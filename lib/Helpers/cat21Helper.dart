@@ -1,14 +1,11 @@
 import 'dart:core';
 import 'dart:typed_data';
-import 'helpDecode.dart';
+import 'package:decereix/Helpers/helpDecode.dart';
 
 class CAT21Helper{
-  HelpDecode lib;
+  HelpDecode lib = HelpDecode();
 
-  CAT21Helper(HelpDecode decode)
-  {
-    this.lib = decode;
-  }
+  CAT21Helper();
   /// <summary>
   /// Data Item I021/008, Aircraft Operational Status
   ///
@@ -25,12 +22,12 @@ class CAT21Helper{
   String SA;
   int Compute_Aircraft_Operational_Status(List<String> message, int pos)
   {
-    String OctetoChar = message[pos].ToCharArray(0, 8);
+    String OctetoChar = message[pos];
     if (OctetoChar[0] == '1') { RA = "TCAS RA active"; }
     else { RA = "TCAS II or ACAS RA not active"; }
-    if (Convert.ToInt32(String.Concat(OctetoChar[1], OctetoChar[2]), 2) == 1) { TC = "No capability for trajectory Change Reports"; }
-    else if (Convert.ToInt32(String.Concat(OctetoChar[1], OctetoChar[2]), 2) == 2) { TC = "Support fot TC+0 reports only"; }
-    else if (Convert.ToInt32(String.Concat(OctetoChar[1], OctetoChar[2]), 2) == 3) { TC = "Support for multiple TC reports"; }
+    if (this.lib.Binary2Int(OctetoChar[1] + OctetoChar[2]) == 1) { TC = "No capability for trajectory Change Reports"; }
+    else if (this.lib.Binary2Int(OctetoChar[1] + OctetoChar[2]) == 2) { TC = "Support fot TC+0 reports only"; }
+    else if (this.lib.Binary2Int(OctetoChar[1] + OctetoChar[2]) == 3) { TC = "Support for multiple TC reports"; }
     else { TC = "Reserved"; }
     if (OctetoChar[3] == '0') { TS = "No capability to support Target State Reports"; }
     else { TS = "Capable of supporting target State Reports"; }
@@ -58,11 +55,11 @@ class CAT21Helper{
   int airportCode;
   int Compute_Data_Source_Identification(List<String> message, int pos)
   {
-  SAC = Convert.ToString(Convert.ToInt32(message[pos], 2));
-  SIC = Convert.ToString(Convert.ToInt32(message[pos + 1], 2));
-  this.airportCode = GetAirporteCode(Convert.ToInt32(SIC)); //Computes airport code from SIC
-  pos += 2;
-  return pos;
+    SAC = this.lib.Binary2Int(message[pos]).toString();
+    SIC = (this.lib.Binary2Int(message[pos + 1])).toString();
+    this.airportCode = GetAirporteCode(this.lib.Binary2Int(SIC)); //Computes airport code from SIC
+    pos += 2;
+    return pos;
   }
   int GetAirporteCode(int SIC)
   {
@@ -102,9 +99,9 @@ class CAT21Helper{
   String Service_Identification;
   int Compute_Service_Identification(List<String> message, int pos)
   {
-  Service_Identification = Convert.ToString(Convert.ToInt32(message[pos], 2));
-  pos++;
-  return pos;
+    Service_Identification = this.lib.Binary2Int(message[pos]).toString();
+    pos++;
+    return pos;
   }
 
   /// <summary>
@@ -116,9 +113,9 @@ class CAT21Helper{
   String RP;
   int Compute_Service_Managment(List<String> message, int pos)
   {
-  RP = Convert.ToString(Convert.ToDouble(Convert.ToInt32(message[pos], 2)) * 0.5) + " sec";
-  pos++;
-  return pos;
+    RP = (this.lib.Binary2Double(message[pos]) * 0.5).toString() + " sec";
+    pos++;
+    return pos;
   }
 
   /// <summary>
@@ -131,34 +128,34 @@ class CAT21Helper{
   String ECAT;
   int Compute_Emitter_Category(List<String> message, int pos)
   {
-  int ecat = Convert.ToInt32(message[pos], 2);
-  if (Target_Identification == "7777XBEG") { ECAT = "No ADS-B Emitter Category Information"; }
-  else
-  {
-  if (ecat == 0) { ECAT = "No ADS-B Emitter Category Information"; }
-  if (ecat == 1) { ECAT = "Light aircraft"; }
-  if (ecat == 2) { ECAT = "Small aircraft"; }
-  if (ecat == 3) { ECAT = "Medium aircraft"; }
-  if (ecat == 4) { ECAT = "High Vortex Large"; }
-  if (ecat == 5) { ECAT = "Heavy aircraft"; }
-  if (ecat == 6) { ECAT = "Highly manoeuvrable(5g acceleration capability) and high speed(> 400 knots cruise)"; }
-  if (ecat == 7 || ecat == 8 || ecat == 9) { ECAT = "Reserved"; }
-  if (ecat == 10) { ECAT = "Rotocraft"; }
-  if (ecat == 11) { ECAT = "Glider / Sailplane"; }
-  if (ecat == 12) { ECAT = "Lighter than air"; }
-  if (ecat == 13) { ECAT = "Unmanned Aerial Vehicle"; }
-  if (ecat == 14) { ECAT = "Space / Transatmospheric Vehicle"; }
-  if (ecat == 15) { ECAT = "Ultralight / Handglider / Paraglider"; }
-  if (ecat == 16) { ECAT = "Parachutist / Skydiver"; }
-  if (ecat == 17 || ecat == 18 || ecat == 19) { ECAT = "Reserved"; }
-  if (ecat == 20) { ECAT = "Surface emergency vehicle"; }
-  if (ecat == 21) { ECAT = "Surface service vehicle"; }
-  if (ecat == 22) { ECAT = "Fixed ground or tethered obstruction"; }
-  if (ecat == 23) { ECAT = "Cluster obstacle"; }
-  if (ecat == 24) { ECAT = "Line obstacle"; }
-  }
-  pos++;
-  return pos;
+    int ecat = this.lib.Binary2Int(message[pos]);
+    if (Target_Identification == "7777XBEG") { ECAT = "No ADS-B Emitter Category Information"; }
+    else
+    {
+      if (ecat == 0) { ECAT = "No ADS-B Emitter Category Information"; }
+      if (ecat == 1) { ECAT = "Light aircraft"; }
+      if (ecat == 2) { ECAT = "Small aircraft"; }
+      if (ecat == 3) { ECAT = "Medium aircraft"; }
+      if (ecat == 4) { ECAT = "High Vortex Large"; }
+      if (ecat == 5) { ECAT = "Heavy aircraft"; }
+      if (ecat == 6) { ECAT = "Highly manoeuvrable(5g acceleration capability) and high speed(> 400 knots cruise)"; }
+      if (ecat == 7 || ecat == 8 || ecat == 9) { ECAT = "Reserved"; }
+      if (ecat == 10) { ECAT = "Rotocraft"; }
+      if (ecat == 11) { ECAT = "Glider / Sailplane"; }
+      if (ecat == 12) { ECAT = "Lighter than air"; }
+      if (ecat == 13) { ECAT = "Unmanned Aerial Vehicle"; }
+      if (ecat == 14) { ECAT = "Space / Transatmospheric Vehicle"; }
+      if (ecat == 15) { ECAT = "Ultralight / Handglider / Paraglider"; }
+      if (ecat == 16) { ECAT = "Parachutist / Skydiver"; }
+      if (ecat == 17 || ecat == 18 || ecat == 19) { ECAT = "Reserved"; }
+      if (ecat == 20) { ECAT = "Surface emergency vehicle"; }
+      if (ecat == 21) { ECAT = "Surface service vehicle"; }
+      if (ecat == 22) { ECAT = "Fixed ground or tethered obstruction"; }
+      if (ecat == 23) { ECAT = "Cluster obstacle"; }
+      if (ecat == 24) { ECAT = "Line obstacle"; }
+    }
+    pos++;
+    return pos;
   }
 
   /// <summary>
@@ -186,59 +183,59 @@ class CAT21Helper{
   String FX;
   int Compute_Target_Report_Descripter(List<String> message, int pos)
   {
-  String OctetoChar = message[pos].ToCharArray(0, 8);
-  int atp = Convert.ToInt32(String.Concat(OctetoChar[0], OctetoChar[1], OctetoChar[2]), 2);
-  int arc = Convert.ToInt32(String.Concat(OctetoChar[3], OctetoChar[4]), 2);
-  if (atp == 0) { ATP = "24-Bit ICAO address"; }
-  else if (atp == 1) { ATP = "Duplicate address"; }
-  else if (atp == 2) { ATP = "Surface vehicle address"; }
-  else if (atp == 3) { ATP = "Anonymous address"; }
-  else { ATP = "Reserved for future use"; }
-  if (arc == 0) { ARC = "25 ft "; }
-  else if (arc == 1) { ARC = "100 ft"; }
-  else if (arc == 2) { ARC = "Unknown"; }
-  else { ARC = "Invalid"; }
-  if (OctetoChar[5] == '0') { RC = "Default"; }
-  else { RC = "Range Check passed, CPR Validation pending"; }
-  if (OctetoChar[6] == '0') { RAB = "Report from target transponder"; }
-  else { RAB = "Report from field monitor (fixed transponder)"; }
-  pos++;
-  if (OctetoChar[7] == '1')
-  {
-  OctetoChar = message[pos].ToCharArray(0, 8);
-  if (OctetoChar[0] == '0') { DCR = "No differential correction (ADS-B)"; }
-  else { DCR = "Differential correction (ADS-B)"; }
-  if (OctetoChar[1] == '0') { GBS = "Ground Bit not set"; }
-  else { GBS = "Ground Bit set"; }
-  if (OctetoChar[2] == '0') { SIM = "Actual target report"; }
-  else { SIM = "Simulated target report"; }
-  if (OctetoChar[3] == '0') { TST = "Default"; }
-  else { TST = "Test Target"; }
-  if (OctetoChar[4] == '0') { SAA = "Equipment capable to provide Selected Altitude"; }
-  else { SAA = "Equipment not capable to provide Selected Altitude"; }
-  int cl = Convert.ToInt32(String.Concat(OctetoChar[5], OctetoChar[6]), 2);
-  if (cl == 0) { CL = "Report valid"; }
-  else if (cl == 1) { CL = "Report suspect"; }
-  else if (cl == 2) { CL = "No information"; }
-  else { CL = "Reserved for future use"; }
-  pos++;
-  if (OctetoChar[7] == '1')
-  {
-  OctetoChar = message[pos].ToCharArray(0, 8);
-  if (OctetoChar[2] == '0') { IPC = "Default"; }
-  else { IPC = "Independent Position Check failed"; }
-  if (OctetoChar[3] == '0') { NOGO = "NOGO-bit not set"; }
-  else { NOGO = "NOGO-bit set"; }
-  if (OctetoChar[4] == '0') { CPR = "CPR Validation correct "; }
-  else { CPR = "CPR Validation failed"; }
-  if (OctetoChar[5] == '0') { LDPJ = "LDPJ not detected"; }
-  else { LDPJ = "LDPJ detected"; }
-  if (OctetoChar[6] == '0') { RCF = "Default"; }
-  else { RCF = "Range Check failed "; }
-  pos++;
-  }
-  }
-  return pos;
+    String OctetoChar = message[pos];
+    int atp = this.lib.Binary2Int(OctetoChar[0]+ OctetoChar[1]+ OctetoChar[2]);
+    int arc = this.lib.Binary2Int(OctetoChar[3]+ OctetoChar[4]);
+    if (atp == 0) { ATP = "24-Bit ICAO address"; }
+    else if (atp == 1) { ATP = "Duplicate address"; }
+    else if (atp == 2) { ATP = "Surface vehicle address"; }
+    else if (atp == 3) { ATP = "Anonymous address"; }
+    else { ATP = "Reserved for future use"; }
+    if (arc == 0) { ARC = "25 ft "; }
+    else if (arc == 1) { ARC = "100 ft"; }
+    else if (arc == 2) { ARC = "Unknown"; }
+    else { ARC = "Invalid"; }
+    if (OctetoChar[5] == '0') { RC = "Default"; }
+    else { RC = "Range Check passed, CPR Validation pending"; }
+    if (OctetoChar[6] == '0') { RAB = "Report from target transponder"; }
+    else { RAB = "Report from field monitor (fixed transponder)"; }
+    pos++;
+    if (OctetoChar[7] == '1')
+    {
+      OctetoChar = message[pos];
+      if (OctetoChar[0] == '0') { DCR = "No differential correction (ADS-B)"; }
+      else { DCR = "Differential correction (ADS-B)"; }
+      if (OctetoChar[1] == '0') { GBS = "Ground Bit not set"; }
+      else { GBS = "Ground Bit set"; }
+      if (OctetoChar[2] == '0') { SIM = "Actual target report"; }
+      else { SIM = "Simulated target report"; }
+      if (OctetoChar[3] == '0') { TST = "Default"; }
+      else { TST = "Test Target"; }
+      if (OctetoChar[4] == '0') { SAA = "Equipment capable to provide Selected Altitude"; }
+      else { SAA = "Equipment not capable to provide Selected Altitude"; }
+      int cl = this.lib.Binary2Int(OctetoChar[5]+ OctetoChar[6]);
+      if (cl == 0) { CL = "Report valid"; }
+      else if (cl == 1) { CL = "Report suspect"; }
+      else if (cl == 2) { CL = "No information"; }
+      else { CL = "Reserved for future use"; }
+      pos++;
+      if (OctetoChar[7] == '1')
+      {
+        OctetoChar = message[pos];
+        if (OctetoChar[2] == '0') { IPC = "Default"; }
+        else { IPC = "Independent Position Check failed"; }
+        if (OctetoChar[3] == '0') { NOGO = "NOGO-bit not set"; }
+        else { NOGO = "NOGO-bit set"; }
+        if (OctetoChar[4] == '0') { CPR = "CPR Validation correct "; }
+        else { CPR = "CPR Validation failed"; }
+        if (OctetoChar[5] == '0') { LDPJ = "LDPJ not detected"; }
+        else { LDPJ = "LDPJ detected"; }
+        if (OctetoChar[6] == '0') { RCF = "Default"; }
+        else { RCF = "Range Check failed "; }
+        pos++;
+      }
+    }
+    return pos;
   }
 
   /// <summary>
@@ -250,9 +247,9 @@ class CAT21Helper{
   String ModeA3;
   int Compute_Mode_A3(List<String> message, int pos)
   {
-  ModeA3 = Convert.ToString(lib.Decimal2Octal(Convert.ToInt32(String.Concat(message[pos], message[pos + 1]).Substring(4, 12), 2))).PadLeft(4, '0');
-  pos += 2;
-  return pos;
+    ModeA3 = (lib.decimal2Octal(this.lib.Binary2Int(message[pos]+ message[pos + 1].substring(4, 16)))).toString().padLeft(4, '0');
+    pos += 2;
+    return pos;
   }
 
   /// <summary>
@@ -264,14 +261,14 @@ class CAT21Helper{
   String Time_of_Applicability_Position;
   int Compute_Time_of_Aplicabillity_Position(List<String> message, int pos)
   {
-  // MessageBox.Show("Entered");
-  int str = Convert.ToInt32(String.Concat(message[pos], message[pos + 1], message[pos + 2]), 2);
-  double segundos = (Convert.ToDouble(str) / 128);
-  // Time_of_day_sec = Convert.ToInt32(Math.Truncate(segundos));
-  TimeSpan tiempo = TimeSpan.FromSeconds(segundos);
-  Time_of_Applicability_Position = tiempo.ToString(@"hh\:mm\:ss\:fff");
-  pos += 3;
-  return pos;
+    // MessageBox.Show("Entered");
+    int str = this.lib.Binary2Int(message[pos]+ message[pos + 1]+ message[pos + 2]);
+    double seconds = ((str) / 128);
+    Time_of_day_sec = seconds.truncate();
+    final d3 = Duration(milliseconds: str*1000);
+    Time_of_Applicability_Position = d3.toString().substring(2, 7);
+    pos += 3;
+    return pos;
   }
 
   /// <summary>
@@ -283,12 +280,13 @@ class CAT21Helper{
   String Time_of_Applicability_Velocity;
   int Compute_Time_of_Aplicabillity_Velocity(List<String> message, int pos)
   {
-  int str = Convert.ToInt32(String.Concat(message[pos], message[pos + 1], message[pos + 2]), 2);
-  double segundos = (Convert.ToDouble(str) / 128);
-  TimeSpan tiempo = TimeSpan.FromSeconds(segundos);
-  Time_of_Applicability_Velocity = tiempo.ToString(@"hh\:mm\:ss\:fff");
-  pos += 3;
-  return pos;
+    int str = this.lib.Binary2Int(message[pos]+ message[pos + 1]+ message[pos + 2]);
+    double seconds = ((str) / 128);
+    Time_of_day_sec = seconds.truncate();
+    final duration = Duration(seconds: Time_of_day_sec);
+    Time_of_Applicability_Velocity = "${duration.inHours}:${duration.inMinutes.remainder(60)}:${(duration.inSeconds.remainder(60))}";
+    pos += 3;
+    return pos;
   }
 
   /// <summary>
@@ -301,12 +299,13 @@ class CAT21Helper{
   String Time_of_Message_Reception_Position;
   int Compute_Time_of_Message_Reception_Position(List<String> message, int pos)
   {
-  int str = Convert.ToInt32(String.Concat(message[pos], message[pos + 1], message[pos + 2]), 2);
-  double segundos = (Convert.ToDouble(str) / 128);
-  TimeSpan tiempo = TimeSpan.FromSeconds(segundos);
-  Time_of_Message_Reception_Position = tiempo.ToString(@"hh\:mm\:ss\:fff");
-  pos += 3;
-  return pos;
+    int str = this.lib.Binary2Int(message[pos]+ message[pos + 1]+ message[pos + 2]);
+    double seconds = ((str) / 128);
+    Time_of_day_sec = seconds.truncate();
+    final duration = Duration(seconds: Time_of_day_sec);
+    Time_of_Message_Reception_Position = "${duration.inHours}:${duration.inMinutes.remainder(60)}:${(duration.inSeconds.remainder(60))}";
+    pos += 3;
+    return pos;
   }
 
 
@@ -320,16 +319,16 @@ class CAT21Helper{
   String Time_of_Message_Reception_Position_High_Precision;
   int Compute_Time_of_Message_Reception_Position_High_Precision(List<String> message, int pos)
   {
-  String octet = String.Concat(message[pos], message[pos + 1], message[pos + 2], message[pos + 3]);
-  String FSI = octet.Substring(0, 2);
-  String time = octet.Substring(2, 30);
-  int str = Convert.ToInt32(time, 2);
-  double sec = (Convert.ToDouble(str)) * Math.Pow(2, -30);
-  if (FSI == "10") { sec--; }
-  if (FSI == "01") { sec++; }
-  Time_of_Message_Reception_Position_High_Precision = Convert.ToString(sec) + " sec";
-  pos += 4;
-  return pos;
+    String octet = (message[pos]+ message[pos + 1]+ message[pos + 2]+ message[pos + 3]);
+    String FSI = octet.substring(0, 2);
+    String time = octet.substring(2, 32);
+    int str = this.lib.Binary2Int(time);
+    double sec = ((str)) * 9.3132257e-10;
+    if (FSI == "10") { sec--; }
+    if (FSI == "01") { sec++; }
+    Time_of_Message_Reception_Position_High_Precision = sec.toString() + " sec";
+    pos += 4;
+    return pos;
   }
 
 
@@ -343,12 +342,15 @@ class CAT21Helper{
   String Time_of_Message_Reception_Velocity;
   int Compute_Time_of_Message_Reception_Velocity(List<String> message, int pos)
   {
-  int str = Convert.ToInt32(String.Concat(message[pos], message[pos + 1], message[pos + 2]), 2);
-  double segundos = (Convert.ToDouble(str) / 128);
-  TimeSpan tiempo = TimeSpan.FromSeconds(segundos);
-  Time_of_Message_Reception_Velocity = tiempo.ToString(@"hh\:mm\:ss\:fff");
-  pos += 3;
-  return pos;
+    int str = this.lib.Binary2Int((message[pos]+ message[pos + 1]+ message[pos + 2]));
+
+    double seconds = ((str) / 128);
+    Time_of_day_sec = seconds.truncate();
+    final duration = Duration(seconds: Time_of_day_sec);
+    Time_of_Message_Reception_Velocity = "${duration.inHours}:${duration.inMinutes.remainder(60)}:${(duration.inSeconds.remainder(60))}";
+
+    pos += 3;
+    return pos;
   }
 
 
@@ -362,16 +364,16 @@ class CAT21Helper{
   String Time_of_Message_Reception_Velocity_High_Precision;
   int Compute_Time_of_Message_Reception_Velocity_High_Precision(List<String> message, int pos)
   {
-  String octet = String.Concat(message[pos], message[pos + 1], message[pos + 2], message[pos + 3]);
-  String FSI = octet.Substring(0, 2);
-  String time = octet.Substring(2, 30);
-  int str = Convert.ToInt32(time, 2);
-  double sec = (Convert.ToDouble(str)) * Math.Pow(2, -30);
-  if (FSI == "10") { sec--; }
-  if (FSI == "01") { sec++; }
-  Time_of_Message_Reception_Velocity_High_Precision = Convert.ToString(sec) + " sec";
-  pos += 4;
-  return pos;
+    String octet =(message[pos]+ message[pos + 1]+ message[pos + 2]+ message[pos + 3]);
+    String FSI = octet.substring(0, 2);
+    String time = octet.substring(2, 32);
+    int str = this.lib.Binary2Int(time);
+    double sec = ((str)) * 9.3132257e-10;
+    if (FSI == "10") { sec--; }
+    if (FSI == "01") { sec++; }
+    Time_of_Message_Reception_Velocity_High_Precision = (sec).toString() + " sec";
+    pos += 4;
+    return pos;
   }
 
   /// <summary>
@@ -388,13 +390,15 @@ class CAT21Helper{
   int Compute_Time_of_Asterix_Report_Transmission(List<String> message, int pos)
   {
 
-  int str = Convert.ToInt32(String.Concat(message[pos], message[pos + 1], message[pos + 2]), 2);
-  double segundos = (Convert.ToDouble(str) / 128);
-  Time_of_day_sec = Convert.ToInt32(Math.Truncate(segundos));
-  TimeSpan tiempo = TimeSpan.FromSeconds(segundos);
-  Time_of_Asterix_Report_Transmission = tiempo.ToString(@"hh\:mm\:ss\:fff");
-  pos += 3;
-  return pos;
+    int str = this.lib.Binary2Int((message[pos]+ message[pos + 1]+ message[pos + 2]));
+
+    double seconds = ((str) / 128);
+    Time_of_day_sec = seconds.truncate();
+    final duration = Duration(seconds: Time_of_day_sec);
+    Time_of_Asterix_Report_Transmission = "${duration.inHours}:${duration.inMinutes.remainder(60)}:${(duration.inSeconds.remainder(60))}";
+
+    pos += 3;
+    return pos;
   }
 
   /// <summary>
@@ -405,11 +409,11 @@ class CAT21Helper{
   /// </summary>
   //TARGET ADDRESS
   String Target_address;
-  int Compute_Target_Address(List<String> message, int pos)
+  int Compute_Target_Address(Uint8List messageInt, int pos)
   {
-  Target_address = String.Concat(lib.Binary2Hex(message[pos]), lib.Binary2Hex(message[pos + 1]), lib.Binary2Hex(message[pos + 2]));
-  pos += 3;
-  return pos;
+    Target_address = messageInt[pos].toRadixString(16).padLeft(2, "0")+ messageInt[pos+1].toRadixString(16).padLeft(2, "0")+messageInt[pos+2].toRadixString(16).padLeft(2, "0");
+    pos += 3;
+    return pos;
   }
 
   /// <summary>
@@ -436,48 +440,48 @@ class CAT21Helper{
 
   int Compute_Quality_Indicators(List<String> message, int pos)
   {
-  NUCr_NACv = Convert.ToString(Convert.ToInt32(message[pos].Substring(0, 3), 2));
-  NUCp_NIC = Convert.ToString(Convert.ToInt32(message[pos].Substring(3, 4), 2));
-  pos++;
-  if (message[pos - 1].Substring(7, 1) == "1")
-  {
+    NUCr_NACv =(this.lib.Binary2Int(message[pos].substring(0, 3))).toString();
+    NUCp_NIC = (this.lib.Binary2Int(message[pos].substring(3, 3+4))).toString();
+    pos++;
+    if (message[pos - 1][7] == "1")
+    {
 
-  NICbaro = Convert.ToString(Convert.ToInt32(message[pos].Substring(0, 1), 2));
-  SIL = Convert.ToString(Convert.ToInt32(message[pos].Substring(1, 2), 2));
-  NACp = Convert.ToString(Convert.ToInt32(message[pos].Substring(3, 4), 2));
-  pos++;
-  if (message[pos - 1].Substring(7, 1) == "1")
-  {
+      NICbaro = (this.lib.Binary2Int(message[pos][0])).toString();
+      SIL = (this.lib.Binary2Int(message[pos].substring(1, 3))).toString();
+      NACp = (this.lib.Binary2Int(message[pos].substring(3, 7))).toString();
+      pos++;
+      if (message[pos - 1][7] == "1")
+      {
 
-  if (message[pos].Substring(2, 1) == "0") { SILS = "Measured per flight-Hour"; }
-  else { SILS = "Measured per sample"; }
-  SDA = Convert.ToString(Convert.ToInt32(message[pos].Substring(3, 2), 2));
-  GVA = Convert.ToString(Convert.ToInt32(message[pos].Substring(5, 2), 2));
-  pos++;
-  if (message[pos - 1].Substring(7, 1) == "1")
-  {
+        if (message[pos][2] == "0") { SILS = "Measured per flight-Hour"; }
+        else { SILS = "Measured per sample"; }
+        SDA = (this.lib.Binary2Int(message[pos].substring(3,5))).toString();
+        GVA = (this.lib.Binary2Int(message[pos].substring(5,7))).toString();
+        pos++;
+        if (message[pos - 1][7] == "1")
+        {
 
-  PIC = Convert.ToInt32(message[pos].Substring(0, 4), 2);
-  if (PIC == 0) { ICB = "No integrity(or > 20.0 NM)"; NUCp = "0"; NIC = "0"; }
-  if (PIC == 1) { ICB = "< 20.0 NM"; NUCp = "1"; NIC = "1"; }
-  if (PIC == 2) { ICB = "< 10.0 NM"; NUCp = "2"; NIC = "-"; }
-  if (PIC == 3) { ICB = "< 8.0 NM"; NUCp = "-"; NIC = "2"; }
-  if (PIC == 4) { ICB = "< 4.0 NM"; NUCp = "-"; NIC = "3"; }
-  if (PIC == 5) { ICB = "< 2.0 NM"; NUCp = "3"; NIC = "4"; }
-  if (PIC == 6) { ICB = "< 1.0 NM"; NUCp = "4"; NIC = "5"; }
-  if (PIC == 7) { ICB = "< 0.6 NM"; NUCp = "-"; NIC = "6 (+ 1/1)"; }
-  if (PIC == 8) { ICB = "< 0.5 NM"; NUCp = "5"; NIC = "6 (+ 0/0)"; }
-  if (PIC == 9) { ICB = "< 0.3 NM"; NUCp = "-"; NIC = "6 (+ 0/1)"; }
-  if (PIC == 10) { ICB = "< 0.2 NM"; NUCp = "6"; NIC = "7"; }
-  if (PIC == 11) { ICB = "< 0.1 NM"; NUCp = "7"; NIC = "8"; }
-  if (PIC == 12) { ICB = "< 0.04 NM"; NUCp = ""; NIC = "9"; }
-  if (PIC == 13) { ICB = "< 0.013 NM"; NUCp = "8"; NIC = "10"; }
-  if (PIC == 14) { ICB = "< 0.004 NM"; NUCp = "9"; NIC = "11"; }
-  pos++;
-  }
-  }
-  }
-  return pos;
+          PIC = this.lib.Binary2Int(message[pos].substring(0, 4));
+          if (PIC == 0) { ICB = "No integrity(or > 20.0 NM)"; NUCp = "0"; NIC = "0"; }
+          if (PIC == 1) { ICB = "< 20.0 NM"; NUCp = "1"; NIC = "1"; }
+          if (PIC == 2) { ICB = "< 10.0 NM"; NUCp = "2"; NIC = "-"; }
+          if (PIC == 3) { ICB = "< 8.0 NM"; NUCp = "-"; NIC = "2"; }
+          if (PIC == 4) { ICB = "< 4.0 NM"; NUCp = "-"; NIC = "3"; }
+          if (PIC == 5) { ICB = "< 2.0 NM"; NUCp = "3"; NIC = "4"; }
+          if (PIC == 6) { ICB = "< 1.0 NM"; NUCp = "4"; NIC = "5"; }
+          if (PIC == 7) { ICB = "< 0.6 NM"; NUCp = "-"; NIC = "6 (+ 1/1)"; }
+          if (PIC == 8) { ICB = "< 0.5 NM"; NUCp = "5"; NIC = "6 (+ 0/0)"; }
+          if (PIC == 9) { ICB = "< 0.3 NM"; NUCp = "-"; NIC = "6 (+ 0/1)"; }
+          if (PIC == 10) { ICB = "< 0.2 NM"; NUCp = "6"; NIC = "7"; }
+          if (PIC == 11) { ICB = "< 0.1 NM"; NUCp = "7"; NIC = "8"; }
+          if (PIC == 12) { ICB = "< 0.04 NM"; NUCp = ""; NIC = "9"; }
+          if (PIC == 13) { ICB = "< 0.013 NM"; NUCp = "8"; NIC = "10"; }
+          if (PIC == 14) { ICB = "< 0.004 NM"; NUCp = "9"; NIC = "11"; }
+          pos++;
+        }
+      }
+    }
+    return pos;
   }
 
   /// <summary>
@@ -494,95 +498,95 @@ class CAT21Helper{
   String NAV;
   String NVB;
   int REP;
-  String[] TCA;
-  String[] NC;
-  int[] TCP;
-  String[] Altitude;
-  String[] Latitude;
-  String[] Longitude;
-  String[] Point_Type;
-  String[] TD;
-  String[] TRA;
-  String[] TOA;
-  String[] TOV;
-  String[] TTR;
+  List<String> TCA;
+  List<String> NC;
+  List<int> TCP;
+  List<String> Altitude;
+  List<String> Latitude;
+  List<String> Longitude;
+  List<String> Point_Type;
+  List<String> TD;
+  List<String> TRA;
+  List<String> TOA;
+  List<String> TOV;
+  List<String> TTR;
   int Compute_Trajectory_Intent(List<String> message, int pos)
   {
-  Trajectory_present = 1;
-  if (message[pos].Substring(0, 1) == "1") { subfield1 = true; }
-  else { subfield1 = false; }
-  if (message[pos].Substring(1, 1) == "1") { subfield2 = true; }
-  else { subfield2 = false; }
-  if (subfield1 == true)
-  {
-  pos++;
-  if (message[pos].Substring(0, 1) == "0") { NAV = "Trajectory Intent Data is available for this aircraft"; }
-  else { NAV = "Trajectory Intent Data is not available for this aircraft "; }
-  if (message[pos].Substring(1, 1) == "0") { NVB = "Trajectory Intent Data is valid"; }
-  else { NVB = "Trajectory Intent Data is not valid"; }
-  }
-  if (subfield2 == true)
-  {
-  pos++;
-  REP = Convert.ToInt32(message[pos], 2);
-  TCA = new String[REP];
-  NC = new String[REP];
-  TCP = new int[REP];
-  Altitude = new String[REP];
-  Latitude = new String[REP];
-  Longitude = new String[REP];
-  Point_Type = new String[REP];
-  TD = new String[REP];
-  TRA = new String[REP];
-  TOA = new String[REP];
-  TOV = new String[REP];
-  TTR = new String[REP];
-  pos++;
+    Trajectory_present = 1;
+    if (message[pos][0] == "1") { subfield1 = true; }
+    else { subfield1 = false; }
+    if (message[pos][1] == "1") { subfield2 = true; }
+    else { subfield2 = false; }
+    if (subfield1 == true)
+    {
+      pos++;
+      if (message[pos][0] == "0") { NAV = "Trajectory Intent Data is available for this aircraft"; }
+      else { NAV = "Trajectory Intent Data is not available for this aircraft "; }
+      if (message[pos][1] == "0") { NVB = "Trajectory Intent Data is valid"; }
+      else { NVB = "Trajectory Intent Data is not valid"; }
+    }
+    if (subfield2 == true)
+    {
+      pos++;
+      REP = this.lib.Binary2Int(message[pos]);
+      TCA = List .filled(REP, "", growable: true);
+      NC = List .filled(REP, "", growable: true);
+      TCP = List .filled(REP, 0, growable: true);
+      Altitude = List .filled(REP, "", growable: true);
+      Latitude = List .filled(REP, "", growable: true);
+      Longitude = List .filled(REP, "", growable: true);
+      Point_Type = List .filled(REP, "", growable: true);
+      TD = List .filled(REP, "", growable: true);
+      TRA = List .filled(REP, "", growable: true);
+      TOA = List .filled(REP, "", growable: true);
+      TOV = List .filled(REP, "", growable: true);
+      TTR = List .filled(REP, "", growable: true);
+      pos++;
 
-  for (int i = 0; i < REP; i++)
-  {
-  if (message[pos].Substring(0, 1) == "0") { TCA[i] = "TCP number available"; }
-  else { TCA[i] = "TCP number not available"; }
-  if (message[pos].Substring(1, 1) == "0") { NC[i] = "TCP compliance"; }
-  else { NC[i] = "TCP non-compliance"; }
-  TCP[i] = Convert.ToInt32(message[pos].Substring(2, 6));
-  pos++;
-  Altitude[i] = Convert.ToString(lib.TwoComplement2Decimal(String.Concat(message[pos], message[pos + 1])) * 10) + " ft";
-  pos += 2;
-  Latitude[i] = Convert.ToString(lib.TwoComplement2Decimal(String.Concat(message[pos], message[pos + 1])) * (180 / (Math.Pow(2, 23)))) + " deg";
-  pos += 2;
-  Longitude[i] = Convert.ToString(lib.TwoComplement2Decimal(String.Concat(message[pos], message[pos + 1])) * (180 / (Math.Pow(2, 23)))) + " deg";
-  pos += 2;
-  int pt = Convert.ToInt32(message[pos].Substring(0, 4), 2);
-  if (pt == 0) { Point_Type[i] = "Unknown"; }
-  else if (pt == 1) { Point_Type[i] = "Fly by waypoint (LT) "; }
-  else if (pt == 2) { Point_Type[i] = "Fly over waypoint (LT)"; }
-  else if (pt == 3) { Point_Type[i] = "Hold pattern (LT)"; }
-  else if (pt == 4) { Point_Type[i] = "Procedure hold (LT)"; }
-  else if (pt == 5) { Point_Type[i] = "Procedure turn (LT)"; }
-  else if (pt == 6) { Point_Type[i] = "RF leg (LT)"; }
-  else if (pt == 7) { Point_Type[i] = "Top of climb (VT)"; }
-  else if (pt == 8) { Point_Type[i] = "Top of descent (VT)"; }
-  else if (pt == 9) { Point_Type[i] = "Start of level (VT)"; }
-  else if (pt == 10) { Point_Type[i] = "Cross-over altitude (VT)"; }
-  else { Point_Type[i] = "Transition altitude (VT)"; }
-  String td = message[pos].Substring(4, 2);
-  if (td == "00") { TD[i] = "N/A"; }
-  else if (td == "01") { TD[i] = "Turn right"; }
-  else if (td == "10") { TD[i] = "Turn left"; }
-  else { TD[i] = "No turn"; }
-  if (message[pos].Substring(6, 1) == "0") { TRA[i] = "TTR not available"; }
-  else { TRA[i] = "TTR available"; }
-  if (message[pos].Substring(7, 1) == "0") { TOA[i] = "TOV available"; }
-  else { TOA[i] = "TOV not available"; }
-  pos++;
-  TOV[i] = Convert.ToString(Convert.ToInt32(String.Concat(message[pos], message[pos + 1], message[pos + 2]), 2)) + " sec";
-  pos += 3;
-  TTR[i] = Convert.ToString(Convert.ToInt32(String.Concat(message[pos], message[pos + 1]), 2) * 0.01) + " Nm";
-  pos += 2;
-  }
-  }
-  return pos;
+      for (int i = 0; i < REP; i++)
+      {
+        if (message[pos][0] == "0") { TCA[i] = "TCP number available"; }
+        else { TCA[i] = "TCP number not available"; }
+        if (message[pos][1] == "0") { NC[i] = "TCP compliance"; }
+        else { NC[i] = "TCP non-compliance"; }
+        TCP[i] = this.lib.Binary2Int(message[pos].substring(2, 8));
+        pos++;
+        Altitude[i] = (lib.TwoComplement2Decimal(message[pos]+ message[pos + 1]) * 10).toString() + " ft";
+        pos += 2;
+        Latitude[i] = (lib.TwoComplement2Decimal(message[pos]+ message[pos + 1]) * (180 / (8388608))).toString() + " deg";
+        pos += 2;
+        Longitude[i] = (lib.TwoComplement2Decimal(message[pos]+ message[pos + 1]) * (180 / (8388608))).toString() + " deg";
+        pos += 2;
+        int pt = this.lib.Binary2Int(message[pos].substring(0, 4));
+        if (pt == 0) { Point_Type[i] = "Unknown"; }
+        else if (pt == 1) { Point_Type[i] = "Fly by waypoint (LT) "; }
+        else if (pt == 2) { Point_Type[i] = "Fly over waypoint (LT)"; }
+        else if (pt == 3) { Point_Type[i] = "Hold pattern (LT)"; }
+        else if (pt == 4) { Point_Type[i] = "Procedure hold (LT)"; }
+        else if (pt == 5) { Point_Type[i] = "Procedure turn (LT)"; }
+        else if (pt == 6) { Point_Type[i] = "RF leg (LT)"; }
+        else if (pt == 7) { Point_Type[i] = "Top of climb (VT)"; }
+        else if (pt == 8) { Point_Type[i] = "Top of descent (VT)"; }
+        else if (pt == 9) { Point_Type[i] = "Start of level (VT)"; }
+        else if (pt == 10) { Point_Type[i] = "Cross-over altitude (VT)"; }
+        else { Point_Type[i] = "Transition altitude (VT)"; }
+        String td = message[pos].substring(4,6);
+        if (td == "00") { TD[i] = "N/A"; }
+        else if (td == "01") { TD[i] = "Turn right"; }
+        else if (td == "10") { TD[i] = "Turn left"; }
+        else { TD[i] = "No turn"; }
+        if (message[pos][6] == "0") { TRA[i] = "TTR not available"; }
+        else { TRA[i] = "TTR available"; }
+        if (message[pos][7] == "0") { TOA[i] = "TOV available"; }
+        else { TOA[i] = "TOV not available"; }
+        pos++;
+        TOV[i] = (this.lib.Binary2Int(message[pos]+ message[pos + 1]+ message[pos + 2])).toString() + " sec";
+        pos += 3;
+        TTR[i] = (this.lib.Binary2Int(message[pos]+ message[pos + 1]) * 0.01).toString() + " Nm";
+        pos += 2;
+      }
+    }
+    return pos;
   }
 
   /// <summary>
@@ -600,24 +604,24 @@ class CAT21Helper{
   String LongitudeWGS_84;
   double LatitudeWGS_84_map = -200;
   double LongitudeWGS_84_map = -200;
-  int Compute_PositionWGS_84(List<String> message, int pos)
+  int Compute_PositionWGS_84(List<String> messageOctets, int pos)
   {
 
-  double Latitude = lib.TwoComplement2Decimal(String.Concat(message[pos], message[pos + 1], message[pos + 2])) * (180 / (Math.Pow(2, 23)));
-  pos += 3;
-  double Longitude = lib.TwoComplement2Decimal(String.Concat(message[pos], message[pos + 1], message[pos + 2])) * (180 / (Math.Pow(2, 23)));
-  LatitudeWGS_84_map = Convert.ToDouble(Latitude);
-  LongitudeWGS_84_map = Convert.ToDouble(Longitude);
-  int Latdegres = Convert.ToInt32(Math.Truncate(Latitude));
-  int Latmin = Convert.ToInt32(Math.Truncate((Latitude - Latdegres) * 60));
-  double Latsec = Math.Round(((Latitude - (Latdegres + (Convert.ToDouble(Latmin) / 60))) * 3600), 2);
-  int Londegres = Convert.ToInt32(Math.Truncate(Longitude));
-  int Lonmin = Convert.ToInt32(Math.Truncate((Longitude - Londegres) * 60));
-  double Lonsec = Math.Round(((Longitude - (Londegres + (Convert.ToDouble(Lonmin) / 60))) * 3600), 2);
-  LatitudeWGS_84 = Convert.ToString(Latdegres) + "º " + Convert.ToString(Latmin) + "' " + Convert.ToString(Latsec) + "''";
-  LongitudeWGS_84 = Convert.ToString(Londegres) + "º" + Convert.ToString(Lonmin) + "' " + Convert.ToString(Lonsec) + "''";
-  pos += 3;
-  return pos;
+    double Latitude = this.lib.TwoComplement2Decimal(messageOctets[pos]+ messageOctets[pos + 1]+ messageOctets[pos + 2]) * (0.00002145767);
+    pos += 3;
+    double Longitude = this.lib.TwoComplement2Decimal(messageOctets[pos]+ messageOctets[pos + 1]+ messageOctets[pos + 2]) * (0.00002145767);
+    pos += 3;
+    LatitudeWGS_84_map = (Latitude);
+    LongitudeWGS_84_map = (Longitude);
+    int Latdegres = Latitude.truncate();
+    int Latmin = ((Latitude - Latdegres) * 60).truncate();
+    double Latsec = (Latitude - (Latdegres + (Latmin / 60)))*3600;
+    int Londegres = Longitude.truncate();
+    int Lonmin = ((Longitude - Londegres) * 60).truncate();
+    double Lonsec = (Longitude - (Londegres + (Lonmin / 60)))*3600;
+    LatitudeWGS_84 = Latdegres.toString() + "º " + Latmin.toString() + "' " + Latsec.toString() + "''";
+    LongitudeWGS_84 = Londegres.toString() + "º" + Lonmin.toString() + "' " + Lonsec.toString() + "''";
+    return pos;
   }
 
   /// <summary>
@@ -630,20 +634,21 @@ class CAT21Helper{
   String High_Resolution_LongitudeWGS_84;
   int Compute_High_Resolution_PositionWGS_84(List<String> message, int pos)
   {
-
-  double Latitude = lib.TwoComplement2Decimal(String.Concat(message[pos], message[pos + 1], message[pos + 2], message[pos + 3])) * (180 / (Math.Pow(2, 30))); pos += 4;
-  double Longitude = lib.TwoComplement2Decimal(String.Concat(message[pos], message[pos + 1], message[pos + 2], message[pos + 3])) * (180 / (Math.Pow(2, 30))); pos += 4;
-  LatitudeWGS_84_map = Convert.ToDouble(Latitude);
-  LongitudeWGS_84_map = Convert.ToDouble(Longitude);
-  int Latdegres = Convert.ToInt32(Math.Truncate(Latitude));
-  int Latmin = Convert.ToInt32(Math.Truncate((Latitude - Latdegres) * 60));
-  double Latsec = Math.Round(((Latitude - (Latdegres + (Convert.ToDouble(Latmin) / 60))) * 3600), 5);
-  int Londegres = Convert.ToInt32(Math.Truncate(Longitude));
-  int Lonmin = Convert.ToInt32(Math.Truncate((Longitude - Londegres) * 60));
-  double Lonsec = Math.Round(((Longitude - (Londegres + (Convert.ToDouble(Lonmin) / 60))) * 3600), 5);
-  High_Resolution_LatitudeWGS_84 = Convert.ToString(Latdegres) + "º " + Convert.ToString(Latmin) + "' " + Convert.ToString(Latsec) + "''";
-  High_Resolution_LongitudeWGS_84 = Convert.ToString(Londegres) + "º" + Convert.ToString(Lonmin) + "' " + Convert.ToString(Lonsec) + "''";
-  return pos;
+    double Latitude = this.lib.TwoComplement2Decimal(message[pos]+ message[pos + 1]+ message[pos + 2] + message[pos + 3]) * (0.000000167638063);
+    pos += 4;
+    double Longitude = this.lib.TwoComplement2Decimal(message[pos]+ message[pos + 1]+ message[pos + 2]) * (0.000000167638063);
+    pos += 4;
+    LatitudeWGS_84_map = (Latitude);
+    LongitudeWGS_84_map = (Longitude);
+    int Latdegres = Latitude.truncate();
+    int Latmin = ((Latitude - Latdegres) * 60).truncate();
+    double Latsec = (Latitude - (Latdegres + (Latmin / 60)))*3600;
+    int Londegres = Longitude.truncate();
+    int Lonmin = ((Longitude - Londegres) * 60).truncate();
+    double Lonsec = (Longitude - (Londegres + (Lonmin / 60)))*3600;
+    High_Resolution_LatitudeWGS_84 = Latdegres.toString() + "º " + Latmin.toString() + "' " + Latsec.toString() + "''";
+    High_Resolution_LongitudeWGS_84 = Londegres.toString() + "º" + Lonmin.toString() + "' " + Lonsec.toString() + "''";
+    return pos;
   }
 
   /// <summary>
@@ -655,9 +660,9 @@ class CAT21Helper{
   String Message_Amplitude;
   int Compute_Message_Amplitude(List<String> message, int pos)
   {
-  Message_Amplitude = Convert.ToString(lib.TwoComplement2Decimal(message[pos])) + " dBm";
-  pos++;
-  return pos;
+    Message_Amplitude = (lib.TwoComplement2Decimal(message[pos])).toString() + " dBm";
+    pos++;
+    return pos;
   }
 
   /// <summary>
@@ -670,8 +675,8 @@ class CAT21Helper{
   String Geometric_Height;
   int Compute_Geometric_Height(List<String> message, int pos)
   {
-  Geometric_Height = Convert.ToString(lib.TwoComplement2Decimal(String.Concat(message[pos], message[pos + 1])) * 6.25) + " ft"; pos += 2;
-  return pos;
+    Geometric_Height = (lib.TwoComplement2Decimal(message[pos]+ message[pos + 1]) * 6.25).toString() + " ft"; pos += 2;
+    return pos;
   }
 
   /// <summary>
@@ -683,9 +688,9 @@ class CAT21Helper{
   String Flight_Level;
   int Compute_Flight_level(List<String> message, int pos)
   {
-  Flight_Level = Convert.ToString(lib.TwoComplement2Decimal(String.Concat(message[pos], message[pos + 1])) * (0.25)) + " FL";
-  pos += 2;
-  return pos;
+    Flight_Level = (lib.TwoComplement2Decimal((message[pos]+ message[pos + 1])) * (0.25)).toString() + " FL";
+    pos += 2;
+    return pos;
   }
 
   /// <summary>
@@ -704,15 +709,15 @@ class CAT21Helper{
   String Selected_Altitude;
   int Compute_Selected_Altitude(List<String> message, int pos)
   {
-  String sou = message[pos].Substring(1, 2);
-  if (sou == "00") { Source = "Unknown"; }
-  else if (sou == "01") { Source = "Aircraft Altitude (Holding Altitude)"; }
-  else if (sou == "10") { Source = "MCP/FCU Selected Altitude"; }
-  else { Source = "FMS Selected Altitude"; }
-  Sel_Altitude = Convert.ToString(lib.TwoComplement2Decimal(String.Concat(message[pos], message[pos + 1]).Substring(3, 13)) * 25) + " ft";
-  Selected_Altitude = "SA: " + Convert.ToString(Sel_Altitude);
-  pos += 2;
-  return pos;
+    String sou = message[pos].substring(1,3);
+    if (sou == "00") { Source = "Unknown"; }
+    else if (sou == "01") { Source = "Aircraft Altitude (Holding Altitude)"; }
+    else if (sou == "10") { Source = "MCP/FCU Selected Altitude"; }
+    else { Source = "FMS Selected Altitude"; }
+    Sel_Altitude = (lib.TwoComplement2Decimal((message[pos]+ message[pos + 1]).substring(3, 16)) * 25).toString() + " ft";
+    Selected_Altitude = "SA: " + (Sel_Altitude).toString();
+    pos += 2;
+    return pos;
   }
 
   /// <summary>
@@ -729,15 +734,15 @@ class CAT21Helper{
   String Final_State_Altitude;
   int Compute_Final_State_Selected_Altitude(List<String> message, int pos)
   {
-  if (message[pos].Substring(0, 1) == "0") { MV = "Not active or unknown"; }
-  else { MV = "Active"; }
-  if (message[pos].Substring(1, 1) == "0") { AH = "Not active or unknown"; }
-  else { AH = "Active"; }
-  if (message[pos].Substring(2, 1) == "0") { AM = "Not active or unknown"; }
-  else { AM = "Active"; }
-  Final_State_Altitude = Convert.ToString(lib.TwoComplement2Decimal(String.Concat(message[pos], message[pos + 1]).Substring(3, 13)) * 25) + " ft";
-  pos += 2;
-  return pos;
+    if (message[pos][0] == "0") { MV = "Not active or unknown"; }
+    else { MV = "Active"; }
+    if (message[pos][1] == "0") { AH = "Not active or unknown"; }
+    else { AH = "Active"; }
+    if (message[pos][2] == "0") { AM = "Not active or unknown"; }
+    else { AM = "Active"; }
+    Final_State_Altitude = (lib.TwoComplement2Decimal((message[pos]+ message[pos + 1]).substring(3, 16)) * 25).toString() + " ft";
+    pos += 2;
+    return pos;
   }
 
   /// <summary>
@@ -749,10 +754,10 @@ class CAT21Helper{
   String Air_Speed;
   int Compute_Air_Speed(List<String> message, int pos)
   {
-  if (message[pos].Substring(0, 1) == "0") { Air_Speed = Convert.ToString(Convert.ToInt32(String.Concat(message[pos], message[pos + 1]).Substring(1, 15), 2) * Math.Pow(2, -14)) + " NM/s"; }
-  else { Air_Speed = Convert.ToString(Convert.ToInt32(String.Concat(message[pos], message[pos + 1]).Substring(1, 15), 2) * 0.001) + " Mach"; }
-  pos += 2;
-  return pos;
+    if (message[pos][0] == "0") { Air_Speed = (this.lib.Binary2Int((message[pos]+ message[pos + 1]).toString().substring(1, 16)) * 0.00006103515).toString() + " NM/s"; }
+    else { Air_Speed = (this.lib.Binary2Int((message[pos]+ message[pos + 1]).substring(1, 16)) * 0.001).toString() + " Mach"; }
+    pos += 2;
+    return pos;
   }
 
   /// <summary>
@@ -764,13 +769,13 @@ class CAT21Helper{
   String True_Air_Speed;
   int Compute_True_Air_Speed(List<String> message, int pos)
   {
-  if (message[pos].Substring(0, 1) == "0")
-  {
-  True_Air_Speed = Convert.ToString(Convert.ToInt32(String.Concat(message[pos], message[pos + 1]).Substring(1, 15), 2)) + " Knots";
-  }
-  else { True_Air_Speed = "Value exceeds defined rage"; }
-  pos += 2;
-  return pos;
+    if (message[pos][0] == "0")
+    {
+      True_Air_Speed = (this.lib.Binary2Int((message[pos]+ message[pos + 1]).toString().substring(1, 16))).toString() + " Knots";
+    }
+    else { True_Air_Speed = "Value exceeds defined rage"; }
+    pos += 2;
+    return pos;
   }
 
 
@@ -785,9 +790,9 @@ class CAT21Helper{
   String Magnetic_Heading;
   int Compute_Magnetic_Heading(List<String> message, int pos)
   {
-  Magnetic_Heading = Convert.ToString(Convert.ToInt32(String.Concat(message[pos], message[pos]), 2) * (360 / (Math.Pow(2, 16)))) + "º";
-  pos += 2;
-  return pos;
+    Magnetic_Heading = (this.lib.Binary2Int((message[pos]+message[pos])) * (360 / (65536))).toString() + "º";
+    pos += 2;
+    return pos;
   }
 
   /// <summary>
@@ -799,13 +804,13 @@ class CAT21Helper{
   String Barometric_Vertical_Rate;
   int Compute_Barometric_Vertical_Rate(List<String> message, int pos)
   {
-  if (message[pos].Substring(0, 1) == "0")
-  {
-  Barometric_Vertical_Rate = Convert.ToString(lib.TwoComplement2Decimal(String.Concat(message[pos], message[pos + 1]).Substring(1, 15)) * 6.25) + " feet/minute";
-  }
-  else { Barometric_Vertical_Rate = "Value exceeds defined rage"; }
-  pos += 2;
-  return pos;
+    if (message[pos][0] == "0")
+    {
+      Barometric_Vertical_Rate = (lib.TwoComplement2Decimal((message[pos]+ message[pos + 1]).substring(1, 16)) * 6.25).toString() + " feet/minute";
+    }
+    else { Barometric_Vertical_Rate = "Value exceeds defined rage"; }
+    pos += 2;
+    return pos;
   }
 
   /// <summary>
@@ -817,13 +822,13 @@ class CAT21Helper{
   String Geometric_Vertical_Rate;
   int Compute_Geometric_Vertical_Rate(List<String> message, int pos)
   {
-  if (message[pos].Substring(0, 1) == "0")
-  {
-  Geometric_Vertical_Rate = Convert.ToString(lib.TwoComplement2Decimal(String.Concat(message[pos], message[pos + 1]).Substring(1, 15)) * 6.25) + " feet/minute";
-  }
-  else { Geometric_Vertical_Rate = "Value exceeds defined rage"; }
-  pos += 2;
-  return pos;
+    if (message[pos][0] == "0")
+    {
+      Geometric_Vertical_Rate = (lib.TwoComplement2Decimal((message[pos]+message[pos + 1]).substring(1, 16)) * 6.25).toString() + " feet/minute";
+    }
+    else { Geometric_Vertical_Rate = "Value exceeds defined rage"; }
+    pos += 2;
+    return pos;
   }
 
   /// <summary>
@@ -837,16 +842,16 @@ class CAT21Helper{
   String Ground_vector;
   int Compute_Airborne_Ground_Vector(List<String> message, int pos)
   {
-  if (message[pos].Substring(0, 1) == "0")
-  {
-  Ground_Speed = String.Format("{0:0.00}", (Convert.ToInt32(String.Concat(message[pos], message[pos + 1]).Substring(1, 15), 2) * Math.Pow(2, -14) * 3600)) + "Knts";
-  // double meters =
-  Track_Angle = String.Format("{0:0.00}", Convert.ToInt32(String.Concat(message[pos + 2], message[pos + 3]).Substring(0, 16), 2) * (360 / (Math.Pow(2, 16))));
-  Ground_vector = "GS: " + Ground_Speed + ", T.A: " + String.Format("{0:0.00}", Track_Angle) + "º";
-  }
-  else { Ground_vector = "Value exceeds defined rage"; }
-  pos += 4;
-  return pos;
+    if (message[pos][0] == "0")
+    {
+      Ground_Speed = (this.lib.Binary2Int((message[pos]+ message[pos + 1]).substring(1, 16)) * 0.21972654).toString() + "Knts";
+      // double meters =
+      Track_Angle = (this.lib.Binary2Int((message[pos + 2]+ message[pos + 3]).substring(0, 16)) * 0.00549316406).toString();
+      Ground_vector = "GS: " + Ground_Speed + ", T.A: " + (Track_Angle) + "º";
+    }
+    else { Ground_vector = "Value exceeds defined rage"; }
+    pos += 4;
+    return pos;
   }
 
   /// <summary>
@@ -858,9 +863,9 @@ class CAT21Helper{
   String Track_Number;
   int Compute_Track_Number(List<String> message, int pos)
   {
-  Track_Number = Convert.ToString(Convert.ToInt32(String.Concat(message[pos], message[pos + 1]).Substring(4, 12), 2));
-  pos += 2;
-  return pos;
+    Track_Number = (this.lib.Binary2Int((message[pos]+ message[pos + 1]).substring(4, 16))).toString();
+    pos += 2;
+    return pos;
   }
 
   /// <summary>
@@ -872,9 +877,9 @@ class CAT21Helper{
   String Track_Angle_Rate;
   int Compute_Track_Angle_Rate(List<String> message, int pos)
   {
-  Track_Angle_Rate = Convert.ToString(Convert.ToInt32(String.Concat(message[pos], message[pos]).Substring(6, 10), 2) * (1 / 32)) + " º/s";
-  pos += 2;
-  return pos;
+    Track_Angle_Rate = (this.lib.Binary2Int((message[pos]+ message[pos]).substring(6, 16)) * 0.03125).toString() + " º/s";
+    pos += 2;
+    return pos;
   }
 
   /// <summary>
@@ -887,12 +892,12 @@ class CAT21Helper{
   String Target_Identification;
   int Compute_Target_Identification(List<String> message, int pos)
   {
-  StringBuilder Identification = new StringBuilder();
-  String octets = String.Concat(message[pos], message[pos + 1], message[pos + 2], message[pos + 3], message[pos + 4], message[pos + 5]);
-  for (int i = 0; i < 8; i++) { Identification.Append(lib.Compute_Char(octets.Substring(i * 6, 6))); }
-  String tar = Identification.ToString();
-  if (tar.Length > 1) { Target_Identification = tar; }
-  return pos + 6;
+    String Identification = "";
+    String octets = (message[pos]+ message[pos + 1]+ message[pos + 2]+ message[pos + 3]+ message[pos + 4]+ message[pos + 5]);
+    for (int i = 0; i < 8; i++) { Identification+=(lib.computeChar(octets.substring(i * 6, i * 6+6))); }
+    String tar = Identification.toString();
+    if (tar.length > 1) { Target_Identification = tar; }
+    return pos + 6;
   }
 
   /// <summary>
@@ -907,25 +912,25 @@ class CAT21Helper{
   String SS;
   int Compute_Target_Status(List<String> message, int pos)
   {
-  if (message[pos].Substring(0, 1) == "0") { ICF = "No intent change active"; }
-  else { ICF = "Intent change flag raised"; }
-  if (message[pos].Substring(1, 1) == "0") { LNAV = "LNAV Mode engaged"; }
-  else { LNAV = "LNAV Mode not engaged"; }
-  int ps = Convert.ToInt32(message[pos].Substring(3, 3), 2);
-  if (ps == 0) { PS = "No emergency / not reported"; }
-  else if (ps == 1) { PS = "General emergency"; }
-  else if (ps == 2) { PS = "Lifeguard / medical emergency"; }
-  else if (ps == 3) { PS = "Minimum fuel"; }
-  else if (ps == 4) { PS = "No communications"; }
-  else if (ps == 5) { PS = "Unlawful interference"; }
-  else { PS = "'Downed' Aircraft "; }
-  int ss = Convert.ToInt32(message[pos].Substring(6, 2), 2);
-  if (ss == 0) { SS = "No condition reported"; }
-  else if (ss == 1) { SS = "Permanent Alert (Emergency condition)"; }
-  else if (ss == 2) { SS = "Temporary Alert (change in Mode 3/A Code other than emergency)"; }
-  else { SS = "SPI set"; }
-  pos++;
-  return pos;
+    if (message[pos][0] == "0") { ICF = "No intent change active"; }
+    else { ICF = "Intent change flag raised"; }
+    if (message[pos][1] == "0") { LNAV = "LNAV Mode engaged"; }
+    else { LNAV = "LNAV Mode not engaged"; }
+    int ps = this.lib.Binary2Int(message[pos].substring(3, 6));
+    if (ps == 0) { PS = "No emergency / not reported"; }
+    else if (ps == 1) { PS = "General emergency"; }
+    else if (ps == 2) { PS = "Lifeguard / medical emergency"; }
+    else if (ps == 3) { PS = "Minimum fuel"; }
+    else if (ps == 4) { PS = "No communications"; }
+    else if (ps == 5) { PS = "Unlawful interference"; }
+    else { PS = "'Downed' Aircraft "; }
+    int ss = this.lib.Binary2Int(message[pos].substring(6,8));
+    if (ss == 0) { SS = "No condition reported"; }
+    else if (ss == 1) { SS = "Permanent Alert (Emergency condition)"; }
+    else if (ss == 2) { SS = "Temporary Alert (change in Mode 3/A Code other than emergency)"; }
+    else { SS = "SPI set"; }
+    pos++;
+    return pos;
   }
 
   /// <summary>
@@ -940,25 +945,25 @@ class CAT21Helper{
   String MOPS;
   int Compute_MOPS_Version(List<String> message, int pos)
   {
-  if (message[pos].Substring(1, 1) == "0") { VNS = "The MOPS Version is supported by the GS"; }
-  else { VNS = "The MOPS Version is not supported by the GS"; }
-  int ltt = Convert.ToInt32(message[pos].Substring(5, 3), 2);
-  if (ltt == 0) { LTT = "Other"; }
-  else if (ltt == 1) { LTT = "UAT"; }
-  else if (ltt == 2)
-  {
-  int vn = Convert.ToInt32(message[pos].Substring(2, 3), 2);
-  String VN = "";
-  if (vn == 0) { VN = "ED102/DO-260"; }
-  if (vn == 1) { VN = "DO-260A"; }
-  if (vn == 2) { VN = "ED102A/DO-260B"; }
-  LTT = "Version Number: " + VN;
-  }
-  else if (ltt == 3) { LTT = "VDL 4"; }
-  else { LTT = "Not assigned"; }
-  MOPS = LTT;
-  pos++;
-  return pos;
+    if (message[pos][1] == "0") { VNS = "The MOPS Version is supported by the GS"; }
+    else { VNS = "The MOPS Version is not supported by the GS"; }
+    int ltt = this.lib.Binary2Int(message[pos].substring(5, 8));
+    if (ltt == 0) { LTT = "Other"; }
+    else if (ltt == 1) { LTT = "UAT"; }
+    else if (ltt == 2)
+    {
+      int vn = this.lib.Binary2Int(message[pos].substring(2, 5));
+      String VN = "";
+      if (vn == 0) { VN = "ED102/DO-260"; }
+      if (vn == 1) { VN = "DO-260A"; }
+      if (vn == 2) { VN = "ED102A/DO-260B"; }
+      LTT = "Version Number: " + VN;
+    }
+    else if (ltt == 3) { LTT = "VDL 4"; }
+    else { LTT = "Not assigned"; }
+    MOPS = LTT;
+    pos++;
+    return pos;
   }
 
 
@@ -976,14 +981,14 @@ class CAT21Helper{
   String Turbulence;
   int Compute_Met_Information(List<String> message, int pos)
   {
-  MET_present = 1;
-  int posin = pos;
-  int posfin = pos++;
-  if (message[posin].Substring(0, 1) == "1") { Wind_Speed = Convert.ToString(Convert.ToInt32(String.Concat(message[posfin], message[posfin]), 2)) + " Knots"; posfin += 2; }
-  if (message[posin].Substring(1, 1) == "1") { Wind_Direction = Convert.ToString(Convert.ToInt32(String.Concat(message[posfin], message[posfin]), 2)) + " degrees"; posfin += 2; }
-  if (message[posin].Substring(2, 1) == "1") { Temperature = Convert.ToString(Convert.ToInt32(String.Concat(message[posfin], message[posfin]), 2) * 0.25) + " ºC"; posfin += 2; }
-  if (message[posin].Substring(3, 1) == "1") { Turbulence = Convert.ToString(Convert.ToInt32(String.Concat(message[posfin], message[posfin]), 2)) + " Turbulence"; posfin += 2; }
-  return posfin;
+    MET_present = 1;
+    int posin = pos;
+    int posfin = pos++;
+    if (message[posin][0] == "1") { Wind_Speed = (this.lib.Binary2Int((message[posfin]+ message[posfin]))).toString() + " Knots"; posfin += 2; }
+    if (message[posin][1] == "1") { Wind_Direction = (this.lib.Binary2Int((message[posfin]+ message[posfin]))).toString() + " degrees"; posfin += 2; }
+    if (message[posin][2] == "1") { Temperature = (this.lib.Binary2Int((message[posfin]+ message[posfin])) * 0.25).toString() + " ºC"; posfin += 2; }
+    if (message[posin][3] == "1") { Turbulence = (this.lib.Binary2Int((message[posfin]+ message[posfin]))).toString() + " Turbulence"; posfin += 2; }
+    return posfin;
   }
 
 
@@ -997,8 +1002,8 @@ class CAT21Helper{
   String Roll_Angle;
   int Compute_Roll_Angle(List<String> message, int pos)
   {
-  Roll_Angle = Convert.ToString(lib.TwoComplement2Decimal(String.Concat(message[pos], message[pos])) * 0.01) + "º";
-  return pos++;
+    Roll_Angle = (lib.TwoComplement2Decimal((message[pos]+ message[pos])) * 0.01).toString() + "º";
+    return pos++;
   }
 
   /// <summary>
@@ -1009,23 +1014,23 @@ class CAT21Helper{
   /// Indicator(REP) followed by at least one BDS message
   /// </summary>
 
-  String[] MB_Data;
-  String[] BDS1;
-  String[] BDS2;
+  List<String> MB_Data;
+  List<String> BDS1;
+  List<String> BDS2;
   int modeS_rep;
   int Compute_Mode_S_MB_DATA(List<String> message, int pos)
   {
-  int modeS_rep = Convert.ToInt32(message[pos], 2);
-  if (modeS_rep < 0) { MB_Data = new String[modeS_rep]; BDS1 = new String[modeS_rep]; BDS2 = new String[modeS_rep]; }
-  pos++;
-  for (int i = 0; i < modeS_rep; i++)
-  {
-  MB_Data[i] = String.Concat(message[pos], message[pos + 1], message[pos + 2], message[pos + 3], message[pos + 4], message[pos + 5], message[pos + 6]);
-  BDS1[1] = message[pos + 7].Substring(0, 4);
-  BDS2[1] = message[pos + 7].Substring(4, 4);
-  pos += 8;
-  }
-  return pos;
+    int modeS_rep = this.lib.Binary2Int(message[pos]);
+    if (modeS_rep < 0) { MB_Data = List .filled(modeS_rep, "", growable: false); BDS1 = List .filled(modeS_rep, "", growable: false); BDS2 = List .filled(modeS_rep, "", growable: false); }
+    pos++;
+    for (int i = 0; i < modeS_rep; i++)
+    {
+      MB_Data[i] = (message[pos]+ message[pos + 1]+ message[pos + 2]+ message[pos + 3]+ message[pos + 4]+ message[pos + 5]+ message[pos + 6]);
+      BDS1[1] = message[pos + 7].substring(0, 4);
+      BDS2[1] = message[pos + 7].substring(4, 8);
+      pos += 8;
+    }
+    return pos;
   }
 
   /// <summary>
@@ -1047,17 +1052,17 @@ class CAT21Helper{
   String TID;
   int Compute_ACAS_Resolution_Advisory_Report(List<String> message, int pos)
   {
-  String messg = String.Concat(message[pos], message[pos + 1], message[pos + 2], message[pos + 3], message[pos + 4], message[pos + 5], message[pos + 6]);
-  TYP = messg.Substring(0, 5);
-  STYP = messg.Substring(5, 3);
-  ARA = messg.Substring(8, 14);
-  RAC = messg.Substring(22, 4);
-  RAT = messg.Substring(26, 1);
-  MTE = messg.Substring(27, 1);
-  TTI = messg.Substring(28, 2);
-  TID = messg.Substring(30, 26);
-  pos += 7;
-  return pos;
+    String messg = (message[pos]+ message[pos + 1]+ message[pos + 2]+ message[pos + 3]+ message[pos + 4]+ message[pos + 5]+ message[pos + 6]);
+    TYP = messg.substring(0, 5);
+    STYP = messg.substring(5, 8);
+    ARA = messg.substring(8, 22);
+    RAC = messg.substring(22, 26);
+    RAT = messg.substring(26, 27);
+    MTE = messg.substring(27, 28);
+    TTI = messg.substring(28,30);
+    TID = messg.substring(30, 56);
+    pos += 7;
+    return pos;
   }
 
 
@@ -1078,39 +1083,39 @@ class CAT21Helper{
   int Compute_Surface_Capabiliteies_and_Characteristics(List<String> message, int pos)
   {
 
-  if (message[pos].Substring(2, 1) == "0") { POA = "Position transmitted is not ADS-B position reference point"; }
-  else { POA = "Position transmitted is the ADS-B position reference point"; }
-  if (message[pos].Substring(3, 1) == "0") { CDTIS = "Cockpit Display of Traffic Information not operational"; }
-  else { CDTIS = "Cockpit Display of Traffic Information operational"; }
-  if (message[pos].Substring(4, 1) == "0") { B2_low = "Class B2 transmit power ≥ 70 Watts"; }
-  else { B2_low = "Class B2 transmit power < 70 Watts"; }
-  if (message[pos].Substring(5, 1) == "0") { RAS = "Aircraft not receiving ATC-services"; }
-  else { RAS = "Aircraft receiving ATC services"; }
-  if (message[pos].Substring(6, 1) == "0") { IDENT = "IDENT switch not active"; }
-  else { IDENT = "IDENT switch active"; }
-  if (message[pos].Substring(7, 1) == "1")
-  {
-  pos++;
-  int LaW = Convert.ToInt32(message[pos].Substring(4, 4), 2);
-  if (LaW == 0) { LengthandWidth = "Lenght < 15  and Width < 11.5"; }
-  if (LaW == 1) { LengthandWidth = "Lenght < 15  and Width < 23"; }
-  if (LaW == 2) { LengthandWidth = "Lenght < 25  and Width < 28.5"; }
-  if (LaW == 3) { LengthandWidth = "Lenght < 25  and Width < 34"; }
-  if (LaW == 4) { LengthandWidth = "Lenght < 35  and Width < 33"; }
-  if (LaW == 5) { LengthandWidth = "Lenght < 35  and Width < 38"; }
-  if (LaW == 6) { LengthandWidth = "Lenght < 45  and Width < 39.5"; }
-  if (LaW == 7) { LengthandWidth = "Lenght < 45  and Width < 45"; }
-  if (LaW == 8) { LengthandWidth = "Lenght < 55  and Width < 45"; }
-  if (LaW == 9) { LengthandWidth = "Lenght < 55  and Width < 52"; }
-  if (LaW == 10) { LengthandWidth = "Lenght < 65  and Width < 59.5"; }
-  if (LaW == 11) { LengthandWidth = "Lenght < 65  and Width < 67"; }
-  if (LaW == 12) { LengthandWidth = "Lenght < 75  and Width < 72.5"; }
-  if (LaW == 13) { LengthandWidth = "Lenght < 75  and Width < 80"; }
-  if (LaW == 14) { LengthandWidth = "Lenght < 85  and Width < 80"; }
-  if (LaW == 15) { LengthandWidth = "Lenght > 85  and Width > 80"; }
-  }
-  pos++;
-  return pos;
+    if (message[pos][2] == "0") { POA = "Position transmitted is not ADS-B position reference point"; }
+    else { POA = "Position transmitted is the ADS-B position reference point"; }
+    if (message[pos][3] == "0") { CDTIS = "Cockpit Display of Traffic Information not operational"; }
+    else { CDTIS = "Cockpit Display of Traffic Information operational"; }
+    if (message[pos][4] == "0") { B2_low = "Class B2 transmit power ≥ 70 Watts"; }
+    else { B2_low = "Class B2 transmit power < 70 Watts"; }
+    if (message[pos][5] == "0") { RAS = "Aircraft not receiving ATC-services"; }
+    else { RAS = "Aircraft receiving ATC services"; }
+    if (message[pos][6] == "0") { IDENT = "IDENT switch not active"; }
+    else { IDENT = "IDENT switch active"; }
+    if (message[pos][7] == "1")
+    {
+      pos++;
+      int LaW = this.lib.Binary2Int(message[pos].substring(4,8));
+      if (LaW == 0) { LengthandWidth = "Lenght < 15  and Width < 11.5"; }
+      if (LaW == 1) { LengthandWidth = "Lenght < 15  and Width < 23"; }
+      if (LaW == 2) { LengthandWidth = "Lenght < 25  and Width < 28.5"; }
+      if (LaW == 3) { LengthandWidth = "Lenght < 25  and Width < 34"; }
+      if (LaW == 4) { LengthandWidth = "Lenght < 35  and Width < 33"; }
+      if (LaW == 5) { LengthandWidth = "Lenght < 35  and Width < 38"; }
+      if (LaW == 6) { LengthandWidth = "Lenght < 45  and Width < 39.5"; }
+      if (LaW == 7) { LengthandWidth = "Lenght < 45  and Width < 45"; }
+      if (LaW == 8) { LengthandWidth = "Lenght < 55  and Width < 45"; }
+      if (LaW == 9) { LengthandWidth = "Lenght < 55  and Width < 52"; }
+      if (LaW == 10) { LengthandWidth = "Lenght < 65  and Width < 59.5"; }
+      if (LaW == 11) { LengthandWidth = "Lenght < 65  and Width < 67"; }
+      if (LaW == 12) { LengthandWidth = "Lenght < 75  and Width < 72.5"; }
+      if (LaW == 13) { LengthandWidth = "Lenght < 75  and Width < 80"; }
+      if (LaW == 14) { LengthandWidth = "Lenght < 85  and Width < 80"; }
+      if (LaW == 15) { LengthandWidth = "Lenght > 85  and Width > 80"; }
+    }
+    pos++;
+    return pos;
   }
 
 
@@ -1148,54 +1153,54 @@ class CAT21Helper{
   String SCC;
   int Compute_Data_Age(List<String> message, int pos)
   {
-  Data_Ages_present = 1;
-  int posin = pos;
-  if (message[pos].Substring(7, 1) == "1")
-  {
-  pos++;
-  if (message[pos].Substring(7, 1) == "1")
-  {
-  pos++;
-  if (message[pos].Substring(7, 1) == "1")
-  {
-  pos++;
-  }
-  }
-  }
-  pos++;
-  if (message[posin].Substring(0, 1) == "1") { AOS = Convert.ToString(Convert.ToInt32(message[pos], 2) * 0.1) + " s"; pos++; }
-  if (message[posin].Substring(1, 1) == "1") { TRD = Convert.ToString(Convert.ToInt32(message[pos], 2) * 0.1) + " s"; pos++; }
-  if (message[posin].Substring(2, 1) == "1") { M3A = Convert.ToString(Convert.ToInt32(message[pos], 2) * 0.1) + " s"; pos++; }
-  if (message[posin].Substring(3, 1) == "1") { QI = Convert.ToString(Convert.ToInt32(message[pos], 2) * 0.1) + " s"; pos++; }
-  if (message[posin].Substring(4, 1) == "1") { TI = Convert.ToString(Convert.ToInt32(message[pos], 2) * 0.1) + " s"; pos++; }
-  if (message[posin].Substring(5, 1) == "1") { MAM = Convert.ToString(Convert.ToInt32(message[pos], 2) * 0.1) + " s"; pos++; }
-  if (message[posin].Substring(6, 1) == "1") { GH = Convert.ToString(Convert.ToInt32(message[pos], 2) * 0.1) + " s"; pos++; }
-  if (message[posin].Substring(7, 1) == "1")
-  {
-  if (message[posin + 1].Substring(0, 1) == "1") { FL = Convert.ToString(Convert.ToInt32(message[pos], 2) * 0.1) + " s"; pos++; }
-  if (message[posin + 1].Substring(1, 1) == "1") { ISA = Convert.ToString(Convert.ToInt32(message[pos], 2) * 0.1) + " s"; pos++; }
-  if (message[posin + 1].Substring(2, 1) == "1") { FSA = Convert.ToString(Convert.ToInt32(message[pos], 2) * 0.1) + " s"; pos++; }
-  if (message[posin + 1].Substring(3, 1) == "1") { AS = Convert.ToString(Convert.ToInt32(message[pos], 2) * 0.1) + " s"; pos++; }
-  if (message[posin + 1].Substring(4, 1) == "1") { TAS = Convert.ToString(Convert.ToInt32(message[pos], 2) * 0.1) + " s"; pos++; }
-  if (message[posin + 1].Substring(5, 1) == "1") { MH = Convert.ToString(Convert.ToInt32(message[pos], 2) * 0.1) + " s"; pos++; }
-  if (message[posin + 1].Substring(6, 1) == "1") { BVR = Convert.ToString(Convert.ToInt32(message[pos], 2) * 0.1) + " s"; pos++; }
-  }
-  if (message[posin + 1].Substring(7, 1) == "1")
-  {
-  if (message[posin + 2].Substring(0, 1) == "1") { GVR = Convert.ToString(Convert.ToInt32(message[pos], 2) * 0.1) + " s"; pos++; }
-  if (message[posin + 2].Substring(1, 1) == "1") { GV = Convert.ToString(Convert.ToInt32(message[pos], 2) * 0.1) + " s"; pos++; }
-  if (message[posin + 2].Substring(2, 1) == "1") { TAR = Convert.ToString(Convert.ToInt32(message[pos], 2) * 0.1) + " s"; pos++; }
-  if (message[posin + 2].Substring(3, 1) == "1") { TI_DataAge = Convert.ToString(Convert.ToInt32(message[pos], 2) * 0.1) + " s"; pos++; }
-  if (message[posin + 2].Substring(4, 1) == "1") { TS_DataAge = Convert.ToString(Convert.ToInt32(message[pos], 2) * 0.1) + " s"; pos++; }
-  if (message[posin + 2].Substring(5, 1) == "1") { MET = Convert.ToString(Convert.ToInt32(message[pos], 2) * 0.1) + " s"; pos++; }
-  if (message[posin + 2].Substring(6, 1) == "1") { ROA = Convert.ToString(Convert.ToInt32(message[pos], 2) * 0.1) + " s"; pos++; }
-  }
-  if (message[posin + 2].Substring(7, 1) == "1")
-  {
-  if (message[posin + 3].Substring(0, 1) == "1") { ARA_DataAge = Convert.ToString(Convert.ToInt32(message[pos], 2) * 0.1) + " s"; pos++; }
-  if (message[posin + 3].Substring(1, 1) == "1") { SCC = Convert.ToString(Convert.ToInt32(message[pos], 2) * 0.1) + " s"; pos++; }
-  }
-  return pos;
+    Data_Ages_present = 1;
+    int posin = pos;
+    if (message[pos][7] == "1")
+    {
+      pos++;
+      if (message[pos][7] == "1")
+      {
+        pos++;
+        if (message[pos][7] == "1")
+        {
+          pos++;
+        }
+      }
+    }
+    pos++;
+    if (message[posin][0] == "1") { AOS = (this.lib.Binary2Double(message[pos]) * 0.1).toString() + " s"; pos++; }
+    if (message[posin][1] == "1") { TRD = (this.lib.Binary2Double(message[pos]) * 0.1).toString() + " s"; pos++; }
+    if (message[posin][2] == "1") { M3A = (this.lib.Binary2Double(message[pos]) * 0.1).toString() + " s"; pos++; }
+    if (message[posin][3] == "1") { QI = (this.lib.Binary2Double(message[pos]) * 0.1).toString() + " s"; pos++; }
+    if (message[posin][4] == "1") { TI = (this.lib.Binary2Double(message[pos]) * 0.1).toString() + " s"; pos++; }
+    if (message[posin][5] == "1") { MAM = (this.lib.Binary2Double(message[pos]) * 0.1).toString() + " s"; pos++; }
+    if (message[posin][6] == "1") { GH = (this.lib.Binary2Double(message[pos]) * 0.1).toString() + " s"; pos++; }
+    if (message[posin][7] == "1")
+    {
+      if (message[posin + 1][0] == "1") { FL = (this.lib.Binary2Double(message[pos]) * 0.1).toString() + " s"; pos++; }
+      if (message[posin + 1][1] == "1") { ISA = (this.lib.Binary2Double(message[pos]) * 0.1).toString() + " s"; pos++; }
+      if (message[posin + 1][2] == "1") { FSA = (this.lib.Binary2Double(message[pos]) * 0.1).toString() + " s"; pos++; }
+      if (message[posin + 1][3] == "1") { AS = (this.lib.Binary2Double(message[pos]) * 0.1).toString() + " s"; pos++; }
+      if (message[posin + 1][4] == "1") { TAS = (this.lib.Binary2Double(message[pos]) * 0.1).toString() + " s"; pos++; }
+      if (message[posin + 1][5] == "1") { MH = (this.lib.Binary2Double(message[pos]) * 0.1).toString() + " s"; pos++; }
+      if (message[posin + 1][6] == "1") { BVR = (this.lib.Binary2Double(message[pos]) * 0.1).toString() + " s"; pos++; }
+    }
+    if (message[posin + 1][7] == "1")
+    {
+      if (message[posin + 2][0] == "1") { GVR = (this.lib.Binary2Double(message[pos]) * 0.1).toString() + " s"; pos++; }
+      if (message[posin + 2][1] == "1") { GV = (this.lib.Binary2Double(message[pos]) * 0.1).toString() + " s"; pos++; }
+      if (message[posin + 2][2] == "1") { TAR = (this.lib.Binary2Double(message[pos]) * 0.1).toString() + " s"; pos++; }
+      if (message[posin + 2][3] == "1") { TI_DataAge = (this.lib.Binary2Double(message[pos]) * 0.1).toString() + " s"; pos++; }
+      if (message[posin + 2][4] == "1") { TS_DataAge = (this.lib.Binary2Double(message[pos]) * 0.1).toString() + " s"; pos++; }
+      if (message[posin + 2][5] == "1") { MET = (this.lib.Binary2Double(message[pos]) * 0.1).toString() + " s"; pos++; }
+      if (message[posin + 2][6] == "1") { ROA = (this.lib.Binary2Double(message[pos]) * 0.1).toString() + " s"; pos++; }
+    }
+    if (message[posin + 2][7] == "1")
+    {
+      if (message[posin + 3][0] == "1") { ARA_DataAge = (this.lib.Binary2Double(message[pos]) * 0.1).toString() + " s"; pos++; }
+      if (message[posin + 3][1] == "1") { SCC = (this.lib.Binary2Double(message[pos]) * 0.1).toString() + " s"; pos++; }
+    }
+    return pos;
   }
 
 
@@ -1209,11 +1214,8 @@ class CAT21Helper{
   String Receiver_ID;
   int Compute_Receiver_ID(List<String> message, int pos)
   {
-  Receiver_ID = Convert.ToString(Convert.ToInt32(message[pos], 2));
-  pos++;
-  return pos;
-  }
-
-
+    Receiver_ID = this.lib.Binary2Int(message[pos]).toString();
+    pos++;
+    return pos;
   }
 }

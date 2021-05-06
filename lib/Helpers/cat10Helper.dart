@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:decereix/Helpers/helpDecode.dart';
 
 class CAT10Helper{
@@ -209,8 +208,8 @@ class CAT10Helper{
     int str =  this.lib.Binary2Int(s);
     double seconds = str / 128;
     Time_of_day_sec = seconds.truncate();
-    final d3 = Duration(milliseconds: str*1000);
-    Time_Of_Day = d3.toString().substring(2, 7);
+    final duration = Duration(seconds: Time_of_day_sec);
+    Time_Of_Day = "${duration.inHours}:${duration.inMinutes.remainder(60)}:${(duration.inSeconds.remainder(60))}";
     pos += 3;
     return pos;
   }
@@ -341,7 +340,7 @@ class CAT10Helper{
   String Track_Number;
   int Compute_Track_Number(List<String> message, int pos)
   {
-  Track_Number = (this.lib.Binary2Int((message[pos].toString() + message[pos + 1].toString()).substring(4, 12))).toString();
+  Track_Number = (this.lib.Binary2Int((message[pos].toString() + message[pos + 1].toString()).substring(4, 16))).toString();
   pos += 2;
   return pos;
   }
@@ -499,7 +498,7 @@ class CAT10Helper{
     {
       MB_Data.add(message[pos].toString()+ message[pos + 1].toString()+ message[pos + 2].toString()+ message[pos + 3].toString()+ message[pos + 4].toString()+ message[pos + 5].toString()+ message[pos + 6].toString());
       BDS1.add(message[pos + 7].substring(0, 4));
-      BDS2.add(message[pos + 7].substring(4, 4));
+      BDS2.add(message[pos + 7].substring(4, 8));
       pos += 8;
     }
     return pos;
@@ -551,7 +550,7 @@ class CAT10Helper{
   else { V_Flight_Level = "Code not validated"; }
   if (OctetoChar[1] == '0') { G_Flight_Level = "Default"; }
   else { G_Flight_Level = "Garbled code"; }
-  Flight_Level_Binary = (this.lib.TwoComplement2Decimal((message[pos].toString()+ message[pos + 1].toString()).substring(2, 14)) * (0.25)).toString();
+  Flight_Level_Binary = (this.lib.TwoComplement2Decimal((message[pos].toString()+ message[pos + 1].toString()).substring(2, 16)) * (0.25)).toString();
   Flight_Level = V_Flight_Level + ", " + G_Flight_Level + ", Flight Level: " + Flight_Level_Binary;
   Flight_Level = (double.parse(Flight_Level_Binary) * 100).toString() + " ft";
   pos += 2;

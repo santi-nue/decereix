@@ -3,7 +3,7 @@ import 'package:decereix/Helpers/cat21Helper.dart';
 import 'package:decereix/Helpers/helpDecode.dart';
 import 'package:flutter/cupertino.dart';
 
-class Cat21 {
+class CAT21 {
   String FSPEC;
   List<String> message;
   List<String> items = [];
@@ -303,7 +303,7 @@ class Cat21 {
 
       }
       if (FSPEC[10] == '1') {
-      index = cat21Helper.Compute_Target_Address(message, index);
+      index = cat21Helper.Compute_Target_Address(messageInt, index);
       Target_address = cat21Helper.Target_address;
 
       }
