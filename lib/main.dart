@@ -113,17 +113,20 @@ class _MyHomePageState extends State<MyHomePage> {
 
         HelpDecode helpDecode = new HelpDecode();
         CAT10Helper cat10helper = new CAT10Helper();
-
+        StringBuffer buffer = new StringBuffer();
+        List<CAT10> cat10All = [];// creates an empty array of length 5
         // Messages separated --> Now we have to convert them according to CAT 10 or CAT 21
         for(int k=0; k<messages.length;k++){
           //messagesBinary[k] = buffer.toString();
           // For each message we are gonna convert it properly
           if(messages[k][0]==10){
-            CAT10 cat10 = new CAT10(helpDecode, cat10helper, messages[k], k, messagesBinary[k]);
+            CAT10 cat10 = new CAT10(helpDecode,cat10helper,messages[k],k, messagesBinary[k]);
+            cat10All.add(cat10);
           }else if(messages[k][0]==21){
 
           }
         }
+        String sd = "";
         setState(() {
           _counter = 999;
         });
