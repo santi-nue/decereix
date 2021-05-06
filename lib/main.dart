@@ -1,19 +1,35 @@
-import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:decereix/Helpers/cat10Helper.dart';
 import 'package:decereix/Helpers/helpDecode.dart';
+import 'package:decereix/Provider/cat_provider.dart';
+import 'package:decereix/Screens/cat10_screen.dart';
+import 'package:decereix/Screens/cat21_screen.dart';
+import 'package:decereix/Screens/catall_screen.dart';
+import 'package:decereix/Screens/load_file.dart';
+import 'package:decereix/Screens/map_screen.dart';
 import 'package:decereix/models/cat21.dart';
 import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'dart:async';
 
 import 'Helpers/cat21Helper.dart';
 import 'models/cat10.dart';
 
 void main() {
-  runApp(MyApp());
+  /// [runApp] which is a Dart funciton to initalize the [Widget Tree]
+  runApp(
+    /// Providers are above [MyApp] instead of inside it, so that [Other Widgets] including [MyApp]
+    /// can use, while mocking the providers. Which means change the state inside it.
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => CatProvider()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -58,101 +74,17 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  int _currPage = 0;
 
   void _incrementCounter() {
-    loadAsterix().whenComplete(() {
-      setState(() {
-        // This call to setState tells the Flutter framework that something has
-        // changed in this State, which causes it to rerun the build method below
-        // so that the display can reflect the updated values. If we changed
-        // _counter without calling setState(), then the build method would not be
-        // called again, and so nothing would appear to happen.
-        _counter = _counter + 3;
-      });
+    setState(() {
+      // This call to setState tells the Flutter framework that something has
+      // changed in this State, which causes it to rerun the build method below
+      // so that the display can reflect the updated values. If we changed
+      // _counter without calling setState(), then the build method would not be
+      // called again, and so nothing would appear to happen.
+      _currPage = 1;
     });
-  }
-
-  Future<int> loadAsterix() async {
-    // show a dialog to open a file
-    Uint8List fileBytes;
-    FilePickerCross.importFromStorage(
-            fileExtension:
-                'ast' // Only if FileTypeCross.custom . May be any file extension like `dot`, `ppt,pptx,odp`
-            )
-        .then((myFile) {
-      // After picking file --> Read the file in Hex
-      if (myFile != null) {
-        // Chosen
-        fileBytes = myFile.toUint8List();
-        // Translate Bytes to Binary String
-        List<String> fileBinary =
-            new List<String>.filled(fileBytes.length, "", growable: false);
-        for (int i = 0; i < fileBytes.length; i++) {
-          fileBinary[i] = fileBytes[i].toRadixString(2).padLeft(8, "0");
-        }
-        // Go over all of the packets and store them in a separate list of lists
-        // First Octet Category
-
-        // 2nd*256 + 3rd Octet = Length in Bytes
-        //int messageCategory = fileBytes[0];
-        int messageLength; // 2nd*256 + 3rd Octet
-        List<Uint8List> messages = [];
-        List<List<String>> messagesBinary = [];
-        List<int> messagesLengths = [];
-        // Also store as binary messages[currentMsg][Field].toRadixString(2).padLeft(8, "0")
-        // Store messages from the fileBytes into packet size Blocks using messageLength
-        int endPointer = messageLength;
-
-        for (int currPointer = 0;
-            (currPointer + 1) < fileBytes.length;
-            currPointer += messageLength) {
-          messageLength =
-              (fileBytes[currPointer + 1] * 256) + fileBytes[currPointer + 2];
-          endPointer = currPointer + messageLength; // 0+31 = 31
-          if (endPointer >= fileBytes.length) {
-            messages.add(fileBytes
-                .sublist(currPointer)); // (currentMessageByte)-LastByteIncluded
-            messagesBinary.add(fileBinary.sublist(currPointer));
-          } else {
-            messages.add(fileBytes.sublist(currPointer, endPointer)); // O-30
-            messagesBinary.add(fileBinary.sublist(currPointer, endPointer));
-          }
-          messagesLengths.add(messageLength);
-        }
-
-        HelpDecode helpDecode = new HelpDecode();
-        CAT10Helper cat10helper = new CAT10Helper();
-        CAT21Helper cat21helper = new CAT21Helper();
-        StringBuffer buffer = new StringBuffer();
-        List<CAT10> cat10All = []; // creates an empty array of length 5
-        List<CAT21> cat21All = []; // creates an empty array of length 5
-        // Messages separated --> Now we have to convert them according to CAT 10 or CAT 21
-        for (int k = 0; k < messages.length; k++) {
-          //messagesBinary[k] = buffer.toString();
-          // For each message we are gonna convert it properly
-          if (messages[k][0] == 10) {
-            CAT10 cat10 = new CAT10(
-                helpDecode, cat10helper, messages[k], k, messagesBinary[k]);
-            cat10All.add(cat10);
-          } else if (messages[k][0] == 21) {
-            CAT21 cat21 = new CAT21(
-                helpDecode, cat21helper, messages[k], k, messagesBinary[k]);
-            cat21All.add(cat21);
-          }
-        }
-        String sd = "";
-        setState(() {
-          _counter = 999;
-        });
-      }
-    }).catchError((onError) {
-      //do something...
-      debugPrint(onError);
-    }).whenComplete(() {
-      return 3;
-    });
-    String a = "";
   }
 
   @override
@@ -169,92 +101,118 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Container(
-        height: MediaQuery.of(context).size.height * 0.98,
-        child: Center(
-          // Center is a layout widget. It takes a single child and positions it
-          // in the middle of the parent.
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Flexible(
-                flex: 2,
-                child: Padding(
-                  padding: const EdgeInsets.all(1.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox.expand(
-                        child: CupertinoButton.filled(
-                          child: Text('Load File'),
-                          onPressed: () {},
-                        ),
+      body: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Flexible(
+            flex: 2,
+            child: Container(
+              color: Colors.blue,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    flex: 2,
+                    child: SizedBox(
+                      child: CupertinoButton.filled(
+                        child: Text('Load File'),
+                        onPressed: () {
+                          setState(() {
+                            this._currPage = 0;
+                          });
+                        },
                       ),
-                      SizedBox.expand(
-                        child: CupertinoButton.filled(
-                          child: Text('Cat 10'),
-                          onPressed: () {},
-                        ),
-                      ),
-                      SizedBox.expand(
-                        child: CupertinoButton.filled(
-                          child: Text('Cat 21'),
-                          onPressed: () {},
-                        ),
-                      ),
-                      SizedBox.expand(
-                        child: CupertinoButton.filled(
-                          child: Text('Cat All'),
-                          onPressed: () {},
-                        ),
-                      ),
-                      SizedBox.expand(
-                        child: CupertinoButton.filled(
-                          child: Text('Map'),
-                          onPressed: () {},
-                        ),
-                      )
-                    ],
+                    ),
                   ),
-                ),
-              ),
-              Flexible(
-                flex: 8,
-                child: Padding(
-                  padding: const EdgeInsets.all(1.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      CupertinoButton.filled(
-                        child: Text('A Button'),
-                        onPressed: () {},
+                  Expanded(
+                    flex: 2,
+                    child: SizedBox(
+                      child: CupertinoButton.filled(
+                        child: Text('Cat 10'),
+                        onPressed: () {
+                          setState(() {
+                            this._currPage = 1;
+                          });
+                        },
                       ),
-                      CupertinoButton.filled(
-                        child: Text('A Button'),
-                        onPressed: () {},
-                      ),
-                      CupertinoButton.filled(
-                        child: Text('A Button'),
-                        onPressed: () {},
-                      ),
-                      CupertinoButton.filled(
-                        child: Text('A Button'),
-                        onPressed: () {},
-                      ),
-                      CupertinoButton.filled(
-                        child: Text('A Button'),
-                        onPressed: () {},
-                      )
-                    ],
+                    ),
                   ),
-                ),
+                  Expanded(
+                    flex: 2,
+                    child: SizedBox(
+                      child: CupertinoButton.filled(
+                        child: Text('Cat 21'),
+                        onPressed: () {
+                          setState(() {
+                            this._currPage = 2;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: SizedBox(
+                      child: CupertinoButton.filled(
+                        child: Text('Cat All'),
+                        onPressed: () {
+                          setState(() {
+                            this._currPage = 3;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: SizedBox(
+                      child: CupertinoButton.filled(
+                        child: Text('Map'),
+                        onPressed: () {
+                          setState(() {
+                            this._currPage = 4;
+                          });
+                        },
+                      ),
+                    ),
+                  )
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+          if (_currPage == 0) ...[
+            Expanded(
+              flex: 8,
+              child: Center(child: load_file(
+                onDataLoaded: (bool status) {
+                  // Something...
+                },
+              )),
+            ),
+          ] else if (_currPage == 1) ...[
+            Expanded(
+              flex: 8,
+              child: Center(child: Cat10Table()),
+            ),
+          ] else if (_currPage == 2) ...[
+            Expanded(
+              flex: 8,
+              child: Center(child: Cat21Table()),
+            ),
+          ] else if (_currPage == 3) ...[
+            Expanded(
+              flex: 8,
+              child: Center(child: CatAllTable()),
+            ),
+          ] else if (_currPage == 4) ...[
+            Expanded(
+              flex: 8,
+              child: Center(child: MapScreen()),
+            ),
+          ],
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
