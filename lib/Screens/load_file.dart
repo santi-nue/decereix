@@ -18,7 +18,7 @@ class load_file extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CatProvider _catProvider = Provider.of<CatProvider>(context, listen: false);
+    CatProvider _catProvider = Provider.of<CatProvider>(context, listen: true);
 
     Future<bool> loadAsterix() async {
       List<CAT10> cat10All = [];
@@ -96,17 +96,17 @@ class load_file extends StatelessWidget {
           // With Provider store it globally
           if (cat10All != null) {
             if (cat10All.isNotEmpty) {
-              _catProvider.setCat10(cat10All);
+              _catProvider.cat10All = (cat10All);
             }
           }
           if (cat21All != null) {
             if (cat21All.isNotEmpty) {
-              _catProvider.setCat21(cat21All);
+              _catProvider.cat21All = (cat21All);
             }
           }
           if (catAll != null) {
             if (catAll.isNotEmpty) {
-              _catProvider.setCatAll(catAll);
+              _catProvider.catAll = (catAll);
             }
           }
         }
