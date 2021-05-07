@@ -56,8 +56,9 @@ class CAT21Helper{
   int Compute_Data_Source_Identification(List<String> message, int pos)
   {
     SAC = this.lib.Binary2Int(message[pos]).toString();
-    SIC = (this.lib.Binary2Int(message[pos + 1])).toString();
-    this.airportCode = GetAirporteCode(this.lib.Binary2Int(SIC)); //Computes airport code from SIC
+    int x = this.lib.Binary2Int(message[pos + 1]);
+    SIC = x.toString();
+    this.airportCode = GetAirporteCode((x)); //Computes airport code from SIC
     pos += 2;
     return pos;
   }
@@ -247,7 +248,7 @@ class CAT21Helper{
   String ModeA3;
   int Compute_Mode_A3(List<String> message, int pos)
   {
-    ModeA3 = (lib.decimal2Octal(this.lib.Binary2Int(message[pos]+ message[pos + 1].substring(4, 16)))).toString().padLeft(4, '0');
+    ModeA3 = (lib.decimal2Octal(this.lib.Binary2Int((message[pos]+ message[pos + 1]).substring(4, 16)))).toString().padLeft(4, '0');
     pos += 2;
     return pos;
   }
