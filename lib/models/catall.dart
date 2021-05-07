@@ -11,8 +11,10 @@ class CATALL {
   int Time_Of_day;
   int List_Time_Of_Day;
   String Track_number;
-  double Latitude_in_WGS_84;
-  double Longitude_in_WGS_84;
+  String Latitude_in_WGS_84;
+  String Longitude_in_WGS_84;
+  double Latitude_in_WGS_84_map;
+  double Longitude_in_WGS_84_map;
   String Flight_level;
   String type;
   String DetectionMode;
@@ -36,8 +38,10 @@ class CATALL {
     this.Target_Identification = message.TAR;
     this.Target_Address = message.TargetAddress;
     this.Track_number = message.TrackNumber;
-    this.Latitude_in_WGS_84 = message.LatitudeWGS_84_map;
-    this.Longitude_in_WGS_84 = message.LongitudeWGS_84_map;
+    this.Latitude_in_WGS_84 = message.LatitudeWGS_84;
+    this.Longitude_in_WGS_84 = message.LongitudeWGS_84;
+    this.Longitude_in_WGS_84_map = message.LongitudeWGS_84_map;
+    this.Latitude_in_WGS_84_map = message.LongitudeWGS_84_map;
     this.Flight_level = message.FlightLevel;
     /* if (message.TimeOfDayInSeconds < first_time) {
       this.List_Time_Of_Day =
@@ -75,8 +79,8 @@ class CATALL {
     this.Target_Identification = message.Target_Identification;
     this.Target_Address = message.Target_address;
     this.Track_number = message.Track_Number;
-    this.Latitude_in_WGS_84 = message.LatitudeWGS_84_map;
-    this.Longitude_in_WGS_84 = message.LongitudeWGS_84_map;
+    this.Latitude_in_WGS_84_map = message.LatitudeWGS_84_map;
+    this.Longitude_in_WGS_84_map = message.LongitudeWGS_84_map;
     this.Flight_level = message.Flight_Level;
     /* if (message.TimeOfDayInSeconds < first_time) {
       this.List_Time_Of_Day =

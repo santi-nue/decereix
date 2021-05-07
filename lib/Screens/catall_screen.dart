@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:decereix/Provider/cat_provider.dart';
 import 'package:decereix/models/catall.dart';
 import 'package:flutter/material.dart';
+import 'package:pluto_grid/pluto_grid.dart';
 import 'package:provider/provider.dart';
 
 class CatAllTable extends StatefulWidget {
@@ -17,153 +18,149 @@ class _CatAllTableState extends State<CatAllTable> {
   @override
   Widget build(BuildContext context) {
     CatProvider _catProvider = Provider.of<CatProvider>(context, listen: true);
-    //--------------------------------------------------------------//
-    SingleChildScrollView dataBody() {
-      return SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Column(
-          children: <Widget>[
-            DataTable(
-              sortAscending: sort,
-              sortColumnIndex: 0,
-              columns: [
-                DataColumn(
-                    label: Text("Num"),
-                    numeric: false,
-                    tooltip: "This is message number",
-                    onSort: (columnIndex, ascending) {
-                      /* setState(() {
-                        sort = !sort;
-                      }); */
-                      /* onSortColum(columnIndex, ascending); */
-                    }),
-                DataColumn(
-                  label: Text("CAT"),
-                  numeric: false,
-                  tooltip: "This is CAT",
-                ),
-                DataColumn(
-                  label: Text("SAC"),
-                  numeric: false,
-                  tooltip: "This is SAC",
-                ),
-                DataColumn(
-                  label: Text("SIC"),
-                  numeric: false,
-                  tooltip: "This is SIC",
-                ),
-                DataColumn(
-                  label: Text("Target Identification"),
-                  numeric: false,
-                  tooltip: "This is Target Identification",
-                ),
-                DataColumn(
-                  label: Text("Target Address"),
-                  numeric: false,
-                  tooltip: "This is Last Name",
-                ),
-                DataColumn(
-                  label: Text("Time of Day"),
-                  numeric: false,
-                  tooltip: "This is Last Name",
-                ),
-                DataColumn(
-                  label: Text("List Time of Day"),
-                  numeric: false,
-                  tooltip: "This is Last Name",
-                ),
-                DataColumn(
-                  label: Text("Track Number"),
-                  numeric: false,
-                  tooltip: "This is Last Name",
-                ),
-                DataColumn(
-                  label: Text("latitude WGS84"),
-                  numeric: false,
-                  tooltip: "This is Last Name",
-                ),
-                DataColumn(
-                  label: Text("Longitude WGS84"),
-                  numeric: false,
-                  tooltip: "This is Last Name",
-                ),
-                DataColumn(
-                  label: Text("Flight Level"),
-                  numeric: false,
-                  tooltip: "This is Last Name",
-                ),
-                DataColumn(
-                  label: Text("Type"),
-                  numeric: false,
-                  tooltip: "This is Last Name",
-                ),
-                DataColumn(
-                  label: Text("Detection Mode"),
-                  numeric: false,
-                  tooltip: "This is Last Name",
-                ),
-              ],
-              rows: _catProvider.catAll
-                  .map(
-                    (catAll) => DataRow(
-                        selected: false,
-                        onSelectChanged: (b) {
-                          print("Onselect");
-                          /* onSelectedRow(b, user); */
-                        },
-                        cells: [
-                          DataCell(
-                            Text(catAll.num.toString() ?? "None"),
-                          ),
-                          DataCell(
-                            Text(catAll.CAT ?? "None"),
-                          ),
-                          DataCell(
-                            Text(catAll.SAC ?? "None"),
-                          ),
-                          DataCell(
-                            Text(catAll.SIC ?? "None"),
-                          ),
-                          DataCell(
-                            Text(catAll.Target_Identification ?? "None"),
-                          ),
-                          DataCell(
-                            Text(catAll.Target_Address ?? "None"),
-                          ),
-                          DataCell(
-                            Text(catAll.Time_Of_day.toString() ?? "None"),
-                          ),
-                          DataCell(
-                            Text(catAll.List_Time_Of_Day.toString() ?? "None"),
-                          ),
-                          DataCell(
-                            Text(catAll.Track_number ?? "None"),
-                          ),
-                          DataCell(
-                            Text(
-                                catAll.Latitude_in_WGS_84.toString() ?? "None"),
-                          ),
-                          DataCell(
-                            Text(catAll.Longitude_in_WGS_84.toString() ??
-                                "None"),
-                          ),
-                          DataCell(
-                            Text(catAll.Flight_level ?? "None"),
-                          ),
-                          DataCell(
-                            Text(catAll.type ?? "None"),
-                          ),
-                          DataCell(
-                            Text(catAll.DetectionMode ?? "None"),
-                          ),
-                        ]),
-                  )
-                  .toList(),
-            ),
-          ],
-        ),
-      );
-    }
+    //------------------PLUTO---------------------------------------//
+    List<PlutoColumn> columns = [
+      /// Number Column definition
+      PlutoColumn(
+        title: 'Index',
+        field: 'num0',
+        type: PlutoColumnType.number(),
+      ),
+
+      /// Text Column definition
+      PlutoColumn(
+        title: 'CAT',
+        field: 'text_field1',
+        type: PlutoColumnType.text(),
+      ),
+
+      /// Text Column definition
+      PlutoColumn(
+        title: 'SAC',
+        field: 'text_field2',
+        type: PlutoColumnType.text(),
+      ),
+
+      /// Text Column definition
+      PlutoColumn(
+        title: 'SIC',
+        field: 'text_field3',
+        type: PlutoColumnType.text(),
+      ),
+
+      /// Text Column definition
+      PlutoColumn(
+        title: 'Target Identification',
+        field: 'text_field4',
+        type: PlutoColumnType.text(),
+      ),
+
+      /// Text Column definition
+      PlutoColumn(
+        title: 'Target Address',
+        field: 'text_field5',
+        type: PlutoColumnType.text(),
+      ),
+
+      /// Text Column definition
+      PlutoColumn(
+        title: 'Time of Day',
+        field: 'text_field6',
+        type: PlutoColumnType.text(),
+      ),
+
+      /// Text Column definition
+      PlutoColumn(
+        title: 'List Time of Day',
+        field: 'text_field7',
+        type: PlutoColumnType.text(),
+      ),
+
+      /// Text Column definition
+      PlutoColumn(
+        title: 'Track Number',
+        field: 'text_field8',
+        type: PlutoColumnType.text(),
+      ),
+
+      /// Text Column definition
+      PlutoColumn(
+        title: 'latitude WGS84',
+        field: 'text_field9',
+        type: PlutoColumnType.text(),
+      ),
+
+      /// Text Column definition
+      PlutoColumn(
+        title: 'Longitude WGS84',
+        field: 'text_field10',
+        type: PlutoColumnType.text(),
+      ),
+      /// Text Column definition
+      PlutoColumn(
+        title: 'latitude WGS84Map',
+        field: 'text_field9b',
+        type: PlutoColumnType.text(),
+      ),
+
+      /// Text Column definition
+      PlutoColumn(
+        title: 'Longitude WGS84Map',
+        field: 'text_field10b',
+        type: PlutoColumnType.text(),
+      ),
+      /// Text Column definition
+      PlutoColumn(
+        title: 'Flight Level',
+        field: 'text_field11',
+        type: PlutoColumnType.text(),
+      ),
+
+      /// Text Column definition
+      PlutoColumn(
+        title: 'Type',
+        field: 'text_field12',
+        type: PlutoColumnType.text(),
+      ),
+
+      /// Text Column definition
+      PlutoColumn(
+        title: 'Detection Mode',
+        field: 'text_field13',
+        type: PlutoColumnType.text(),
+      ),
+    ];
+
+    List<PlutoRow> rows = _catProvider.catAll
+        .map(
+          (catAll) => PlutoRow(
+            cells: {
+              'num0': PlutoCell(value: catAll.num ?? -1),
+              'text_field1': PlutoCell(value: catAll.CAT ?? "None"),
+              'text_field2': PlutoCell(value: catAll.SAC ?? "None"),
+              'text_field3': PlutoCell(value: catAll.SIC ?? "None"),
+              'text_field4':
+                  PlutoCell(value: catAll.Target_Identification ?? "None"),
+              'text_field5': PlutoCell(value: catAll.Target_Address ?? "None"),
+              'text_field6': PlutoCell(value: catAll.Time_Of_day ?? "None"),
+              'text_field7':
+                  PlutoCell(value: catAll.List_Time_Of_Day ?? "None"),
+              'text_field8': PlutoCell(value: catAll.Track_number ?? "None"),
+              'text_field9':
+                  PlutoCell(value: catAll.Latitude_in_WGS_84 ?? "None"),
+              'text_field10':
+                  PlutoCell(value: catAll.Longitude_in_WGS_84 ?? "None"),
+              'text_field9b':
+              PlutoCell(value: catAll.Latitude_in_WGS_84_map ?? "None"),
+              'text_field10b':
+              PlutoCell(value: catAll.Longitude_in_WGS_84_map ?? "None"),
+              'text_field11': PlutoCell(value: catAll.Flight_level ?? "None"),
+              'text_field12': PlutoCell(value: catAll.type ?? "None"),
+              'text_field13': PlutoCell(value: catAll.DetectionMode ?? "None"),
+            },
+          ),
+        )
+        .toList();
 
     //--------------------Future TO------------------------------//
     /// [_fetchPreferences] We fetch the preference from the storage and notify in future
@@ -194,7 +191,15 @@ class _CatAllTableState extends State<CatAllTable> {
             } else {
               //Error in Autologgin --> Login probably -1
               /// Redirect to [Login]
-              return dataBody();
+              return PlutoGrid(
+                  columns: columns,
+                  rows: rows,
+                  onChanged: (PlutoGridOnChangedEvent event) {
+                    print(event);
+                  },
+                  onLoaded: (PlutoGridOnLoadedEvent event) {
+                    print(event);
+                  });
             }
         }
       },
