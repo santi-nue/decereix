@@ -13,13 +13,13 @@ class CAT21Helper{
   /// Format: One-octet fixed length Data Item.
   /// </summary>
 
-  String RA;
-  String TC;
-  String TS;
-  String ARV;
-  String CDTIA;
-  String Not_TCAS;
-  String SA;
+  String RA="";
+  String TC="";
+  String TS="";
+  String ARV="";
+  String CDTIA="";
+  String Not_TCAS="";
+  String SA="";
   int Compute_Aircraft_Operational_Status(List<String> message, int pos)
   {
     String OctetoChar = message[pos];
@@ -50,15 +50,15 @@ class CAT21Helper{
   /// Format : Two-octet fixed length Data Item.
   /// </summary>
 
-  String SAC;
-  String SIC;
-  int airportCode;
-  int Compute_Data_Source_Identification(List<String> message, int pos)
+  String SAC="";
+  String SIC="";
+  int airportCode=0;
+  int Compute_Data_Source_Identification(Uint8List message, int pos)
   {
-    SAC = this.lib.Binary2Int(message[pos]).toString();
-    int x = this.lib.Binary2Int(message[pos + 1]);
-    SIC = x.toString();
-    this.airportCode = GetAirporteCode((x)); //Computes airport code from SIC
+    SAC = message[pos].toString();
+    int x = message[pos + 1];
+    SIC = message[pos + 1].toString();
+    this.airportCode = GetAirporteCode(x); //Computes airport code from SIC
     pos += 2;
     return pos;
   }
@@ -97,10 +97,10 @@ class CAT21Helper{
   /// Definition : Identification of the service provided to one or more users.
   /// Format : One-Octet fixed length data item.
   /// </summary>
-  String Service_Identification;
-  int Compute_Service_Identification(List<String> message, int pos)
+  String Service_Identification="";
+  int Compute_Service_Identification(Uint8List message, int pos)
   {
-    Service_Identification = this.lib.Binary2Int(message[pos]).toString();
+    Service_Identification = message[pos].toString();
     pos++;
     return pos;
   }
@@ -111,10 +111,10 @@ class CAT21Helper{
   /// Definition: Identification of services offered by a ground station (identified by a SIC code).
   /// Format: One-octet fixed length Data Item.
   /// </summary>
-  String RP;
-  int Compute_Service_Managment(List<String> message, int pos)
+  String RP="";
+  int Compute_Service_Managment(Uint8List message, int pos)
   {
-    RP = (this.lib.Binary2Double(message[pos]) * 0.5).toString() + " sec";
+    RP = ((message[pos]) * 0.5).toString() + " sec";
     pos++;
     return pos;
   }
@@ -126,10 +126,10 @@ class CAT21Helper{
   /// Format : One-Octet fixed length data item.
   /// </summary>
   //EMITTER CATEGORY
-  String ECAT;
-  int Compute_Emitter_Category(List<String> message, int pos)
+  String ECAT="";
+  int Compute_Emitter_Category(Uint8List message, int pos)
   {
-    int ecat = this.lib.Binary2Int(message[pos]);
+    int ecat = message[pos];
     if (Target_Identification == "7777XBEG") { ECAT = "No ADS-B Emitter Category Information"; }
     else
     {
@@ -166,22 +166,22 @@ class CAT21Helper{
   /// Format: Variable Length Data Item, comprising a primary subfield of one octet, followed by one-octet extensions as necessary.
   /// </summary>
 
-  String ATP;
-  String ARC;
-  String RC;
-  String RAB;
-  String DCR;
-  String GBS;
-  String SIM;
-  String TST;
-  String SAA;
-  String CL;
-  String IPC;
-  String NOGO;
-  String CPR;
-  String LDPJ;
-  String RCF;
-  String FX;
+  String ATP="";
+  String ARC="";
+  String RC="";
+  String RAB="";
+  String DCR="";
+  String GBS="";
+  String SIM="";
+  String TST="";
+  String SAA="";
+  String CL="";
+  String IPC="";
+  String NOGO="";
+  String CPR="";
+  String LDPJ="";
+  String RCF="";
+  String FX="";
   int Compute_Target_Report_Descripter(List<String> message, int pos)
   {
     String OctetoChar = message[pos];
@@ -245,7 +245,7 @@ class CAT21Helper{
   /// Definition: Mode-3/A code converted into octal representation.
   /// Format: Two-octet fixed length Data Item.
   /// </summary>
-  String ModeA3;
+  String ModeA3="";
   int Compute_Mode_A3(List<String> message, int pos)
   {
     ModeA3 = (lib.decimal2Octal(this.lib.Binary2Int((message[pos]+ message[pos + 1]).substring(4, 16)))).toString().padLeft(4, '0');
@@ -259,15 +259,16 @@ class CAT21Helper{
   /// Definition: Time of applicability of the reported position, in the form of elapsed time since last midnight, expressed as UTC.
   /// Format: Three-Octet fixed length data item.
   /// </summary>
-  String Time_of_Applicability_Position;
+  String Time_of_Applicability_Position="";
   int Compute_Time_of_Aplicabillity_Position(List<String> message, int pos)
   {
     // MessageBox.Show("Entered");
     int str = this.lib.Binary2Int(message[pos]+ message[pos + 1]+ message[pos + 2]);
     double seconds = ((str) / 128);
-    Time_of_day_sec = seconds.truncate();
-    final d3 = Duration(milliseconds: str*1000);
-    Time_of_Applicability_Position = d3.toString().substring(2, 7);
+    final duration = Duration(seconds: Time_of_day_sec);
+    Time_of_Applicability_Position =
+    "${duration.inHours}:${duration.inMinutes.remainder(60)}:${(duration.inSeconds.remainder(60))}";
+
     pos += 3;
     return pos;
   }
@@ -278,7 +279,7 @@ class CAT21Helper{
   /// Definition: Time of applicability(measurement) of the reported velocity, in the form of elapsed time since last midnight, expressed as UTC.
   /// Format: Three-Octet fixed length data item.
   /// </summary>
-  String Time_of_Applicability_Velocity;
+  String Time_of_Applicability_Velocity="";
   int Compute_Time_of_Aplicabillity_Velocity(List<String> message, int pos)
   {
     int str = this.lib.Binary2Int(message[pos]+ message[pos + 1]+ message[pos + 2]);
@@ -297,7 +298,7 @@ class CAT21Helper{
   /// Station, in the form of elapsed time since last midnight, expressed as UTC.
   /// Format : Three-Octet fixed length data item.
   /// </summary>
-  String Time_of_Message_Reception_Position;
+  String Time_of_Message_Reception_Position="";
   int Compute_Time_of_Message_Reception_Position(List<String> message, int pos)
   {
     int str = this.lib.Binary2Int(message[pos]+ message[pos + 1]+ message[pos + 2]);
@@ -317,7 +318,7 @@ class CAT21Helper{
   /// by the ground station, expressed as fraction of the second of the UTC Time.
   /// Format : Four-Octet fixed length data item.
   /// </summary>
-  String Time_of_Message_Reception_Position_High_Precision;
+  String Time_of_Message_Reception_Position_High_Precision="";
   int Compute_Time_of_Message_Reception_Position_High_Precision(List<String> message, int pos)
   {
     String octet = (message[pos]+ message[pos + 1]+ message[pos + 2]+ message[pos + 3]);
@@ -340,7 +341,7 @@ class CAT21Helper{
   /// Station, in the form of elapsed time since last midnight, expressed as UTC.
   /// Format: Three-Octet fixed length data item.
   /// </summary>
-  String Time_of_Message_Reception_Velocity;
+  String Time_of_Message_Reception_Velocity="";
   int Compute_Time_of_Message_Reception_Velocity(List<String> message, int pos)
   {
     int str = this.lib.Binary2Int((message[pos]+ message[pos + 1]+ message[pos + 2]));
@@ -362,7 +363,7 @@ class CAT21Helper{
   /// by the ground station, expressed as fraction of the second of the UTC Time.
   /// Format: Four-Octet fixed length data item.
   /// </summary>
-  String Time_of_Message_Reception_Velocity_High_Precision;
+  String Time_of_Message_Reception_Velocity_High_Precision="";
   int Compute_Time_of_Message_Reception_Velocity_High_Precision(List<String> message, int pos)
   {
     String octet =(message[pos]+ message[pos + 1]+ message[pos + 2]+ message[pos + 3]);
@@ -386,18 +387,15 @@ class CAT21Helper{
   /// </summary>
   /// <param name="Time_of_day_sec">Time in int format for the map</param>
   /// <param name="Time_of_Asterix_Report_Transmission">Time in String format for tables</param>
-  String Time_of_Asterix_Report_Transmission;
-  int Time_of_day_sec;
+  String Time_of_Asterix_Report_Transmission="";
+  int Time_of_day_sec=0;
   int Compute_Time_of_Asterix_Report_Transmission(List<String> message, int pos)
   {
-
     int str = this.lib.Binary2Int((message[pos]+ message[pos + 1]+ message[pos + 2]));
-
     double seconds = ((str) / 128);
     Time_of_day_sec = seconds.truncate();
     final duration = Duration(seconds: Time_of_day_sec);
     Time_of_Asterix_Report_Transmission = "${duration.inHours}:${duration.inMinutes.remainder(60)}:${(duration.inSeconds.remainder(60))}";
-
     pos += 3;
     return pos;
   }
@@ -409,7 +407,7 @@ class CAT21Helper{
   /// Format: Three-octet fixed length Data Item.
   /// </summary>
   //TARGET ADDRESS
-  String Target_address;
+  String Target_address="";
   int Compute_Target_Address(Uint8List messageInt, int pos)
   {
     Target_address = messageInt[pos].toRadixString(16).padLeft(2, "0")+ messageInt[pos+1].toRadixString(16).padLeft(2, "0")+messageInt[pos+2].toRadixString(16).padLeft(2, "0");
@@ -425,24 +423,24 @@ class CAT21Helper{
   /// NOTE: Apart from the “PIC” item, all items are defined as per the respective link technology protocol version(“MOPS version”, see I021/210).
   /// </summary>
 
-  String Quality_Indicators;
-  String NUCr_NACv;
-  String NUCp_NIC;
-  String NICbaro;
-  String SIL;
-  String NACp;
-  String SILS;
-  String SDA;
-  String GVA;
-  int PIC;
-  String ICB;
-  String NUCp;
-  String NIC;
+  String Quality_Indicators="";
+  String NUCr_NACv="";
+  String NUCp_NIC="";
+  String NICbaro="";
+  String SIL="";
+  String NACp="";
+  String SILS="";
+  String SDA="";
+  String GVA="";
+  int PIC=0;
+  String ICB="";
+  String NUCp="";
+  String NIC="";
 
   int Compute_Quality_Indicators(List<String> message, int pos)
   {
     NUCr_NACv =(this.lib.Binary2Int(message[pos].substring(0, 3))).toString();
-    NUCp_NIC = (this.lib.Binary2Int(message[pos].substring(3, 3+4))).toString();
+    NUCp_NIC = (this.lib.Binary2Int(message[pos].substring(3, 7))).toString();
     pos++;
     if (message[pos - 1][7] == "1")
     {
@@ -494,23 +492,23 @@ class CAT21Helper{
 
   //TRAJECTORY INTENT
   int Trajectory_present = 0;
-  bool subfield1;
-  bool subfield2;
-  String NAV;
-  String NVB;
-  int REP;
-  List<String> TCA;
-  List<String> NC;
-  List<int> TCP;
-  List<String> Altitude;
-  List<String> Latitude;
-  List<String> Longitude;
-  List<String> Point_Type;
-  List<String> TD;
-  List<String> TRA;
-  List<String> TOA;
-  List<String> TOV;
-  List<String> TTR;
+  bool subfield1=false;
+  bool subfield2=false;
+  String NAV="";
+  String NVB="";
+  int REP=0;
+  List<String> TCA=[];
+  List<String> NC=[];
+  List<int> TCP=[];
+  List<String> Altitude=[];
+  List<String> Latitude=[];
+  List<String> Longitude=[];
+  List<String> Point_Type=[];
+  List<String> TD=[];
+  List<String> TRA=[];
+  List<String> TOA=[];
+  List<String> TOV=[];
+  List<String> TTR=[];
   int Compute_Trajectory_Intent(List<String> message, int pos)
   {
     Trajectory_present = 1;
@@ -529,7 +527,7 @@ class CAT21Helper{
     if (subfield2 == true)
     {
       pos++;
-      REP = this.lib.Binary2Int(message[pos]);
+      REP = this.lib.Binary2Int(message[pos])>0 ? this.lib.Binary2Int(message[pos]) : 0;
       TCA = List .filled(REP, "", growable: true);
       NC = List .filled(REP, "", growable: true);
       TCP = List .filled(REP, 0, growable: true);
@@ -601,8 +599,8 @@ class CAT21Helper{
   /// <param name="Latitude_in_WGS_84_map">Latitude in decimals used to draw markers on map</param>
   /// <param name="Latitude_in_WGS_84_map">Longiutde in decimals used to draw markers on map</param>
 
-  String LatitudeWGS_84;
-  String LongitudeWGS_84;
+  String LatitudeWGS_84="";
+  String LongitudeWGS_84="";
   double LatitudeWGS_84_map = -200;
   double LongitudeWGS_84_map = -200;
   int Compute_PositionWGS_84(List<String> messageOctets, int pos)
@@ -631,8 +629,8 @@ class CAT21Helper{
   /// Definition: Position in WGS-84 Co-ordinates in high resolution.
   /// Format: Eight-octet fixed length Data Item.
   /// </summary>
-  String High_Resolution_LatitudeWGS_84;
-  String High_Resolution_LongitudeWGS_84;
+  String High_Resolution_LatitudeWGS_84="";
+  String High_Resolution_LongitudeWGS_84="";
   int Compute_High_Resolution_PositionWGS_84(List<String> message, int pos)
   {
     double Latitude = this.lib.TwoComplement2Decimal(message[pos]+ message[pos + 1]+ message[pos + 2] + message[pos + 3]) * (0.000000167638063);
@@ -658,7 +656,7 @@ class CAT21Helper{
   /// Definition : Amplitude, in dBm, of ADS-B messages received by the ground station, coded in two’s complement.
   /// Format : One-Octet fixed length data item.
   /// </summary>
-  String Message_Amplitude;
+  String Message_Amplitude="";
   int Compute_Message_Amplitude(List<String> message, int pos)
   {
     Message_Amplitude = (lib.TwoComplement2Decimal(message[pos])).toString() + " dBm";
@@ -673,7 +671,7 @@ class CAT21Helper{
   /// defined by WGS-84, in two’s complement form.
   /// Format : Two-Octet fixed length data item.
   /// </summary>
-  String Geometric_Height;
+  String Geometric_Height="";
   int Compute_Geometric_Height(List<String> message, int pos)
   {
     Geometric_Height = (lib.TwoComplement2Decimal(message[pos]+ message[pos + 1]) * 6.25).toString() + " ft"; pos += 2;
@@ -686,7 +684,7 @@ class CAT21Helper{
   /// Definition: Flight Level from barometric measurements, not QNH corrected, in two’s complement form.
   /// Format: Two-Octet fixed length data item.
   /// </summary>
-  String Flight_Level;
+  String Flight_Level="";
   int Compute_Flight_level(List<String> message, int pos)
   {
     Flight_Level = (lib.TwoComplement2Decimal((message[pos]+ message[pos + 1])) * (0.25)).toString() + " FL";
@@ -704,10 +702,10 @@ class CAT21Helper{
   /// Format: Two-Octet fixed length data item.
   /// </summary>
 
-  String SAS;
-  String Source;
-  String Sel_Altitude;
-  String Selected_Altitude;
+  String SAS="";
+  String Source="";
+  String Sel_Altitude="";
+  String Selected_Altitude="";
   int Compute_Selected_Altitude(List<String> message, int pos)
   {
     String sou = message[pos].substring(1,3);
@@ -729,10 +727,10 @@ class CAT21Helper{
   /// Format: Two-Octet fixed length data item.
   /// </summary>
   ///
-  String MV;
-  String AH;
-  String AM;
-  String Final_State_Altitude;
+  String MV="";
+  String AH="";
+  String AM="";
+  String Final_State_Altitude="";
   int Compute_Final_State_Selected_Altitude(List<String> message, int pos)
   {
     if (message[pos][0] == "0") { MV = "Not active or unknown"; }
@@ -752,10 +750,10 @@ class CAT21Helper{
   /// Definition: Calculated Air Speed (Element of Air Vector).
   /// Format: Two-Octet fixed length data item.
   /// </summary>
-  String Air_Speed;
+  String Air_Speed="";
   int Compute_Air_Speed(List<String> message, int pos)
   {
-    if (message[pos][0] == "0") { Air_Speed = (this.lib.Binary2Int((message[pos]+ message[pos + 1]).toString().substring(1, 16)) * 0.00006103515).toString() + " NM/s"; }
+    if (message[pos][0] == "0") { Air_Speed = (this.lib.Binary2Int((message[pos]+ message[pos + 1]).substring(1, 16)) * 0.00006103515).toString() + " NM/s"; }
     else { Air_Speed = (this.lib.Binary2Int((message[pos]+ message[pos + 1]).substring(1, 16)) * 0.001).toString() + " Mach"; }
     pos += 2;
     return pos;
@@ -767,12 +765,12 @@ class CAT21Helper{
   /// Definition : True Air Speed.
   /// Format : Two-Octet fixed length data item.
   /// </summary>
-  String True_Air_Speed;
+  String True_Air_Speed="";
   int Compute_True_Air_Speed(List<String> message, int pos)
   {
     if (message[pos][0] == "0")
     {
-      True_Air_Speed = (this.lib.Binary2Int((message[pos]+ message[pos + 1]).toString().substring(1, 16))).toString() + " Knots";
+      True_Air_Speed = (this.lib.Binary2Int((message[pos]+ message[pos + 1]).substring(1, 16))).toString() + " Knots";
     }
     else { True_Air_Speed = "Value exceeds defined rage"; }
     pos += 2;
@@ -788,7 +786,7 @@ class CAT21Helper{
   /// </summary>
 
   //MAGNETIC HEADING
-  String Magnetic_Heading;
+  String Magnetic_Heading="";
   int Compute_Magnetic_Heading(List<String> message, int pos)
   {
     Magnetic_Heading = (this.lib.Binary2Int((message[pos]+message[pos])) * (360 / (65536))).toString() + "º";
@@ -802,7 +800,7 @@ class CAT21Helper{
   /// Definition: Barometric Vertical Rate, in two’s complement form.
   /// Format: Two-Octet fixed length data item.
   /// </summary>
-  String Barometric_Vertical_Rate;
+  String Barometric_Vertical_Rate="";
   int Compute_Barometric_Vertical_Rate(List<String> message, int pos)
   {
     if (message[pos][0] == "0")
@@ -820,7 +818,7 @@ class CAT21Helper{
   /// Definition: Geometric Vertical Rate, in two’s complement form, with reference to WGS-84.
   /// Format: Two-Octet fixed length data item.
   /// </summary>
-  String Geometric_Vertical_Rate;
+  String Geometric_Vertical_Rate="";
   int Compute_Geometric_Vertical_Rate(List<String> message, int pos)
   {
     if (message[pos][0] == "0")
@@ -838,9 +836,9 @@ class CAT21Helper{
   /// Definition : Ground Speed and Track Angle elements of Airborne Ground Vector.
   /// Format : Four-Octet fixed length data item.
   /// </summary>
-  String Ground_Speed;
-  String Track_Angle;
-  String Ground_vector;
+  String Ground_Speed="";
+  String Track_Angle="";
+  String Ground_vector="";
   int Compute_Airborne_Ground_Vector(List<String> message, int pos)
   {
     if (message[pos][0] == "0")
@@ -861,7 +859,7 @@ class CAT21Helper{
   /// Definition: An integer value representing a unique reference to a track record within a particular track file.
   /// Format: Two-octet fixed length Data Item.
   /// </summary>
-  String Track_Number;
+  String Track_Number="";
   int Compute_Track_Number(List<String> message, int pos)
   {
     Track_Number = (this.lib.Binary2Int((message[pos]+ message[pos + 1]).substring(4, 16))).toString();
@@ -875,7 +873,7 @@ class CAT21Helper{
   /// Definition : Rate of Turn, in two’s complement form.
   /// Format : 2-Byte Fixed length data item.
   /// </summary>
-  String Track_Angle_Rate;
+  String Track_Angle_Rate="";
   int Compute_Track_Angle_Rate(List<String> message, int pos)
   {
     Track_Angle_Rate = (this.lib.Binary2Int((message[pos]+ message[pos]).substring(6, 16)) * 0.03125).toString() + " º/s";
@@ -890,7 +888,7 @@ class CAT21Helper{
   /// Format: Six-octet fixed length Data Item.
   /// </summary>
   ///
-  String Target_Identification;
+  String Target_Identification="";
   int Compute_Target_Identification(List<String> message, int pos)
   {
     String Identification = "";
@@ -907,10 +905,10 @@ class CAT21Helper{
   /// Definition : Status of the target
   /// Format : One-octet fixed length Data Item
   /// </summary>
-  String ICF;
-  String LNAV;
-  String PS;
-  String SS;
+  String ICF="";
+  String LNAV="";
+  String PS="";
+  String SS="";
   int Compute_Target_Status(List<String> message, int pos)
   {
     if (message[pos][0] == "0") { ICF = "No intent change active"; }
@@ -941,13 +939,14 @@ class CAT21Helper{
   /// Format: One-octet fixed length Data Item
   /// </summary>
 
-  String VNS;
-  String LTT;
-  String MOPS;
+  String VNS="";
+  String LTT="";
+  String MOPS="";
   int Compute_MOPS_Version(List<String> message, int pos)
   {
     if (message[pos][1] == "0") { VNS = "The MOPS Version is supported by the GS"; }
     else { VNS = "The MOPS Version is not supported by the GS"; }
+
     int ltt = this.lib.Binary2Int(message[pos].substring(5, 8));
     if (ltt == 0) { LTT = "Other"; }
     else if (ltt == 1) { LTT = "UAT"; }
@@ -976,10 +975,10 @@ class CAT21Helper{
   /// followed by up to four fixed length data fields.
   /// </summary>
   int MET_present = 0;
-  String Wind_Speed;
-  String Wind_Direction;
-  String Temperature;
-  String Turbulence;
+  String Wind_Speed="";
+  String Wind_Direction="";
+  String Temperature="";
+  String Turbulence="";
   int Compute_Met_Information(List<String> message, int pos)
   {
     MET_present = 1;
@@ -1000,7 +999,7 @@ class CAT21Helper{
   /// Format: A two byte fixed length data item.
   /// </summary>
 
-  String Roll_Angle;
+  String Roll_Angle="";
   int Compute_Roll_Angle(List<String> message, int pos)
   {
     Roll_Angle = (lib.TwoComplement2Decimal((message[pos]+ message[pos])) * 0.01).toString() + "º";
@@ -1015,20 +1014,20 @@ class CAT21Helper{
   /// Indicator(REP) followed by at least one BDS message
   /// </summary>
 
-  List<String> MB_Data;
-  List<String> BDS1;
-  List<String> BDS2;
-  int modeS_rep;
+  List<String> MB_Data=[];
+  List<String> BDS1=[];
+  List<String> BDS2=[];
+  int modeS_rep=0;
   int Compute_Mode_S_MB_DATA(List<String> message, int pos)
   {
     int modeS_rep = this.lib.Binary2Int(message[pos]);
-    if (modeS_rep < 0) { MB_Data = List .filled(modeS_rep, "", growable: false); BDS1 = List .filled(modeS_rep, "", growable: false); BDS2 = List .filled(modeS_rep, "", growable: false); }
+    if(modeS_rep>0){ MB_Data = List .filled(modeS_rep, "", growable: false);}
     pos++;
     for (int i = 0; i < modeS_rep; i++)
     {
       MB_Data[i] = (message[pos]+ message[pos + 1]+ message[pos + 2]+ message[pos + 3]+ message[pos + 4]+ message[pos + 5]+ message[pos + 6]);
-      BDS1[1] = message[pos + 7].substring(0, 4);
-      BDS2[1] = message[pos + 7].substring(4, 8);
+      BDS1[i] = message[pos + 7].substring(0, 4);
+      BDS2[i] = message[pos + 7].substring(4, 8);
       pos += 8;
     }
     return pos;
@@ -1043,14 +1042,14 @@ class CAT21Helper{
   /// Format: Seven-octet fixed length Data Item.
   /// </summary>
 
-  String TYP;
-  String STYP;
-  String ARA;
-  String RAC;
-  String RAT;
-  String MTE;
-  String TTI;
-  String TID;
+  String TYP="";
+  String STYP="";
+  String ARA="";
+  String RAC="";
+  String RAT="";
+  String MTE="";
+  String TTI="";
+  String TID="";
   int Compute_ACAS_Resolution_Advisory_Report(List<String> message, int pos)
   {
     String messg = (message[pos]+ message[pos + 1]+ message[pos + 2]+ message[pos + 3]+ message[pos + 4]+ message[pos + 5]+ message[pos + 6]);
@@ -1075,12 +1074,12 @@ class CAT21Helper{
   /// followed by an one-octet extensions if necessary.
   /// </summary>
   ///
-  String POA;
-  String CDTIS;
-  String B2_low;
-  String RAS;
-  String IDENT;
-  String LengthandWidth;
+  String POA="";
+  String CDTIS="";
+  String B2_low="";
+  String RAS="";
+  String IDENT="";
+  String LengthandWidth="";
   int Compute_Surface_Capabiliteies_and_Characteristics(List<String> message, int pos)
   {
 
@@ -1129,29 +1128,29 @@ class CAT21Helper{
   /// </summary>
 
   int Data_Ages_present = 0;
-  String AOS;
-  String TRD;
-  String M3A;
-  String QI;
-  String TI;
-  String MAM;
-  String GH;
-  String FL;
-  String ISA;
-  String FSA;
-  String AS;
-  String TAS;
-  String MH;
-  String BVR;
-  String GVR;
-  String GV;
-  String TAR;
-  String TI_DataAge;
-  String TS_DataAge;
-  String MET;
-  String ROA;
-  String ARA_DataAge;
-  String SCC;
+  String AOS="";
+  String TRD="";
+  String M3A="";
+  String QI="";
+  String TI="";
+  String MAM="";
+  String GH="";
+  String FL="";
+  String ISA="";
+  String FSA="";
+  String AS="";
+  String TAS="";
+  String MH="";
+  String BVR="";
+  String GVR="";
+  String GV="";
+  String TAR="";
+  String TI_DataAge="";
+  String TS_DataAge="";
+  String MET="";
+  String ROA="";
+  String ARA_DataAge="";
+  String SCC="";
   int Compute_Data_Age(List<String> message, int pos)
   {
     Data_Ages_present = 1;
@@ -1212,7 +1211,7 @@ class CAT21Helper{
   /// Format : One-octet fixed length Data Item.
   /// </summary>
   //RECEIVER ID
-  String Receiver_ID;
+  String Receiver_ID="";
   int Compute_Receiver_ID(List<String> message, int pos)
   {
     Receiver_ID = this.lib.Binary2Int(message[pos]).toString();

@@ -12,9 +12,9 @@ class CAT10Helper {
   /// Definition: Identification of the system from which the data are received.
   /// Format: Two-octet fixed length Data Item.
   /// </summary>
-  String SAC;
-  String SIC;
-  int airportCode;
+  String SAC="";
+  String SIC="";
+  int airportCode=0;
   int Compute_Data_Source_Identifier(Uint8List message, int pos) {
     SAC = message[pos].toString();
     SIC = message[pos + 1].toString();
@@ -107,7 +107,7 @@ class CAT10Helper {
   /// Definition: This Data Item allows for a more convenient handling of the messages at the receiver side by further defining the type of transaction.
   /// Format: One-octet fixed length Data Item.
   /// </summary>
-  String MESSAGE_TYPE;
+  String MESSAGE_TYPE="";
   int Compute_Message_Type(Uint8List message, int pos) {
     MESSAGE_TYPE = "Error";
     int Message_Type = message[pos];
@@ -134,19 +134,19 @@ class CAT10Helper {
   /// Format: Variable length Data Item comprising a first part of one-octet, followed by one-octet extents as necessary.
   /// </summary>
 
-  String TYP;
-  String DCR;
-  String CHN;
-  String GBS;
-  String CRT;
+  String TYP="";
+  String DCR="";
+  String CHN="";
+  String GBS="";
+  String CRT="";
   //First extension
-  String SIM;
-  String TST;
-  String RAB;
-  String LOP;
-  String TOT;
+  String SIM="";
+  String TST="";
+  String RAB="";
+  String LOP="";
+  String TOT="";
   //Second extension
-  String SPI;
+  String SPI="";
   int Compute_Target_Report_Descriptor(List<String> messageOctets, int pos) {
     int cont = 1;
     String octeto1 = messageOctets[pos];
@@ -223,8 +223,8 @@ class CAT10Helper {
   /// </summary>
   /// <param name="Time_of_day_sec">Seconds in int format to be used in map</param>
   /// <param name="Time_of_day_sec">Seconds in String format to be shown in tables</param>
-  String Time_Of_Day;
-  int Time_of_day_sec;
+  String Time_Of_Day="";
+  int Time_of_day_sec=0;
   int Compute_Time_of_Day(List<String> messageOctets, int pos) {
     String s =
         messageOctets[pos] + messageOctets[pos + 1] + messageOctets[pos + 2];
@@ -249,8 +249,8 @@ class CAT10Helper {
   /// <param name="Latitude_in_WGS_84_map">Latitude in decimals used to draw markers on map</param>
   /// <param name="Latitude_in_WGS_84_map">Longiutde in decimals used to draw markers on map</param>
   ///
-  String Latitude_in_WGS_84;
-  String Longitude_in_WGS_84;
+  String Latitude_in_WGS_84="";
+  String Longitude_in_WGS_84="";
   double LatitudeWGS_84_map = -200;
   double LongitudeWGS_84_map = -200;
   int Compute_Position_in_WGS_84_Coordinates(
@@ -259,19 +259,20 @@ class CAT10Helper {
             messageOctets[pos + 1] +
             messageOctets[pos + 2] +
             messageOctets[pos + 3]) *
-        (180 / 8.38190317e-8);
+        (8.38190317e-8);
     pos += 4;
     double Longitude = this.lib.TwoComplement2Decimal(messageOctets[pos] +
             messageOctets[pos + 1] +
             messageOctets[pos + 2] +
             messageOctets[pos + 3]) *
-        (180 / 8.38190317e-8);
+        (8.38190317e-8);
     pos += 4;
     LatitudeWGS_84_map = Latitude;
     LongitudeWGS_84_map = Longitude;
     int Latdegres = Latitude.truncate();
     int Latmin = ((Latitude - Latdegres) * 60).truncate();
     double Latsec = (Latitude - (Latdegres + (Latmin / 60))) * 3600;
+
     int Londegres = Longitude.truncate();
     int Lonmin = ((Longitude - Londegres) * 60).truncate();
     double Lonsec = (Longitude - (Londegres + (Lonmin / 60))) * 3600;
@@ -296,9 +297,9 @@ class CAT10Helper {
   /// Definition: Measured position of a target in local polar co-ordinates.
   /// Format: Four-octet fixed length Data Item.
   /// </summary>
-  String RHO;
-  String THETA;
-  String Position_In_Polar;
+  String RHO="";
+  String THETA="";
+  String Position_In_Polar="";
   int Compute_Measured_Position_in_Polar_Coordinates(
       List<String> message, int pos) {
     double Range = this.lib.Binary2Double(message[pos].toString() +
@@ -329,9 +330,9 @@ class CAT10Helper {
   /// <param name="Y_Component_map">Y component to use in map</param>
   double X_Component_map = -99999;
   double Y_Component_map = -99999;
-  String X_Component;
-  String Y_Component;
-  String Position_Cartesian_Coordinates;
+  String X_Component="";
+  String Y_Component="";
+  String Position_Cartesian_Coordinates="";
   int Compute_Position_in_Cartesian_Coordinates(List<String> message, int pos) {
     X_Component_map = this.lib.TwoComplement2Decimal(
         message[pos].toString() + message[pos + 1].toString());
@@ -354,9 +355,9 @@ class CAT10Helper {
   /// Definition: Calculated track velocity expressed in polar co-ordinates.
   /// Format : Four-Octet fixed length data item.
   /// </summary>
-  String Ground_Speed;
-  String Track_Angle;
-  String Track_Velocity_Polar_Coordinates;
+  String Ground_Speed="";
+  String Track_Angle="";
+  String Track_Velocity_Polar_Coordinates="";
   int Compute_Track_Velocity_in_Polar_Coordinates(
       List<String> message, int pos) {
     double ground_speed = (this.lib.Binary2Double(
@@ -386,9 +387,9 @@ class CAT10Helper {
   /// Definition: Calculated track velocity expressed in Cartesian co-ordinates, in two’s complement representation.
   /// Format: Four-octet fixed length Data Item.
   /// </summary>
-  String Vx;
-  String Vy;
-  String Track_Velocity_in_Cartesian_Coordinates;
+  String Vx="";
+  String Vy="";
+  String Track_Velocity_in_Cartesian_Coordinates="";
   int Compute_Track_Velocity_in_Cartesian_Coordinates(
       List<String> message, int pos) {
     double vx = this.lib.TwoComplement2Decimal(
@@ -410,7 +411,7 @@ class CAT10Helper {
   /// Definition: An integer value representing a unique reference to a track record within a particular track file.
   /// Format: Two-octet fixed length Data Item.
   /// </summary>
-  String Track_Number;
+  String Track_Number="";
   int Compute_Track_Number(List<String> message, int pos) {
     Track_Number = (this.lib.Binary2Int(
             (message[pos].toString() + message[pos + 1].toString())
@@ -427,16 +428,16 @@ class CAT10Helper {
   /// Format: Variable length Data Item comprising a first part of one-octet, followed by one-octet extents as necessary.
   /// </summary>
 
-  String CNF;
-  String TRE;
-  String CST;
-  String MAH;
-  String TCC;
-  String STH;
-  String TOM;
-  String DOU;
-  String MRS;
-  String GHO;
+  String CNF="";
+  String TRE="";
+  String CST="";
+  String MAH="";
+  String TCC="";
+  String STH="";
+  String TOM="";
+  String DOU="";
+  String MRS="";
+  String GHO="";
   int Compute_Track_Status(List<String> message, int pos) {
     String OctetoChar = message[pos];
     if (OctetoChar[0] == '0') {
@@ -537,10 +538,10 @@ class CAT10Helper {
   /// Format: Two-octet fixed length Data Item.
   /// </summary>
   // DATA ITEM I010/060, MODE-3/A CODE IN OCTAL REPRESANTATION
-  String V_Mode_3A;
-  String G_Mode_3A;
-  String L_Mode_3A;
-  String Mode_3A;
+  String V_Mode_3A="";
+  String G_Mode_3A="";
+  String L_Mode_3A="";
+  String Mode_3A="";
   int Compute_Mode_3A_Code_in_Octal_Representation(
       List<String> message, int pos) {
     String OctetoChar = message[pos];
@@ -576,7 +577,7 @@ class CAT10Helper {
   /// Definition: Target address (24-bits address) assigned uniquely to each Target.
   /// Format: Three-octet fixed length Data Item.
   /// </summary>
-  String Target_Address;
+  String Target_Address="";
   int Compute_Target_Address(Uint8List messageInt, int pos) {
     Target_Address = messageInt[pos].toRadixString(16).padLeft(2, "0") +
         messageInt[pos + 1].toRadixString(16).padLeft(2, "0") +
@@ -591,9 +592,9 @@ class CAT10Helper {
   /// Definition: Target (aircraft or vehicle) identification in 8 characters.
   /// Format: Seven-octet fixed length Data Item.
   /// </summary>
-  String STI;
-  String Target_Identification;
-  String TAR;
+  String STI="";
+  String Target_Identification="";
+  String TAR="";
   int Compute_Target_Identification(List<String> message, int pos) {
     String octeto = message[pos];
     String sti = octeto[0] + octeto[1];
@@ -627,10 +628,10 @@ class CAT10Helper {
   /// Format: Repetitive Data Item starting with a one-octet Field Repetition Indicator(REP) followed by at least
   /// one BDS report comprising one seven octet BDS register and one octet BDS code.
   /// </summary>
-  List<String> MB_Data;
-  List<String> BDS1;
-  List<String> BDS2;
-  int modeS_rep;
+  List<String> MB_Data=[];
+  List<String> BDS1=[];
+  List<String> BDS2=[];
+  int modeS_rep=0;
   int Compute_Mode_S_MB_Data(List<String> message, int pos) {
     modeS_rep = this.lib.Binary2Int(message[pos]);
     if (modeS_rep < 0) {
@@ -659,7 +660,7 @@ class CAT10Helper {
   /// Definition: Vehicle fleet identification number.
   /// Format: One octet fixed length Data Item.
   /// </summary>
-  String VFI;
+  String VFI="";
   int Compute_Vehicle_Fleet_Identificatior(List<String> message, int pos) {
     int vfi = this.lib.Binary2Int(message[pos]);
     if (vfi == 0) {
@@ -706,10 +707,10 @@ class CAT10Helper {
   /// Definition: Flight Level (Mode C / Mode S Altitude) converted into binary two's complement representation.
   /// Format: Two-octet fixed length Data Item.
   /// </summary>
-  String V_Flight_Level;
-  String G_Flight_Level;
-  String Flight_Level_Binary;
-  String Flight_Level;
+  String V_Flight_Level="";
+  String G_Flight_Level="";
+  String Flight_Level_Binary="";
+  String Flight_Level="";
   int Compute_Flight_Level_in_Binary_Representaion(
       List<String> message, int pos) {
     String OctetoChar = message[pos];
@@ -743,7 +744,7 @@ class CAT10Helper {
   /// Definition: Height above local 2D co-ordinate reference system (two's complement) based on direct measurements not related to barometric pressure.
   /// Format: Two-octet fixed length Data Item.
   /// </summary>
-  String Measured_Height;
+  String Measured_Height="";
   int Compute_Measured_Height(List<String> message, int pos) {
     Measured_Height = (this.lib.TwoComplement2Decimal(
                     message[pos].toString() + message[pos + 1].toString()) *
@@ -760,10 +761,10 @@ class CAT10Helper {
   /// Format: Variable length Data Item comprising a first part of one octet, followed by one-octet extents as necessary.
   /// </summary>
 
-  String Target_size_and_orientation;
-  String LENGHT;
-  String ORIENTATION;
-  String WIDTH;
+  String Target_size_and_orientation="";
+  String LENGHT="";
+  String ORIENTATION="";
+  String WIDTH="";
   int Compute_Target_Size_and_Orientation(List<String> message, int pos) {
     LENGHT = "Lenght:  " +
         (this.lib.Binary2Int(message[pos].substring(0, 7))).toString() +
@@ -795,11 +796,11 @@ class CAT10Helper {
   /// Definition: Information concerning the configuration and status of a System.
   /// Format: One-octet fixed length Data Item.
   /// </summary>
-  String NOGO;
-  String OVL;
-  String TSV;
-  String DIV;
-  String TIF;
+  String NOGO="";
+  String OVL="";
+  String TSV="";
+  String DIV="";
+  String TIF="";
   int Compute_System_Status(List<String> message, int pos) {
     String OctetoChar = message[pos];
     int nogo = this.lib.Binary2Int(OctetoChar[0] + OctetoChar[1]);
@@ -839,9 +840,9 @@ class CAT10Helper {
   /// Definition: Number related to a pre-programmed message that can be transmitted by a vehicle.
   /// Format: One octet fixed length Data Item.
   /// </summary>
-  String TRB;
-  String MSG;
-  String Pre_programmed_message;
+  String TRB="";
+  String MSG="";
+  String Pre_programmed_message="";
   int Compute_Preprogrammed_Message(List<String> message, int pos) {
     String OctetoChar = message[pos];
     if (OctetoChar[0] == '0') {
@@ -871,9 +872,9 @@ class CAT10Helper {
   /// Definition: Standard Deviation of Position
   /// Format: Four octet fixed length Data Item.
   /// </summary>
-  String Deviation_X;
-  String Deviation_Y;
-  String Covariance_XY;
+  String Deviation_X="";
+  String Deviation_Y="";
+  String Covariance_XY="";
   int Compute_Standard_Deviation_of_Position(List<String> message, int pos) {
     Deviation_X = "Standard Deviation of X component (σx):" +
         ((this.lib.Binary2Double(message[pos])) * 0.25).toString() +
@@ -897,15 +898,14 @@ class CAT10Helper {
   /// indicating the number of presences associated to the plot, followed by series of two octets(co-ordinates differences) as necessary.
   /// </summary>
   int REP_Presence = 0;
-  List<String> DRHO;
-  List<String> DTHETA;
+  List<String> DRHO=[];
+  List<String> DTHETA=[];
   int Compute_Presence(List<String> message, int pos) {
     REP_Presence = this.lib.Binary2Int(message[pos]);
     pos++;
     for (int i = 0; i < REP_Presence; i++) {
-      this.DRHO[i] = this.lib.Binary2Int(message[pos]).toString() + "m";
-      this.DTHETA[i] =
-          (this.lib.Binary2Double(message[pos]) * 0.15).toString() + "º";
+      this.DRHO.add(this.lib.Binary2Int(message[pos]).toString() + "m");
+      this.DTHETA.add((this.lib.Binary2Double(message[pos]) * 0.15).toString() + "º");
       pos += 2;
     }
     return pos;
@@ -916,7 +916,7 @@ class CAT10Helper {
   /// Definition: Amplitude of Primary Plot.
   /// Format: One-Octet fixed length Data Item.
   /// </summary>
-  String PAM;
+  String PAM="";
   int Compute_Amplitude_of_Primary_Plot(List<String> message, int pos) {
     double pam = this.lib.Binary2Double(
         message[pos]); // Lo de Range 0.255 no se si está bien ponerlo
@@ -932,9 +932,9 @@ class CAT10Helper {
   /// Definition : Calculated Acceleration of the target, in two’s complement form.
   /// Format : Two-Octet fixed length data item.
   /// </summary>
-  String Ax;
-  String Ay;
-  String Calculated_Acceleration;
+  String Ax="";
+  String Ay="";
+  String Calculated_Acceleration="";
   int Compute_Calculated_Acceleration(List<String> message, int pos) {
     double ax = this.lib.TwoComplement2Decimal(message[pos]) * 0.25;
     double ay = this.lib.TwoComplement2Decimal(message[pos + 1]) * 0.25;

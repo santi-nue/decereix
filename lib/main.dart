@@ -12,7 +12,6 @@ import 'package:decereix/models/cat21.dart';
 import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
 
@@ -53,7 +52,6 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: MyHomePage(title: 'DECEREIX'),
-      builder: EasyLoading.init(),
     );
   }
 }
@@ -189,11 +187,9 @@ class _MyHomePageState extends State<MyHomePage> {
             if (_currPage == 0) ...[
               Expanded(
                 flex: 8,
-                child: Center(child: load_file(
-                  onDataLoaded: (bool status) {
-                    // Something...
-                  },
-                )),
+                child: Center(child: LoadfileScreen(
+
+                ),),
               ),
             ] else if (_currPage == 1) ...[
               Expanded(

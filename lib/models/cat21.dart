@@ -8,216 +8,216 @@ class CAT21 {
   List<String> message;
   List<String> items = [];
 
-  int Id;
-  int numOctets;
+  int Id = 0;
+  int numOctets=0;
 
   // COMPUTE PARAMETERS
 
   //MESSAGE TYPE
-  String messageType;
+  String messageType="";
 
   //DATA SOURCE IDENTIFIER
-  String SAC;
-  String SIC;
+  String SAC="";
+  String SIC="";
 
   // Target Report Descriptor
-  String ATP;
-  String ARC;
-  String RC;
-  String RAB;
+  String ATP="";
+  String ARC="";
+  String RC="";
+  String RAB="";
 
-  String DCR;
-  String GBS;
-  String SIM;
-  String TST;
-  String SAA;
-  String CL;
+  String DCR="";
+  String GBS="";
+  String SIM="";
+  String TST="";
+  String SAA="";
+  String CL="";
 
-  String IPC;
-  String NOGO;
-  String CPR;
-  String LDPJ;
-  String RCF;
-  String FX;
+  String IPC="";
+  String NOGO="";
+  String CPR="";
+  String LDPJ="";
+  String RCF="";
+  String FX="";
   // Track Number
-  String Track_Number;
+  String Track_Number="";
   // Service Identification
-  String Service_Identification;
+  String Service_Identification="";
   // Time of Applicability for indexition
-  String Time_of_Applicability_Position;
+  String Time_of_Applicability_Position="";
   //  indexition in WGS-84 Co-ordinates.
-  String LatitudeWGS_84;
-  String LongitudeWGS_84;
+  String LatitudeWGS_84="";
+  String LongitudeWGS_84="";
   double LatitudeWGS_84_map = -200;
   double LongitudeWGS_84_map = -200;
   //  High-Resolution indexition in WGS-84 Co-ordinates
-  String High_Resolution_LatitudeWGS_84;
-  String High_Resolution_LongitudeWGS_84;
+  String High_Resolution_LatitudeWGS_84="";
+  String High_Resolution_LongitudeWGS_84="";
   // Time of Applicability Velocity
-  String Time_of_Applicability_Velocity;
+  String Time_of_Applicability_Velocity="";
   // True Airspeed
-  String True_Air_Speed;
+  String True_Air_Speed="";
   // Air Speed
-  String Air_Speed;
+  String Air_Speed="";
   //TARGET ADDRESS
-  String Target_address;
+  String Target_address="";
   // Time of Message Reception indexition
-  String Time_of_Message_Reception_Position;
+  String Time_of_Message_Reception_Position="";
   // Time_of_Message_Reception_indexition_High_Precision
-  String Time_of_Message_Reception_Position_High_Precision;
+  String Time_of_Message_Reception_Position_High_Precision="";
   // Time_of_Message_Reception_Velocity
-  String Time_of_Message_Reception_Velocity;
+  String Time_of_Message_Reception_Velocity="";
   // Data Item I021/076, Time of Message Reception of Velocity–High Precision
-  String Time_of_Message_Reception_Velocity_High_Precision;
+  String Time_of_Message_Reception_Velocity_High_Precision="";
 
-  String Geometric_Height;
+  String Geometric_Height="";
 
-  String Quality_Indicators;
+  String Quality_Indicators="";
   // Quality Indicators
-  String NUCr_NACv;
-  String NUCp_NIC;
-  String NICbaro;
-  String SIL;
-  String NACp;
-  String SILS;
-  String SDA;
-  String GVA;
-  int PIC;
-  String ICB;
-  String NUCp;
-  String NIC;
+  String NUCr_NACv="";
+  String NUCp_NIC="";
+  String NICbaro="";
+  String SIL="";
+  String NACp="";
+  String SILS="";
+  String SDA="";
+  String GVA="";
+  int PIC=0;
+  String ICB="";
+  String NUCp="";
+  String NIC="";
   // MOPS Version
-  String VNS;
-  String LTT;
-  String MOPS;
+  String VNS="";
+  String LTT="";
+  String MOPS="";
   // Mode 3/A Code in Octal Representation
-  String ModeA3;
+  String ModeA3="";
   // Roll Angle
-  String Roll_Angle;
+  String Roll_Angle="";
   // Flight Level
-  String Flight_Level;
+  String Flight_Level="";
   //Magnetic Heading (Element of Air Vector).
-  String Magnetic_Heading;
+  String Magnetic_Heading="";
   //Target Status
-  String ICF;
-  String LNAV;
-  String PS;
-  String SS;
+  String ICF="";
+  String LNAV="";
+  String PS="";
+  String SS="";
   //Barometric Vertical Rate, in two’s complement form.
-  String Barometric_Vertical_Rate;
+  String Barometric_Vertical_Rate="";
   //Geometric Vertical Rate, in two’s complement form, with reference to WGS-84.
-  String Geometric_Vertical_Rate;
+  String Geometric_Vertical_Rate="";
   //  Ground Speed and Track Angle elements of Airborne Ground Vector.
-  String Ground_Speed;
-  String Track_Angle;
-  String Ground_vector;
+  String Ground_Speed="";
+  String Track_Angle="";
+  String Ground_vector="";
   // Track Angle Rate, Rate of Turn, in two’s complement form.
-  String Track_Angle_Rate;
+  String Track_Angle_Rate="";
   // Time of ASTERIX Report Transmission
-  String Time_of_Asterix_Report_Transmission;
-  int TimeOfDayInSeconds;
+  String Time_of_Asterix_Report_Transmission="";
+  int TimeOfDayInSeconds=0;
   // Data Item I021/170, Target Identification
-  String Target_Identification;
+  String Target_Identification="";
   //EMITTER CATEGORY
-  String ECAT;
+  String ECAT="";
   // Meteorological information.
   int MET_present = 0;
-  String Wind_Speed;
-  String Wind_Direction;
-  String Temperature;
-  String Turbulence;
+  String Wind_Speed="";
+  String Wind_Direction="";
+  String Temperature="";
+  String Turbulence="";
   // Data Item I021/146, Selected Altitude
-  String SAS;
-  String Source;
-  String Sel_Altitude;
-  String Selected_Altitude;
+  String SAS="";
+  String Source="";
+  String Sel_Altitude="";
+  String Selected_Altitude="";
   // Data Item I021/148, Final State Selected Altitude
-  String MV;
-  String AH;
-  String AM;
-  String Final_State_Altitude;
+  String MV="";
+  String AH="";
+  String AM="";
+  String Final_State_Altitude="";
   //TRAJECTORY INTENT
   int Trajectory_present = 0;
-  bool subfield1;
-  bool subfield2;
-  String NAV;
-  String NVB;
-  int REP;
-  List<String> TCA;
-  List<String> NC;
-  List<int> TCP;
-  List<String> Altitude;
-  List<String> Latitude;
-  List<String> Longitude;
-  List<String> Point_Type;
-  List<String> TD;
-  List<String> TRA;
-  List<String> TOA;
-  List<String> TOV;
-  List<String> TTR;
+  bool subfield1=false;
+  bool subfield2=false;
+  String NAV="";
+  String NVB="";
+  int REP=0;
+  List<String> TCA=[];
+  List<String> NC=[];
+  List<int> TCP=[];
+  List<String> Altitude=[];
+  List<String> Latitude=[];
+  List<String> Longitude=[];
+  List<String> Point_Type=[];
+  List<String> TD=[];
+  List<String> TRA=[];
+  List<String> TOA=[];
+  List<String> TOV=[];
+  List<String> TTR=[];
   // Data Item I021/016, Service Management
-  String RP;
+  String RP="";
   // Data Item I021/008, Aircraft Operational Status
-  String RA;
-  String TC;
-  String TS;
-  String ARV;
-  String CDTIA;
-  String Not_TCAS;
-  String SA;
+  String RA="";
+  String TC="";
+  String TS="";
+  String ARV="";
+  String CDTIA="";
+  String Not_TCAS="";
+  String SA="";
   // Data Item I021/271, Surface Capabilities and Characteristics
-  String POA;
-  String CDTIS;
-  String B2_low;
-  String RAS;
-  String IDENT;
-  String LengthandWidth;
+  String POA="";
+  String CDTIS="";
+  String B2_low="";
+  String RAS="";
+  String IDENT="";
+  String LengthandWidth="";
   // Data Item I021/132, Message Amplitude
-  String Message_Amplitude;
+  String Message_Amplitude="";
   // Data Item I021/250, Mode S MB Data
-  List<String> MB_Data;
-  List<String> BDS1;
-  List<String> BDS2;
-  int modeS_rep;
+  List<String> MB_Data=[];
+  List<String> BDS1=[];
+  List<String> BDS2=[];
+  int modeS_rep=0;
   // Data Item I021/260, ACAS Resolution Advisory Report
-  String TYP;
-  String STYP;
-  String ARA;
-  String RAC;
-  String RAT;
-  String MTE;
-  String TTI;
-  String TID;
+  String TYP="";
+  String STYP="";
+  String ARA="";
+  String RAC="";
+  String RAT="";
+  String MTE="";
+  String TTI="";
+  String TID="";
   // RECEIVER ID
-  String Receiver_ID;
+  String Receiver_ID="";
   // Data Item I021/295, Data Ages
   int Data_Ages_present = 0;
-  String AOS;
-  String TRD;
-  String M3A;
-  String QI;
-  String TI;
-  String MAM;
-  String GH;
+  String AOS="";
+  String TRD="";
+  String M3A="";
+  String QI="";
+  String TI="";
+  String MAM="";
+  String GH="";
 
-  String FL;
-  String ISA;
-  String FSA;
-  String AS;
-  String TAS;
-  String MH;
-  String BVR;
+  String FL="";
+  String ISA="";
+  String FSA="";
+  String AS="";
+  String TAS="";
+  String MH="";
+  String BVR="";
 
-  String GVR;
-  String GV;
-  String TAR;
-  String TI_DataAge;
-  String TS_DataAge;
-  String MET;
-  String ROA;
+  String GVR="";
+  String GV="";
+  String TAR="";
+  String TI_DataAge="";
+  String TS_DataAge="";
+  String MET="";
+  String ROA="";
 
-  String ARA_DataAge;
-  String SCC;
+  String ARA_DataAge="";
+  String SCC="";
   CAT21(HelpDecode decode, CAT21Helper cat21Helper, Uint8List messageInt,
       int id, List<String> message) {
     try {
@@ -235,7 +235,7 @@ class CAT21 {
                      message (checking if the FSPEC in its indexition == 1) and if it exists calls the function to decode the parameter */
 
       if (FSPEC[0] == '1') {
-        index = cat21Helper.Compute_Data_Source_Identification(message, index);
+        index = cat21Helper.Compute_Data_Source_Identification(messageInt, index);
         SAC = cat21Helper.SAC;
         SIC = cat21Helper.SIC;
       }
@@ -263,7 +263,7 @@ class CAT21 {
         Track_Number = cat21Helper.Track_Number;
       }
       if (FSPEC[3] == '1') {
-        index = cat21Helper.Compute_Service_Identification(message, index);
+        index = cat21Helper.Compute_Service_Identification(messageInt, index);
         Service_Identification = cat21Helper.Service_Identification;
       }
       if (FSPEC[4] == '1') {
@@ -417,7 +417,7 @@ class CAT21 {
           Target_Identification = cat21Helper.Target_Identification;
         }
         if (FSPEC[29] == '1') {
-          index = cat21Helper.Compute_Emitter_Category(message, index);
+          index = cat21Helper.Compute_Emitter_Category(messageInt, index);
           ECAT = cat21Helper.ECAT;
         }
         if (FSPEC[30] == '1') {
@@ -466,7 +466,7 @@ class CAT21 {
           TTR = cat21Helper.TTR;
         }
         if (FSPEC[34] == '1') {
-          index = cat21Helper.Compute_Service_Managment(message, index);
+          index = cat21Helper.Compute_Service_Managment(messageInt, index);
           RP = cat21Helper.RP;
         }
       }

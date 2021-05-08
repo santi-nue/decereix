@@ -2,23 +2,23 @@ import 'package:decereix/models/cat10.dart';
 import 'package:decereix/models/cat21.dart';
 
 class CATALL {
-  int num;
-  String CAT;
-  String SAC;
-  String SIC;
-  String Target_Identification;
-  String Target_Address;
-  int Time_Of_day;
-  int List_Time_Of_Day;
-  String Track_number;
-  String Latitude_in_WGS_84;
-  String Longitude_in_WGS_84;
-  double Latitude_in_WGS_84_map;
-  double Longitude_in_WGS_84_map;
-  String Flight_level;
-  String type;
-  String DetectionMode;
-  int direction;
+  int num=0;
+  String CAT="";
+  String SAC="";
+  String SIC="";
+  String Target_Identification="";
+  String Target_Address="";
+  int Time_Of_day=0;
+  int List_Time_Of_Day=0;
+  String Track_number="";
+  String Latitude_in_WGS_84="";
+  String Longitude_in_WGS_84="";
+  double Latitude_in_WGS_84_map=0;
+  double Longitude_in_WGS_84_map=0;
+  String Flight_level="";
+  String type="";
+  String DetectionMode="";
+  int direction=0;
   int refreshratio = -1;
 
   CATALL() {}

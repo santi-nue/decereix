@@ -278,11 +278,11 @@ class _Cat10TableState extends State<Cat10Table> {
               'text_field5': PlutoCell(value: cat10.messageType ?? "None"),
               'text_field6': PlutoCell(
                   value: cat10.TYP != null
-                      ? "TYP:${cat10.TYP}\nDCR:${cat10.DCR}\nCHN:${cat10.CHN}\nBS:${cat10.GBS}\nCRT${cat10.CRT}"
+                      ? "TYP:${cat10.TYP}:DCR:${cat10.DCR}:CHN:${cat10.CHN}:BS:${cat10.GBS}:CRT${cat10.CRT}"
                       : "None"),
               'text_field6a': PlutoCell(
                   value: cat10.CNF != null
-                      ? "SIM:${cat10.SIM}\nTST:${cat10.TST}\nRAB:${cat10.RAB}\nLOP:${cat10.LOP}\nTOT:${cat10.TOT}"
+                      ? "SIM:${cat10.SIM}:TST:${cat10.TST}:RAB:${cat10.RAB}:LOP:${cat10.LOP}:TOT:${cat10.TOT}"
                       : "None"),
               'text_field6b': PlutoCell(value: cat10.SPI ?? "None"),
               'text_field7': PlutoCell(value: cat10.TimeOfDay ?? "None"),
@@ -309,53 +309,53 @@ class _Cat10TableState extends State<Cat10Table> {
               'text_field15': PlutoCell(value: cat10.TrackNumber ?? "None"),
               'text_field16a': PlutoCell(
                   value: cat10.CNF != null
-                      ? "CNF:${cat10.CNF}\nTRE:${cat10.TRE}\nCST:${cat10.CST}\nMAH:${cat10.MAH}\nTCC${cat10.TCC}\nSTH${cat10.STH}"
+                      ? "CNF:${cat10.CNF}:TRE:${cat10.TRE}:CST:${cat10.CST}:MAH:${cat10.MAH}:TCC${cat10.TCC}:STH${cat10.STH}"
                       : "None"),
               'text_field16b': PlutoCell(
                   value: cat10.TOM != null
-                      ? "TOM:${cat10.TOM}\nDOU:${cat10.DOU}\nMRS:${cat10.MRS}"
+                      ? "TOM:${cat10.TOM}:DOU:${cat10.DOU}:MRS:${cat10.MRS}"
                       : "None"),
               'text_field16c': PlutoCell(value: cat10.GHO ?? "None"),
               'text_field17': PlutoCell(
                   value: cat10.VMode3A != null
-                      ? "VMode3A:${cat10.VMode3A}\nGMode3A:${cat10.GMode3A}\nLMode3A:${cat10.LMode3A}\nMode3A:${cat10.Mode3A}"
+                      ? "VMode3A:${cat10.VMode3A}:GMode3A:${cat10.GMode3A}:LMode3A:${cat10.LMode3A}:Mode3A:${cat10.Mode3A}"
                       : "None"),
               'text_field18': PlutoCell(value: cat10.TargetAddress ?? "None"),
               'text_field18b': PlutoCell(value: cat10.STI ?? "None"),
               'text_field19': PlutoCell(
                   value: cat10.MBData != null
-                      ? "MBData:${cat10.MBData.join("-")}\nBDS1:${cat10.BDS1.join("-")}\nBDS2:${cat10.BDS2.join("-")}\nmodeSrep:${cat10.modeSrep ?? -1}"
+                      ? "MBData:${cat10.MBData.join("-")}:BDS1:${cat10.BDS1.join("-")}:BDS2:${cat10.BDS2.join("-")}:modeSrep:${cat10.modeSrep ?? -1}"
                       : "None"),
               'text_field20a': PlutoCell(value: cat10.VFI ?? "None"),
               'text_field20b': PlutoCell(
                   value: cat10.VFlightLevel != null
-                      ? "VFlightLevel:${cat10.VFlightLevel}\nGFlightLevel:${cat10.GFlightLevel}\nFlightLevel:${cat10.FlightLevel}"
+                      ? "VFlightLevel:${cat10.VFlightLevel}:GFlightLevel:${cat10.GFlightLevel}:FlightLevel:${cat10.FlightLevel}"
                       : "None"),
               'text_field21': PlutoCell(value: cat10.MeasuredHeight ?? "None"),
               'text_field22': PlutoCell(
                   value: cat10.LENGHT != null
-                      ? "LENGHT:${cat10.LENGHT}\nORIENTATION:${cat10.ORIENTATION}\nWIDTH:${cat10.WIDTH}"
+                      ? "LENGHT:${cat10.LENGHT}:ORIENTATION:${cat10.ORIENTATION}:WIDTH:${cat10.WIDTH}"
                       : "None"),
               'text_field22b': PlutoCell(
                   value: cat10.NOGO != null
-                      ? "NOGO:${cat10.NOGO}\nOVL:${cat10.OVL}\nTSV:${cat10.TSV}\nDIV:${cat10.DIV}\nTIF:${cat10.TIF}"
+                      ? "NOGO:${cat10.NOGO}:OVL:${cat10.OVL}:TSV:${cat10.TSV}:DIV:${cat10.DIV}:TIF:${cat10.TIF}"
                       : "None"),
               'text_field23': PlutoCell(
                   value: cat10.TRB != null
-                      ? "TRB:${cat10.TRB}\nMSG:${cat10.MSG}"
+                      ? "TRB:${cat10.TRB}:MSG:${cat10.MSG}"
                       : "None"),
               'text_field24': PlutoCell(
                   value: cat10.DeviationX != null
-                      ? "DeviationX:${cat10.DeviationX}\nDeviationY:${cat10.DeviationY}\CovarianceXY:${cat10.CovarianceXY}"
+                      ? "DeviationX:${cat10.DeviationX}:DeviationY:${cat10.DeviationY}:CovarianceXY:${cat10.CovarianceXY}"
                       : "None"),
               'text_field25': PlutoCell(
                   value: cat10.DRHO != null
-                      ? "DRHO:${cat10.DRHO}\nDTHETA:${cat10.DTHETA}"
+                      ? "DRHO:${cat10.DRHO}:DTHETA:${cat10.DTHETA}"
                       : "None"),
               'text_field26': PlutoCell(value: cat10.PAM ?? "None"),
               'text_field27': PlutoCell(
                   value: cat10.Ax != null
-                      ? "Ax:${cat10.Ax}\nAy:${cat10.Ax}"
+                      ? "Ax:${cat10.Ax}:Ay:${cat10.Ax}"
                       : "None"),
             },
           ),

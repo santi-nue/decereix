@@ -543,7 +543,7 @@ class _Cat21TableState extends State<Cat21Table> {
                   PlutoCell(value: cat21.Message_Amplitude ?? "None"),
               'text_field47': PlutoCell(
                   value: cat21.MB_Data != null
-                      ? "MBData:${cat21.MB_Data.join("-")}\nBDS1:${cat21.BDS1.join("-")}\nBDS2:${cat21.BDS2.join("-")}\nmodeSrep:${cat21.modeS_rep ?? -1}"
+                      ? "MBData:${cat21.MB_Data.join("-")}:BDS1:${cat21.BDS1.join("-")}:BDS2:${cat21.BDS2.join("-")}:modeSrep:${cat21.modeS_rep ?? -1}"
                       : "None"),
               'text_field48': PlutoCell(
                   value: cat21.TYP != null
