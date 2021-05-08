@@ -1,22 +1,13 @@
-import 'dart:typed_data';
 
-import 'package:decereix/Helpers/cat10Helper.dart';
-import 'package:decereix/Helpers/helpDecode.dart';
 import 'package:decereix/Provider/cat_provider.dart';
 import 'package:decereix/Screens/cat10_screen.dart';
 import 'package:decereix/Screens/cat21_screen.dart';
 import 'package:decereix/Screens/catall_screen.dart';
-import 'package:decereix/Screens/load_file.dart';
+import 'package:decereix/Screens/loadfile_screen.dart';
 import 'package:decereix/Screens/map_screen.dart';
-import 'package:decereix/models/cat21.dart';
-import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'dart:async';
-
-import 'Helpers/cat21Helper.dart';
-import 'models/cat10.dart';
 
 void main() {
   /// [runApp] which is a Dart funciton to initalize the [Widget Tree]
