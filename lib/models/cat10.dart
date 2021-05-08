@@ -10,84 +10,84 @@ class CAT10 {
   int numOctets=0;
   int numItems = 0;
 
-  String FSPEC="";
+  String FSPEC;
 
 //DATA SOURCE IDENTIFIER
-  String SAC="";
-  String SIC="";
-  String TAR="";
+  String SAC;
+  String SIC;
+  String TAR;
   int airportCode=0;
 //MESSAGE TYPE
-  String messageType="";
+  String messageType;
 
 //TARGET REPORT DESCRIPTOR
-  String TYP="";
-  String DCR="";
-  String CHN="";
-  String GBS="";
-  String CRT="";
+  String TYP;
+  String DCR;
+  String CHN;
+  String GBS;
+  String CRT;
 //First extension
-  String SIM="";
-  String TST="";
-  String RAB="";
-  String LOP="";
-  String TOT="";
+  String SIM;
+  String TST;
+  String RAB;
+  String LOP;
+  String TOT;
 //Second extension
-  String SPI="";
+  String SPI;
 
 //TIME OF DAY
-  String TimeOfDay="";
+  String TimeOfDay;
   int TimeOfDayInSeconds=0;
 
 //POSITION IN WGS-84 CO-ORDINATES
-  String LatitudeWGS_84="";
-  String LongitudeWGS_84="";
+  String LatitudeWGS_84;
+  String LongitudeWGS_84;
   double LatitudeWGS_84_map = -200;
   double LongitudeWGS_84_map = -200;
 //MEASURED POSITION IN POLAR CO-ORDINATES
-  String RHO="";
-  String THETA="";
+  String RHO;
+  String THETA;
 
 //POSITION IN CARTESIAN CO-ORDINATES
-  String X_Component="";
-  String Y_Component="";
-  String Position_In_Polar="";
+  String X_Component;
+  String Y_Component;
+  String Position_In_Polar;
 //CALCULATED TRACK VELOCITY IN POLAR CO-ORDINATES
-  String GroundSpeed="";
-  String TrackAngle="";
+  String GroundSpeed;
+  String TrackAngle;
 
 //CALCULATED TRACK VELOCITY IN CARTESIAN CO-ORDINATES
-  String Vx="";
-  String Vy="";
+  String Vx;
+  String Vy;
 
 //TRACK NUMBER
-  String TrackNumber="";
+  String TrackNumber;
 
 //TRACK STATUS
-  String CNF="";
-  String TRE="";
-  String CST="";
-  String MAH="";
-  String TCC="";
-  String STH="";
+  String CNF;
+  String TRE;
+  String CST;
+  String MAH;
+  String TCC;
+  String STH;
 //First Extent
-  String TOM="";
-  String DOU="";
-  String MRS="";
+  String TOM;
+  String DOU;
+  String MRS;
 //Second Extent
-  String GHO="";
+  String GHO;
 
 //MODE-3/A CODE IN OCTAL REPRESANTATION
-  String VMode3A="";
-  String GMode3A="";
-  String LMode3A="";
-  String Mode3A="";
+  String VMode3A;
+  String GMode3A;
+  String LMode3A;
+  String Mode3A;
 
 //TARGET ADDRESS
-  String TargetAddress="";
+  String TargetAddress;
 
 //TARGET IDENTIFICATION
-  String STI="";
+  String STI;
 
 //MODE S MB DATA
   List<String> MBData=[];
@@ -96,37 +96,37 @@ class CAT10 {
   int modeSrep=0;
 
 //VEHICLE FLEET IDENTIFICATION
-  String VFI="";
+  String VFI;
 
 //FLIGHT LEVEL IN BINARY REPRESENTATION
-  String VFlightLevel="";
-  String GFlightLevel="";
-  String FlightLevelBinary="";
-  String FlightLevel="";
+  String VFlightLevel;
+  String GFlightLevel;
+  String FlightLevelBinary;
+  String FlightLevel;
 
 //MEASURED HEIGHT
-  String MeasuredHeight="";
+  String MeasuredHeight;
 
 //TARGET SIZE & ORIENTATION
-  String LENGHT="";
-  String ORIENTATION="";
-  String WIDTH="";
+  String LENGHT;
+  String ORIENTATION;
+  String WIDTH;
 
 //SYSTEM STATUS
-  String NOGO="";
-  String OVL="";
-  String TSV="";
-  String DIV="";
-  String TIF="";
+  String NOGO;
+  String OVL;
+  String TSV;
+  String DIV;
+  String TIF;
 
 //PRE-PROGRAMMED MESSAGE
-  String TRB="";
-  String MSG="";
+  String TRB;
+  String MSG;
 
 //STANDARD DEVIATION
-  String DeviationX="";
-  String DeviationY="";
-  String CovarianceXY="";
+  String DeviationX;
+  String DeviationY;
+  String CovarianceXY;
 
 //PRESENCE
   int REP = 0;
@@ -134,13 +134,13 @@ class CAT10 {
   List<String> DTHETA=[];
 
 //AMPLITUDE OF PRIMARY PLOT
-  String PAM="";
+  String PAM;
 
 //CALCULATED ACCELERATION
-  String Ax="";
-  String Ay="";
+  String Ax;
+  String Ay;
 
-  CAT10(HelpDecode decode, CAT10Helper cat10Helper, Uint8List message, int id,
+  CAT10(HelpDecode decode, CAT10Helper cat10Helper, int id,
       List<String> messageBinary) {
     try {
       //Decode FSPEC
@@ -155,13 +155,13 @@ class CAT10 {
       }
       this.numOctets = messageBinary.length;
       if (FSPEC[0] == '1') {
-        index = cat10Helper.Compute_Data_Source_Identifier(message, index);
+        index = cat10Helper.Compute_Data_Source_Identifier(messageBinary, index);
         this.SAC = cat10Helper.SAC;
         this.SIC = cat10Helper.SIC;
         this.airportCode = cat10Helper.airportCode;
       } //
       if (FSPEC[1] == '1') {
-        index = cat10Helper.Compute_Message_Type(message, index);
+        index = cat10Helper.Compute_Message_Type(messageBinary, index);
         this.messageType = cat10Helper.MESSAGE_TYPE;
       } //
       if (FSPEC[2] == '1') {
@@ -244,7 +244,7 @@ class CAT10 {
           this.Mode3A = cat10Helper.Mode_3A;
         } //
         if (FSPEC[12] == '1') {
-          index = cat10Helper.Compute_Target_Address(message, index);
+          index = cat10Helper.Compute_Target_Address(messageBinary, index);
           this.TargetAddress = cat10Helper.Target_Address;
         } //
         if (FSPEC[13] == '1') {

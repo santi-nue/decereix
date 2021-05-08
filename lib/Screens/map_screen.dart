@@ -1,33 +1,20 @@
-import 'dart:typed_data';
+import 'package:decereix/Screens/show_map_leaflet.dart';
 import 'package:flutter/material.dart';
+import 'package:latlong/latlong.dart';
 
-class MapScreen extends StatelessWidget {
+class MapScreen extends StatefulWidget {
   const MapScreen({Key key}) : super(key: key);
 
   @override
+  _MapScreenState createState() => _MapScreenState();
+}
+
+class _MapScreenState extends State<MapScreen> {
+  LatLng location = new LatLng(41.29561833, 2.095114167);
+  @override
   Widget build(BuildContext context) {
     return Container(
-      child: DataTable(
-        columns: const <DataColumn>[
-          DataColumn(
-            label: Text(
-              'Name',
-            ),
-          ),
-          DataColumn(
-            label: Text(
-              'Age',
-            ),
-          ),
-        ],
-        rows: const <DataRow>[
-          DataRow(
-            cells: <DataCell>[
-              DataCell(Text('Map')),
-              DataCell(Text('MAPAAAAA')),
-            ],
-          ),
-        ],
+      child: ShowMapLeaflet(location: this.location,
       ),
     );
   }
