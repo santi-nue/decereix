@@ -108,12 +108,22 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
             map = null;
             myFile = null;
             if (resultTransfer.status) {
-              _catProvider.cat10All = resultTransfer.cat10All;
-              resultTransfer.cat10All = null;
-              _catProvider.catAll = resultTransfer.catAll;
-              resultTransfer.catAll = null;
-              _catProvider.cat21All = resultTransfer.cat21All;
-              resultTransfer = null;
+              if(resultTransfer.cat10All!=null) {
+                _catProvider.cat10All = resultTransfer.cat10All;
+                resultTransfer.cat10All = null;
+              }
+              if(resultTransfer.catAll!=null) {
+                _catProvider.catAll = resultTransfer.catAll;
+                resultTransfer.catAll = null;
+              }
+              if(resultTransfer.cat21All!=null) {
+                _catProvider.cat21All = resultTransfer.cat21All;
+                resultTransfer = null;
+              }
+              // Need to sort the list into a stack of planes, cars, with respective trackNumber
+              // as the distinctive field. Object will have a separate stack inside the list of stacks
+              // TODO: ADD SORTING FOR DESCRIBED REQUIREMENT EARLIER...
+
               toast('File Loaded Successfully!');
             }
             EasyLoading.dismiss();
