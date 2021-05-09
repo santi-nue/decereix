@@ -5,13 +5,7 @@ import 'package:flutter/cupertino.dart';
 
 class CAT21 {
   String FSPEC;
-  List<String> message;
-  List<String> items = [];
-
   int Id = 0;
-  int numOctets=0;
-
-  // COMPUTE PARAMETERS
 
   //MESSAGE TYPE
   String messageType;
@@ -226,10 +220,8 @@ class CAT21 {
       int octetsFSPEC = FSPEC0.length ~/ 7;
       int index = 3 + octetsFSPEC;
       this.FSPEC = FSPEC0;
-      this.message = message;
       // Data Item Header
       this.Id = id;
-      this.numOctets = message.length;
 
       /* From now on each function looks to see if the decoding parameter exists in the
                      message (checking if the FSPEC in its indexition == 1) and if it exists calls the function to decode the parameter */
@@ -547,8 +539,9 @@ class CAT21 {
           SCC = cat21Helper.SCC;
         }
       }
+      decode = null; cat21Helper = null; id = null; message = null;
     } catch (e) {
-      message = message;
+      decode = null; cat21Helper = null; id = null; message = null;
     }
   }
 }

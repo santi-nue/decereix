@@ -74,11 +74,15 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
           cat10 = new CAT10(helpDecode, cat10helper, k, messagesBinary[k]);
           cat10All.add(cat10);
           catAll.add(new CATALL.fromCat10(cat10, firstTime));
+          messagesBinary[k] = null;
+          cat10 = null;
           /*messages[k]=null;*/
         } else if (messagesBinary[k][0] == "00010101") {
           cat21 = new CAT21(helpDecode, cat21helper, k, messagesBinary[k]);
           cat21All.add(cat21);
           catAll.add(new CATALL.fromCat21(cat21, firstTime));
+          messagesBinary[k] = null;
+          cat21 = null;
           /*messages[k]=null;*/
         }
       }

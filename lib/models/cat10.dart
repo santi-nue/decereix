@@ -5,10 +5,7 @@ import 'package:decereix/Helpers/helpDecode.dart';
 import 'package:flutter/cupertino.dart';
 
 class CAT10 {
-  List<String> message = [];
   int Id=0;
-  int numOctets=0;
-  int numItems = 0;
 
   String FSPEC;
 
@@ -148,12 +145,7 @@ class CAT10 {
       int octetsFSPEC = (fspec0.length ~/ 7); // double/division to Int
       int index = 3 + octetsFSPEC;
       this.FSPEC = fspec0.substring(0, fspec0.length);
-
       this.Id = id;
-      if (id == 34) {
-        String ds = "";
-      }
-      this.numOctets = messageBinary.length;
       if (FSPEC[0] == '1') {
         index = cat10Helper.Compute_Data_Source_Identifier(messageBinary, index);
         this.SAC = cat10Helper.SAC;
@@ -330,9 +322,10 @@ class CAT10 {
           this.Ay = cat10Helper.Ay;
         }
       }
-      String xs = "";
+      decode = null; cat10Helper = null; id = null; messageBinary = null;
     } catch (e) {
       debugPrint(e.toString());
+      decode = null; cat10Helper = null; id = null; messageBinary = null;
     }
   }
 }
