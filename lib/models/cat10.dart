@@ -188,7 +188,7 @@ class CAT10 {
         index = cat10Helper.Compute_Position_in_WGS_84_Coordinates(
             messageBinary, index);
         this.LatitudeWGS_84 = cat10Helper.Latitude_in_WGS_84;
-        this.LatitudeWGS_84 = cat10Helper.Longitude_in_WGS_84;
+        this.LongitudeWGS_84 = cat10Helper.Longitude_in_WGS_84;
         this.LatitudeWGS_84_map = cat10Helper.LatitudeWGS_84_map;
         this.LongitudeWGS_84_map = cat10Helper.LongitudeWGS_84_map;
       }
@@ -204,6 +204,10 @@ class CAT10 {
         this.X_Component = cat10Helper.X_Component;
         this.Y_Component = cat10Helper.Y_Component;
         this.Position_In_Polar = cat10Helper.Position_In_Polar;
+        this.LatitudeWGS_84 = cat10Helper.Latitude_in_WGS_84;
+        this.LongitudeWGS_84 = cat10Helper.Longitude_in_WGS_84;
+        this.LatitudeWGS_84_map = cat10Helper.LatitudeWGS_84_map;
+        this.LongitudeWGS_84_map = cat10Helper.LongitudeWGS_84_map;
       } //
       if (FSPEC.length > 8) {
         if (FSPEC[7] == '1') {

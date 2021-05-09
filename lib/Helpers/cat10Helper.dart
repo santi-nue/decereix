@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:decereix/Helpers/helpDecode.dart';
-
+import 'dart:math';
+import 'package:extended_math/extended_math.dart';
 class CAT10Helper {
   HelpDecode lib = new HelpDecode();
   // Empty Constructor
@@ -343,12 +344,36 @@ class CAT10Helper {
     Position_Cartesian_Coordinates =
         "X: " + X_Component + ", Y: " + Y_Component;
     /*Point p = new Point(X_Component_map, Y_Component_map);*/
-    /* PointLatLng position = ComputeWGS_84_from_Cartesian(p, this.SIC);*/ //Compute WGS84 position from cartesian position
+    //Compute WGS84 position from cartesian position
+   List<num> latLong =  ComputeWGS_84_from_Cartesian(X_Component_map,Y_Component_map);
+   setWGS_84(latLong[0].toDouble(), latLong[1].toDouble());
     /*Set_WGS84_Coordinates(position);*/ //Apply computed WGS84 position to this message
     pos += 4;
     return pos;
   }
+  setWGS_84(double Latitude, double Longitude){
+    this.LatitudeWGS_84_map = Latitude;
+    this.LongitudeWGS_84_map = Longitude;
+    int Latdegres = Latitude.truncate();
+    int Latmin = ((Latitude - Latdegres) * 60).truncate();
+    double Latsec = (Latitude - (Latdegres + (Latmin / 60))) * 3600;
 
+    int Londegres = Longitude.truncate();
+    int Lonmin = ((Longitude - Londegres) * 60).truncate();
+    double Lonsec = (Longitude - (Londegres + (Lonmin / 60))) * 3600;
+    this.Latitude_in_WGS_84 = Latdegres.toString() +
+        "º " +
+        Latmin.toString() +
+        "' " +
+        Latsec.toString() +
+        "''";
+    this.Longitude_in_WGS_84 = Londegres.toString() +
+        "º" +
+        Lonmin.toString() +
+        "' " +
+        Lonsec.toString() +
+        "''";
+  }
   /// <summary>
   /// Data Item I010/200, Calculated Track Velocity in Polar Co-ordinates
   ///
@@ -951,5 +976,127 @@ class CAT10Helper {
     Calculated_Acceleration = Ax + " " + Ay;
     pos += 2;
     return pos;
+  }
+
+  List<double> ComputeWGS_84_from_Cartesian(double x_component, double y_component) {
+    //Constants
+    num A = 6378137.0;
+    num E2 = 0.00669437999013;
+    num radlatBcn = 41.29561833* (0.01745329251);
+    num radlongBcn = 2.095114167* (0.01745329251);
+
+    // Get Center Projection
+    // c2 = c.Lat, c.Lon, 0 => Radar Location
+    num nu = A / sqrt(1 - E2 * pow(sin(radlatBcn), 2.0));
+
+    num  R_S = (A * (1.0 - E2)) /
+        pow(1 - E2 * pow(sin(radlatBcn), 2.0), 1.5);
+     // GeneralMatrix R1; GeneralMatrix T1;
+    List<List<num>> T1 = CalculateTranslationMatrix(radlatBcn,radlongBcn, A, E2);
+    List<List<num>> R1 = CalculateRotationMatrix(radlatBcn, radlongBcn);
+    // Convert Object Pos
+    List<num> posGeocentric = change_system_cartesian2geocentric(x_component, y_component, 0, R1, T1);
+    List<num> objectGeodesic = change_geocentric2geodesic(posGeocentric[0],posGeocentric[1],posGeocentric[2], A, E2);
+    // Make the position of object with Airport
+
+    // Save the position and return
+    List<num> coordinatesObjWGS = [0, 0];
+    num LatitudeWGS_84_map = objectGeodesic[0] * (180 / pi);
+    num LongitudeWGS_84_map = objectGeodesic[1] * (180 / pi);
+
+    return [LongitudeWGS_84_map, LatitudeWGS_84_map];
+  }
+  List<List<num>> CalculateTranslationMatrix(num radlatBcn ,num radlongBcn, num A, num E2)
+  {
+    double Height = 0;
+    double nu = A / sqrt(1 - E2 * pow(sin(radlatBcn), 2.0));
+    var coefT1 = List.generate(3, (i) => [0, 0, 0.0], growable: false);
+    coefT1[0][0] = (nu + Height) * cos(radlatBcn) * cos(radlongBcn);
+
+    coefT1[1][0] = (nu + Height) * cos(radlatBcn) * sin(radlongBcn);
+    coefT1[2][0] = (nu * (1 - E2) + Height) * sin(radlatBcn);
+    /*GeneralMatrix m = new GeneralMatrix(coefT1, 3, 1);*/
+    return coefT1;
+  }
+  List<num> change_geocentric2geodesic(num x, num y, num z, num A, num E2)
+  {
+    // semi-minor earth axis
+    //double b = this.A * sqrt(1 - this.E2);
+    num b = 6356752.3142;
+    num Lat = 0; num Lon = 0; num Height = 0;
+    if ((x.abs() < 1e-10) && (y.abs() < 1e-10))
+    {
+      if (z < 1e-10)
+      {
+        // the point is at the center of earth :)
+        Lat = pi / 2.0;
+      }
+      else
+      {
+
+        Lat = (pi / 2.0) * ((z/ z.abs()) + 0.5);
+      }
+      Lon = 0;
+      Height = z.abs() - b;
+      return [Lon, Lat, Height];
+    }
+
+    double d_xy = sqrt(x*x+y*y);
+    // from formula 20
+    Lat = atan((z/ d_xy) / (1 - (A * E2) / sqrt(d_xy * d_xy + z * z)));
+    // from formula 24
+    num nu = A / sqrt(1 - E2 * pow(sin(Lat), 2.0));
+    // from formula 20
+    Height = (d_xy / cos(Lat)) - nu;
+
+    // iteration from formula 20b
+    double Lat_over;
+    if (Lat >= 0) { Lat_over = -0.1; } else { Lat_over = 0.1; }
+
+    int loop_count = 0;
+    while (((Lat - Lat_over).abs() >  1e-8)
+        && (loop_count < 50))
+    {
+      loop_count++;
+      Lat_over = Lat;
+      Lat = atan((z * (1 + Height / nu)) /
+          (d_xy * ((1 - E2) + (Height / nu))));
+      nu = A / sqrt(1 - E2 * pow(sin(Lat), 2.0));
+      Height = d_xy / cos(Lat) - nu;
+    }
+    Lon = atan2(y, x);
+    // if (loop_count == 50) { // exception }
+    return [Lat, Lon, Height];
+  }
+  List<List<num>> CalculateRotationMatrix(num lat, num lon)
+  {
+    var coefR1 = List.generate(3, (i) => [0, 0, 0.0], growable: false);
+    /*double[][] coefR1 = { new double[3], new double[3], new double[3] };*/
+
+    coefR1[0][0] = -(sin(lon));
+    coefR1[0][1] = cos(lon);
+    coefR1[0][2] = 0;
+    coefR1[1][0] = -(sin(lat) * cos(lon));
+    coefR1[1][1] = -(sin(lat) * sin(lon));
+    coefR1[1][2] = cos(lat);
+    coefR1[2][0] = cos(lat) * cos(lon);
+    coefR1[2][1] = cos(lat) * sin(lon);
+    coefR1[2][2] = sin(lat);
+    /*GeneralMatrix m = new GeneralMatrix(coefR1, 3, 3);*/
+    return coefR1;
+  }
+  List<num> change_system_cartesian2geocentric(num x, num y, num z, List<List<num>> R1, List<List<num>> T1)
+  {
+
+    var coefInput = List.generate(3, (i) => [0, 0, 0.0], growable: false);
+    /*double[][] coefInput = { new double[1], new double[1], new double[1] };*/
+    coefInput[0][0] = x; coefInput[1][0] = y; coefInput[2][0] = z;
+    Matrix inputMatrix = new Matrix(coefInput.toList());
+
+    Matrix R2 = Matrix(R1).transpose();
+    Matrix R3 = R2.matrixProduct(inputMatrix);
+    R3 = R3 + Matrix(T1);
+    List<num> ret = [R3.itemAt(1,1), R3.itemAt(2,1), R3.itemAt(3,1)];
+    return ret;
   }
 }

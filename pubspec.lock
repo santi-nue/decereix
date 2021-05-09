@@ -71,6 +71,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.0"
+  extended_math:
+    dependency: "direct main"
+    description:
+      name: extended_math
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.29+1"
   fake_async:
     dependency: transitive
     description:
@@ -226,6 +233,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.12.10"
+  math_utils:
+    dependency: "direct main"
+    description:
+      name: math_utils
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.3"
   meta:
     dependency: transitive
     description:
