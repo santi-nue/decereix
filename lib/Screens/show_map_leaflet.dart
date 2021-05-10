@@ -43,7 +43,7 @@ class _ShowMapLeafletState extends State<ShowMapLeaflet> {
         body: FlutterMap(
           options: new MapOptions(
             center: widget.location,
-            zoom: 13.0,
+            zoom: 12.0,
             maxZoom: 18.0,
             minZoom: 7.0,
           ),

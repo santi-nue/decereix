@@ -6,7 +6,7 @@ class CAT10Helper {
   HelpDecode lib = new HelpDecode();
   // Empty Constructor
   CAT10Helper();
-
+  double rotationNorth = 0;
   /// <summary>
   /// Data Item I010/010, Data Source Identifier
   ///
@@ -1004,7 +1004,7 @@ class CAT10Helper {
     num LatitudeWGS_84_map = objectGeodesic[0] * (180 / pi);
     num LongitudeWGS_84_map = objectGeodesic[1] * (180 / pi);
 
-    return [LongitudeWGS_84_map, LatitudeWGS_84_map];
+    return [LatitudeWGS_84_map, LongitudeWGS_84_map];
   }
   List<List<num>> CalculateTranslationMatrix(num radlatBcn ,num radlongBcn, num A, num E2)
   {

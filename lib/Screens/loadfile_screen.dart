@@ -1,3 +1,4 @@
+import 'dart:core';
 import 'dart:typed_data';
 import 'package:decereix/Helpers/cat10Helper.dart';
 import 'package:decereix/Helpers/cat21Helper.dart';
@@ -6,6 +7,7 @@ import 'package:decereix/Provider/cat_provider.dart';
 import 'package:decereix/models/cat10.dart';
 import 'package:decereix/models/cat21.dart';
 import 'package:decereix/models/catall.dart';
+import 'package:decereix/models/trajectories.dart';
 import 'package:decereix/models/transferCat.dart';
 import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/cupertino.dart';
@@ -35,11 +37,12 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
       int firstTime = mapVal["firstTime"];
       mapVal = null;
       //-------------------RAW File to parse it in RAM-------------------//
-      List<String> fileBinary =
-      new List<String>.filled(fileBytes.length, "", growable: false);
+      /*List<String> fileBinary =
+      new List<String>.filled(fileBytes.length, "00000000", growable: false);
       for (int i = 0; i < fileBytes.length; i++) {
         fileBinary[i] = fileBytes[i].toRadixString(2).padLeft(8, "0");
-      }
+      }*/
+      var fileBinary = fileBytes.map((i) => i.toRadixString(2).padLeft(8, "0")).toList();
       // Go over all of the packets and store them in a separate list of lists
       // First Octet Category
 
@@ -74,24 +77,279 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
           cat10 = new CAT10(helpDecode, cat10helper, k, messagesBinary[k]);
           cat10All.add(cat10);
           catAll.add(new CATALL.fromCat10(cat10, firstTime));
-          messagesBinary[k] = null;
-          cat10 = null;
-          /*messages[k]=null;*/
         } else if (messagesBinary[k][0] == "00010101") {
           cat21 = new CAT21(helpDecode, cat21helper, k, messagesBinary[k]);
           cat21All.add(cat21);
           catAll.add(new CATALL.fromCat21(cat21, firstTime));
-          messagesBinary[k] = null;
-          cat21 = null;
-          /*messages[k]=null;*/
         }
       }
-      return Future.value(
-          new TransferCat.fromCats(cat10All, cat21All, catAll, true));
+      // -- TRANSFER
+      TransferCat transferCat = computeTrajectories(catAll);
+      transferCat.catAll = catAll;
+      transferCat.cat10All = cat10All;
+      transferCat.cat21All = cat21All;
+      transferCat.status = true;
+      /*fromCats(cat10All, cat21All, catAll, true));*/
+      return Future.value(transferCat);
     } catch (e) {
-      debugPrint(e.toString());
       return Future.value(new TransferCat.fromCats([], [], [], false));
     }
+  }
+
+  static TransferCat computeTrajectories(List<CATALL> catAll)
+  {
+    List<Trajectories> SMRTrajectories = [];
+    List<Trajectories> MLATTrajectories = [];
+    List<Trajectories> ADSBTrajectories = [];
+    TransferCat transferCat = new TransferCat();
+    int i = 0;
+    catAll.forEach((message) {
+      //
+      if (message.Latitude_in_WGS_84 != -200 &&
+          message.Longitude_in_WGS_84 != -200) {
+        if (message.DetectionMode == "SMR") {
+          if (message.Target_Identification != null) {
+            bool isNotFound = true;
+            for (int k = 0; k < SMRTrajectories.length; k++) {
+              if (SMRTrajectories[k].Target_Identification ==
+                  message.Target_Identification) {
+                SMRTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
+                    message.Longitude_in_WGS_84_map, message.Time_Of_day);
+                isNotFound = false;
+              }
+            }
+            if (isNotFound) {
+              Trajectories traj = new Trajectories(
+                  message.Target_Identification,
+                  message.Time_Of_day,
+                  message.Latitude_in_WGS_84_map,
+                  message.Longitude_in_WGS_84_map,
+                  message.type,
+                  message.Target_Address,
+                  message.DetectionMode,
+                  message.CAT,
+                  message.SAC,
+                  message.SIC,
+                  message.Track_number);
+              SMRTrajectories.add(traj);
+            }
+          }
+          else if (message.Target_Address != null) {
+            bool isNotFound = true;
+            for (int k = 0; k < SMRTrajectories.length; k++) {
+              if (SMRTrajectories[k].Target_Address == message.Target_Address) {
+                SMRTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
+                    message.Longitude_in_WGS_84_map, message.Time_Of_day);
+                isNotFound = false;
+              }
+            }
+            if (isNotFound) {
+              Trajectories traj = new Trajectories(
+                  message.Target_Identification,
+                  message.Time_Of_day,
+                  message.Latitude_in_WGS_84_map,
+                  message.Longitude_in_WGS_84_map,
+                  message.type,
+                  message.Target_Address,
+                  message.DetectionMode,
+                  message.CAT,
+                  message.SAC,
+                  message.SIC,
+                  message.Track_number);
+              SMRTrajectories.add(traj);
+            }
+          }
+          else if (message.Track_number != null) {
+            bool isNotFound = true;
+            for (int k = 0; k < SMRTrajectories.length; k++) {
+              if (SMRTrajectories[k].Track_number == message.Track_number) {
+                SMRTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
+                    message.Longitude_in_WGS_84_map, message.Time_Of_day);
+                isNotFound = false;
+              }
+            }
+            if (isNotFound) {
+              Trajectories traj = new Trajectories(
+                  message.Target_Identification,
+                  message.Time_Of_day,
+                  message.Latitude_in_WGS_84_map,
+                  message.Longitude_in_WGS_84_map,
+                  message.type,
+                  message.Target_Address,
+                  message.DetectionMode,
+                  message.CAT,
+                  message.SAC,
+                  message.SIC,
+                  message.Track_number);
+              SMRTrajectories.add(traj);
+            }
+          }
+        }
+          else if (message.DetectionMode == "MLAT") {
+          if (message.Target_Identification != null) {
+            bool isNotFound = true;
+            for (int k = 0; k < MLATTrajectories.length; k++) {
+              if (MLATTrajectories[k].Target_Identification ==
+                  message.Target_Identification) {
+                MLATTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
+                    message.Longitude_in_WGS_84_map, message.Time_Of_day);
+                isNotFound = false;
+              }
+            }
+            if (isNotFound) {
+              Trajectories traj = new Trajectories(
+                  message.Target_Identification,
+                  message.Time_Of_day,
+                  message.Latitude_in_WGS_84_map,
+                  message.Longitude_in_WGS_84_map,
+                  message.type,
+                  message.Target_Address,
+                  message.DetectionMode,
+                  message.CAT,
+                  message.SAC,
+                  message.SIC,
+                  message.Track_number);
+              MLATTrajectories.add(traj);
+            }
+          }
+          else if (message.Target_Address != null) {
+            bool isNotFound = true;
+            for (int k = 0; k < MLATTrajectories.length; k++) {
+              if (MLATTrajectories[k].Target_Address ==
+                  message.Target_Address) {
+                MLATTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
+                    message.Longitude_in_WGS_84_map, message.Time_Of_day);
+                isNotFound = false;
+              }
+            }
+            if (isNotFound) {
+              Trajectories traj = new Trajectories(
+                  message.Target_Identification,
+                  message.Time_Of_day,
+                  message.Latitude_in_WGS_84_map,
+                  message.Longitude_in_WGS_84_map,
+                  message.type,
+                  message.Target_Address,
+                  message.DetectionMode,
+                  message.CAT,
+                  message.SAC,
+                  message.SIC,
+                  message.Track_number);
+              MLATTrajectories.add(traj);
+            }
+          }
+          else if (message.Track_number != null) {
+            bool isNotFound = true;
+            for (int k = 0; k < MLATTrajectories.length; k++) {
+              if (MLATTrajectories[k].Track_number == message.Track_number) {
+                MLATTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
+                    message.Longitude_in_WGS_84_map, message.Time_Of_day);
+                isNotFound = false;
+              }
+            }
+            if (isNotFound) {
+              Trajectories traj = new Trajectories(
+                  message.Target_Identification,
+                  message.Time_Of_day,
+                  message.Latitude_in_WGS_84_map,
+                  message.Longitude_in_WGS_84_map,
+                  message.type,
+                  message.Target_Address,
+                  message.DetectionMode,
+                  message.CAT,
+                  message.SAC,
+                  message.SIC,
+                  message.Track_number);
+              MLATTrajectories.add(traj);
+            }
+          }
+        }
+            else if (message.DetectionMode == "ADSB") {
+          if (message.Target_Identification != null) {
+            bool isNotFound = true;
+            for (int k = 0; k < ADSBTrajectories.length; k++) {
+              if (ADSBTrajectories[k].Target_Identification ==
+                  message.Target_Identification) {
+                ADSBTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
+                    message.Longitude_in_WGS_84_map, message.Time_Of_day);
+                isNotFound = false;
+              }
+            }
+            if (isNotFound) {
+              Trajectories traj = new Trajectories(
+                  message.Target_Identification,
+                  message.Time_Of_day,
+                  message.Latitude_in_WGS_84_map,
+                  message.Longitude_in_WGS_84_map,
+                  message.type,
+                  message.Target_Address,
+                  message.DetectionMode,
+                  message.CAT,
+                  message.SAC,
+                  message.SIC,
+                  message.Track_number);
+              ADSBTrajectories.add(traj);
+            }
+          }
+          else if (message.Target_Address != null) {
+            bool isNotFound = true;
+            for (int k = 0; k < ADSBTrajectories.length; k++) {
+              if (ADSBTrajectories[k].Target_Address == message.Target_Address) {
+                ADSBTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
+                    message.Longitude_in_WGS_84_map, message.Time_Of_day);
+                isNotFound = false;
+              }
+            }
+            if (isNotFound) {
+              Trajectories traj = new Trajectories(
+                  message.Target_Identification,
+                  message.Time_Of_day,
+                  message.Latitude_in_WGS_84_map,
+                  message.Longitude_in_WGS_84_map,
+                  message.type,
+                  message.Target_Address,
+                  message.DetectionMode,
+                  message.CAT,
+                  message.SAC,
+                  message.SIC,
+                  message.Track_number);
+              ADSBTrajectories.add(traj);
+            }
+          }
+          else if (message.Track_number != null) {
+            bool isNotFound = true;
+            for (int k = 0; k < ADSBTrajectories.length; k++) {
+              if (ADSBTrajectories[k].Track_number == message.Track_number) {
+                ADSBTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
+                    message.Longitude_in_WGS_84_map, message.Time_Of_day);
+                isNotFound = false;
+              }
+            }
+            if (isNotFound) {
+              Trajectories traj = new Trajectories(
+                  message.Target_Identification,
+                  message.Time_Of_day,
+                  message.Latitude_in_WGS_84_map,
+                  message.Longitude_in_WGS_84_map,
+                  message.type,
+                  message.Target_Address,
+                  message.DetectionMode,
+                  message.CAT,
+                  message.SAC,
+                  message.SIC,
+                  message.Track_number);
+              ADSBTrajectories.add(traj);
+            }
+          }
+            }
+          }
+    });
+    transferCat.SMRTrajectories = SMRTrajectories;
+    transferCat.MLATTrajectories = MLATTrajectories;
+    transferCat.ADSBTrajectories = ADSBTrajectories;
+    return transferCat;
+      /*process = "Computing trajectory for message " + i +" of " + Convert.ToString(List.Count)+" messages...";*/
+     /* i++;*/
   }
 
   @override
@@ -106,28 +364,34 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
         if (myFile != null) {
           Map<String, dynamic> map = {};
           map['fileBytes'] = myFile.toUint8List();
-          map['firstTime'] = _catProvider.first_time;
-          //-----------------------------------------//
-          compute(loadAsterix, map).then((resultTransfer) {
+          map['firstTime'] = _catProvider.firstTime;
+          //-------------------------------- compute(loadAsterix, map). ---------//
+          /*final result = await */Executor().execute(arg1: map, fun1: loadAsterix).then((resultTransfer) {
             map = null;
             myFile = null;
             if (resultTransfer.status) {
               if(resultTransfer.cat10All!=null) {
                 _catProvider.cat10All = resultTransfer.cat10All;
-                resultTransfer.cat10All = null;
               }
               if(resultTransfer.catAll!=null) {
                 _catProvider.catAll = resultTransfer.catAll;
-                resultTransfer.catAll = null;
               }
               if(resultTransfer.cat21All!=null) {
                 _catProvider.cat21All = resultTransfer.cat21All;
-                resultTransfer = null;
+
               }
               // Need to sort the list into a stack of planes, cars, with respective trackNumber
-              // as the distinctive field. Object will have a separate stack inside the list of stacks
-              // TODO: ADD SORTING FOR DESCRIBED REQUIREMENT EARLIER...
-
+              // as the distinctive field.
+              if(resultTransfer.SMRTrajectories!=null) {
+                _catProvider.smrTrajectories = resultTransfer.SMRTrajectories;
+              }
+              if(resultTransfer.MLATTrajectories!=null) {
+                _catProvider.mlatTrajectories = resultTransfer.MLATTrajectories;
+              }
+              if(resultTransfer.ADSBTrajectories!=null) {
+                _catProvider.adsbTrajectories = resultTransfer.ADSBTrajectories;
+              }
+              resultTransfer = null;
               toast('File Loaded Successfully!');
             }
             EasyLoading.dismiss();

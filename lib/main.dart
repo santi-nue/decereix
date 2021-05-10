@@ -12,8 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:worker_manager/worker_manager.dart';
 
 void main() async {
-  await Executor().warmUp(isolatesCount: 12);
-
+  await Executor().warmUp();
   /// [runApp] which is a Dart function to initialize the [Widget Tree]
   runApp(
     /// Providers are above [MyApp] instead of inside it, so that [Other Widgets] including [MyApp]

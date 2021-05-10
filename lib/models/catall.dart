@@ -41,7 +41,7 @@ class CATALL {
     this.Latitude_in_WGS_84 = message.LatitudeWGS_84;
     this.Longitude_in_WGS_84 = message.LongitudeWGS_84;
     this.Longitude_in_WGS_84_map = message.LongitudeWGS_84_map;
-    this.Latitude_in_WGS_84_map = message.LongitudeWGS_84_map;
+    this.Latitude_in_WGS_84_map = message.LatitudeWGS_84_map;
     this.Flight_level = message.FlightLevel;
     /* if (message.TimeOfDayInSeconds < first_time) {
       this.List_Time_Of_Day =

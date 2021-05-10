@@ -10,11 +10,11 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  LatLng location = new LatLng(41.29561833, 2.095114167);
+  LatLng locationBCN = new LatLng(41.29561833, 2.095114167);
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: ShowMapLeaflet(location: this.location,
+      child: ShowMapLeaflet(location: this.locationBCN,
       ),
     );
   }
