@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong/latlong.dart';
 
 import 'error_show.dart';
@@ -22,10 +23,16 @@ class ShowMapLeaflet extends StatefulWidget {
 
 class _ShowMapLeafletState extends State<ShowMapLeaflet> {
   static LatLng location = new LatLng(41.29561833, 2.095114167);
+  /// A [MapController], used to control the map.
+  MapController _mapController = new MapController(
+
+  );
   int index = 0;
   bool isPlaying = false;
   int initialTime = 86400;
-
+  static double minZoom = 6.0;
+  static double maxZoom = 18.0;
+  static double zoomFactor = 0.5;
   /// [ValueNotifier] Value Notifier with Initial Values which only rebuilds the
   /// widgets it is used
   //ValueNotifier<List<String>> universityNames = ValueNotifier(["Select your University:"]);
@@ -91,11 +98,12 @@ class _ShowMapLeafletState extends State<ShowMapLeaflet> {
         // This builder will only get called when the _counter
         // is updated.
         return FlutterMap(
+          mapController: _mapController,
           options: new MapOptions(
             center: location,
             zoom: 12.0,
-            maxZoom: 18.0,
-            minZoom: 7.0,
+            maxZoom: maxZoom,
+            minZoom: minZoom,
           ),
           layers: [
             new TileLayerOptions(
@@ -124,8 +132,13 @@ class _ShowMapLeafletState extends State<ShowMapLeaflet> {
           child: Listener(
             onPointerSignal: (pointerSignal) {
               if (pointerSignal is PointerScrollEvent) {
-                // do something when scrolled
-                print('Scrolled');
+                LatLng latlng = _mapController.center ?? new LatLng(0,0);
+                /// Scroll Direction Normalized * [Zoom factor] :: [Windows Zoom] precision factor
+                double deltaZoom = (pointerSignal.scrollDelta.direction/(pointerSignal.scrollDelta.direction).abs())*zoomFactor;
+                double zoomNew = _mapController.zoom - deltaZoom;
+                zoomNew = zoomNew<minZoom ? minZoom : zoomNew;
+                zoomNew = zoomNew>maxZoom ? maxZoom : zoomNew;
+                _mapController.move(latlng,zoomNew );
               }
             },
             child: flutterMapWidget
