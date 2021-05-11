@@ -36,6 +36,7 @@ dependencies:
   overlay_support: ^1.2.1
   math_utils: ^1.0.3
   extended_math: ^0.0.29+1
+  floating_action_row: ^0.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

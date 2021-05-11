@@ -13,7 +13,8 @@ class Trajectories {
 
   String Track_number;
 
-  String type;
+  // Type =[0=Point,1=Car,2=Plane]
+  int type;
 
   String DetectionMode;
   List<double> ListAngles = [];
@@ -73,11 +74,11 @@ class Trajectories {
     this.SIC = SIC;
     this.Target_Address = TargetAddress;
     if (emitter == "car") {
-      this.type = "Surface vehicle";
+      this.type = 1;
     } else if (emitter == "plane") {
-      this.type = "Aircraft";
+      this.type = 2;
     } else {
-      this.type = emitter;
+      this.type = 0;
     }
     this.DetectionMode = DetectionMode;
     this.Track_number = Track_number;

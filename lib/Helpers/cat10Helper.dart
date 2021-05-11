@@ -229,7 +229,7 @@ class CAT10Helper {
   int Compute_Time_of_Day(List<String> messageOctets, int pos) {
     String s =
         messageOctets[pos] + messageOctets[pos + 1] + messageOctets[pos + 2];
-    int str = this.lib.Binary2Int(s);
+    double str = this.lib.Binary2Double(s);
     double seconds = str / 128;
     Time_of_day_sec = seconds.truncate();
     final duration = Duration(seconds: Time_of_day_sec);
@@ -268,8 +268,8 @@ class CAT10Helper {
             messageOctets[pos + 3]) *
         (8.38190317e-8);
     pos += 4;
-    LatitudeWGS_84_map = Latitude;
-    LongitudeWGS_84_map = Longitude;
+    LatitudeWGS_84_map = dp(Latitude,5);
+    LongitudeWGS_84_map = dp(Longitude,5);
     int Latdegres = Latitude.truncate();
     int Latmin = ((Latitude - Latdegres) * 60).truncate();
     double Latsec = (Latitude - (Latdegres + (Latmin / 60))) * 3600;
@@ -351,9 +351,13 @@ class CAT10Helper {
     pos += 4;
     return pos;
   }
+  double dp(double val, int places){
+    double mod = pow(10.0, places);
+    return ((val * mod).round().toDouble() / mod);
+  }
   setWGS_84(double Latitude, double Longitude){
-    this.LatitudeWGS_84_map = Latitude;
-    this.LongitudeWGS_84_map = Longitude;
+    this.LatitudeWGS_84_map = dp(Latitude,5);
+    this.LongitudeWGS_84_map = dp(Longitude,5);
     int Latdegres = Latitude.truncate();
     int Latmin = ((Latitude - Latdegres) * 60).truncate();
     double Latsec = (Latitude - (Latdegres + (Latmin / 60))) * 3600;

@@ -7,6 +7,7 @@ class TransferCat {
   List<CAT10> cat10All = [];
   List<CAT21> cat21All = [];
   List<CATALL> catAll = [];
+  int firstTime = 999999;
   List<Trajectories> SMRTrajectories = [];
   List<Trajectories> MLATTrajectories = [];
   List<Trajectories> ADSBTrajectories = [];

@@ -35,7 +35,7 @@ class CATALL {
     this.CAT = "10";
     this.SAC = message.SAC;
     this.SIC = message.SIC;
-    this.Target_Identification = message.TAR;
+    this.Target_Identification = message.Target_Identification;
     this.Target_Address = message.TargetAddress;
     this.Track_number = message.TrackNumber;
     this.Latitude_in_WGS_84 = message.LatitudeWGS_84;
@@ -43,10 +43,7 @@ class CATALL {
     this.Longitude_in_WGS_84_map = message.LongitudeWGS_84_map;
     this.Latitude_in_WGS_84_map = message.LatitudeWGS_84_map;
     this.Flight_level = message.FlightLevel;
-    /* if (message.TimeOfDayInSeconds < first_time) {
-      this.List_Time_Of_Day =
-          message.TimeOfDayInSeconds + 86400 + First_time_of_day;
-    } else { */
+    this.Time_Of_day = message.TimeOfDayInSeconds;
     this.List_Time_Of_Day = message.TimeOfDayInSeconds + First_time_of_day;
     /* } */
     if (message.TOT == "Ground vehicle") {
@@ -64,8 +61,6 @@ class CATALL {
     }
   }
 
-  /// <summary>
-  ///  Create an instance of class CAT all from an instance of class CAT 21 version 2.1
   /// </summary>
   /// <param name="message">CAT 21 version 2.1 instance from which you want to create a CAT All instance</param>
   /// <param name="First_time_of_day">Parameter that indicates the time 00:00:00 of the day of the message (if the message is from the second day the time will be 86400)</param>
@@ -82,10 +77,7 @@ class CATALL {
     this.Latitude_in_WGS_84_map = message.LatitudeWGS_84_map;
     this.Longitude_in_WGS_84_map = message.LongitudeWGS_84_map;
     this.Flight_level = message.Flight_Level;
-    /* if (message.TimeOfDayInSeconds < first_time) {
-      this.List_Time_Of_Day =
-          message.TimeOfDayInSeconds + 86400 + First_time_of_day;
-    } else { */
+    this.Time_Of_day = message.TimeOfDayInSeconds;
     this.List_Time_Of_Day = message.TimeOfDayInSeconds + First_time_of_day;
     /* } */
     if (message.ECAT == "Surface emergency vehicle" ||

@@ -109,7 +109,7 @@ class CAT21 {
   String Track_Angle_Rate;
   // Time of ASTERIX Report Transmission
   String Time_of_Asterix_Report_Transmission;
-  int TimeOfDayInSeconds=0;
+  int TimeOfDayInSeconds=-1;
   // Data Item I021/170, Target Identification
   String Target_Identification;
   //EMITTER CATEGORY

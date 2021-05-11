@@ -610,8 +610,8 @@ class CAT21Helper{
     pos += 3;
     double Longitude = this.lib.TwoComplement2Decimal(messageOctets[pos]+ messageOctets[pos + 1]+ messageOctets[pos + 2]) * (0.00002145767);
     pos += 3;
-    LatitudeWGS_84_map = (Latitude);
-    LongitudeWGS_84_map = (Longitude);
+    LatitudeWGS_84_map = dp(Latitude,5);
+    LongitudeWGS_84_map = dp(Longitude,5);
     int Latdegres = Latitude.truncate();
     int Latmin = ((Latitude - Latdegres) * 60).truncate();
     double Latsec = (Latitude - (Latdegres + (Latmin / 60)))*3600;
@@ -622,7 +622,10 @@ class CAT21Helper{
     LongitudeWGS_84 = Londegres.toString() + "º" + Lonmin.toString() + "' " + Lonsec.toString() + "''";
     return pos;
   }
-
+  double dp(double val, int places){
+    double mod = pow(10.0, places);
+    return ((val * mod).round().toDouble() / mod);
+  }
   /// <summary>
   /// Data Item I021/131, High-Resolution Position in WGS-84 Co-ordinates
   ///
@@ -895,7 +898,7 @@ class CAT21Helper{
     String octets = (message[pos]+ message[pos + 1]+ message[pos + 2]+ message[pos + 3]+ message[pos + 4]+ message[pos + 5]);
     for (int i = 0; i < 8; i++) { Identification+=(lib.computeChar(octets.substring(i * 6, i * 6+6))); }
     String tar = Identification.toString();
-    if (tar.length > 1) { Target_Identification = tar; }
+    if (tar!=null) { Target_Identification = tar; }
     return pos + 6;
   }
 

@@ -12,7 +12,6 @@ class CAT10 {
 //DATA SOURCE IDENTIFIER
   String SAC;
   String SIC;
-  String TAR;
   int airportCode=0;
 //MESSAGE TYPE
   String messageType;
@@ -34,7 +33,7 @@ class CAT10 {
 
 //TIME OF DAY
   String TimeOfDay;
-  int TimeOfDayInSeconds=0;
+  int TimeOfDayInSeconds = -1;
 
 //POSITION IN WGS-84 CO-ORDINATES
   String LatitudeWGS_84;
@@ -85,7 +84,8 @@ class CAT10 {
 
 //TARGET IDENTIFICATION
   String STI;
-
+  String Target_Identification;
+  String TAR;
 //MODE S MB DATA
   List<String> MBData=[];
   List<String> BDS1=[];
@@ -247,6 +247,8 @@ class CAT10 {
           index =
               cat10Helper.Compute_Target_Identification(messageBinary, index);
           this.STI = cat10Helper.STI;
+          this.Target_Identification = cat10Helper.TAR;
+          this.TAR = cat10Helper.TAR;
         } //
       }
       if (FSPEC.length > 16) {

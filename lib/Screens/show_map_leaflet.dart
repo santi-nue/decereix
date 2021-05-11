@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
@@ -21,22 +22,6 @@ class _ShowMapLeafletState extends State<ShowMapLeaflet> {
 
   @override
   Widget build(BuildContext context) {
-    /*var markers = [
-      new Marker(
-        width: 60.0,
-        height: 60.0,
-        point: widget.location,
-        builder: (ctx) => Transform.rotate(
-          angle: 180 * pi / 180,
-          child: Icon(
-            Icons.airplanemode_active,
-            color: Colors.red,
-            size: 42.0,
-            semanticLabel: 'Marker Placed on Map', //For Accessibility
-          ),
-        ),
-      )
-    ];*/
     List<Marker> markers() {
       //print(widget.elements);
       List<Marker> returnMarkers = [];
@@ -75,9 +60,15 @@ class _ShowMapLeafletState extends State<ShowMapLeaflet> {
       }
       return returnMarkers;
     }
-    return SafeArea(
-      child: Scaffold(
-        body: FlutterMap(
+
+    return Listener(
+        onPointerSignal: (pointerSignal) {
+          if (pointerSignal is PointerScrollEvent) {
+            // do something when scrolled
+            print('Scrolled');
+          }
+        },
+        child: FlutterMap(
           options: new MapOptions(
             center: widget.location,
             zoom: 12.0,
@@ -87,13 +78,13 @@ class _ShowMapLeafletState extends State<ShowMapLeaflet> {
           layers: [
             new TileLayerOptions(
                 keepBuffer: 150,
-                urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", subdomains: ['a', 'b', 'c']),
+                urlTemplate:
+                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                subdomains: ['a', 'b', 'c']),
             new MarkerLayerOptions(
               markers: markers(),
             ),
           ],
-        ),
-      ),
-    );
+        ));
   }
 }
