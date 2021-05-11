@@ -1,12 +1,14 @@
-import 'dart:typed_data';
-import 'package:decereix/Helpers/helpDecode.dart';
 import 'dart:math';
+
+import 'package:decereix/Helpers/helpDecode.dart';
 import 'package:extended_math/extended_math.dart';
+
 class CAT10Helper {
   HelpDecode lib = new HelpDecode();
   // Empty Constructor
   CAT10Helper();
   double rotationNorth = 0;
+
   /// <summary>
   /// Data Item I010/010, Data Source Identifier
   ///
@@ -15,7 +17,7 @@ class CAT10Helper {
   /// </summary>
   String SAC;
   String SIC;
-  int airportCode=0;
+  int airportCode = 0;
   int Compute_Data_Source_Identifier(List<String> message, int pos) {
     SAC = this.lib.Binary2Int(message[pos]).toString();
     SIC = this.lib.Binary2Int(message[pos + 1]).toString();
@@ -111,17 +113,17 @@ class CAT10Helper {
   String MESSAGE_TYPE;
   int Compute_Message_Type(List<String> message, int pos) {
     MESSAGE_TYPE = "Error";
-    int Message_Type = this.lib.Binary2Int(message[pos]);
-    if (Message_Type == 1) {
+    int MessageType = this.lib.Binary2Int(message[pos]);
+    if (MessageType == 1) {
       MESSAGE_TYPE = "Target Report";
     }
-    if (Message_Type == 2) {
+    if (MessageType == 2) {
       MESSAGE_TYPE = "Start of Update Cycle";
     }
-    if (Message_Type == 3) {
+    if (MessageType == 3) {
       MESSAGE_TYPE = "Periodic Status Message";
     }
-    if (Message_Type == 4) {
+    if (MessageType == 4) {
       MESSAGE_TYPE = "Event-triggered Status Message";
     }
     pos++;
@@ -225,7 +227,7 @@ class CAT10Helper {
   /// <param name="Time_of_day_sec">Seconds in int format to be used in map</param>
   /// <param name="Time_of_day_sec">Seconds in String format to be shown in tables</param>
   String Time_Of_Day;
-  int Time_of_day_sec=0;
+  int Time_of_day_sec = 0;
   int Compute_Time_of_Day(List<String> messageOctets, int pos) {
     String s =
         messageOctets[pos] + messageOctets[pos + 1] + messageOctets[pos + 2];
@@ -268,8 +270,8 @@ class CAT10Helper {
             messageOctets[pos + 3]) *
         (8.38190317e-8);
     pos += 4;
-    LatitudeWGS_84_map = dp(Latitude,5);
-    LongitudeWGS_84_map = dp(Longitude,5);
+    LatitudeWGS_84_map = dp(Latitude, 5);
+    LongitudeWGS_84_map = dp(Longitude, 5);
     int Latdegres = Latitude.truncate();
     int Latmin = ((Latitude - Latdegres) * 60).truncate();
     double Latsec = (Latitude - (Latdegres + (Latmin / 60))) * 3600;
@@ -345,19 +347,22 @@ class CAT10Helper {
         "X: " + X_Component + ", Y: " + Y_Component;
     /*Point p = new Point(X_Component_map, Y_Component_map);*/
     //Compute WGS84 position from cartesian position
-   List<num> latLong =  ComputeWGS_84_from_Cartesian(X_Component_map,Y_Component_map);
-   setWGS_84(latLong[0].toDouble(), latLong[1].toDouble());
+    List<num> latLong =
+        ComputeWGS_84_from_Cartesian(X_Component_map, Y_Component_map);
+    setWGS_84(latLong[0].toDouble(), latLong[1].toDouble());
     /*Set_WGS84_Coordinates(position);*/ //Apply computed WGS84 position to this message
     pos += 4;
     return pos;
   }
-  double dp(double val, int places){
+
+  double dp(double val, int places) {
     double mod = pow(10.0, places);
     return ((val * mod).round().toDouble() / mod);
   }
-  setWGS_84(double Latitude, double Longitude){
-    this.LatitudeWGS_84_map = dp(Latitude,5);
-    this.LongitudeWGS_84_map = dp(Longitude,5);
+
+  setWGS_84(double Latitude, double Longitude) {
+    this.LatitudeWGS_84_map = dp(Latitude, 5);
+    this.LongitudeWGS_84_map = dp(Longitude, 5);
     int Latdegres = Latitude.truncate();
     int Latmin = ((Latitude - Latdegres) * 60).truncate();
     double Latsec = (Latitude - (Latdegres + (Latmin / 60))) * 3600;
@@ -378,6 +383,7 @@ class CAT10Helper {
         Lonsec.toString() +
         "''";
   }
+
   /// <summary>
   /// Data Item I010/200, Calculated Track Velocity in Polar Co-ordinates
   ///
@@ -389,11 +395,11 @@ class CAT10Helper {
   String Track_Velocity_Polar_Coordinates;
   int Compute_Track_Velocity_in_Polar_Coordinates(
       List<String> message, int pos) {
-    double ground_speed = (this.lib.Binary2Double(
+    double groundSpeed = (this.lib.Binary2Double(
             message[pos].toString() + message[pos + 1].toString())) *
         0.00006103515;
-    double meters = ground_speed * 1852;
-    if (ground_speed >= 2) {
+    double meters = groundSpeed * 1852;
+    if (groundSpeed >= 2) {
       Ground_Speed =
           "Ground Speed exceed the max value (2 NM/s) or is the max value, ";
     } else {
@@ -608,9 +614,18 @@ class CAT10Helper {
   /// </summary>
   String Target_Address;
   int Compute_Target_Address(List<String> messageInt, int pos) {
-    Target_Address = this.lib.Binary2Int(messageInt[pos]).toRadixString(16).padLeft(2, "0") +
-        this.lib.Binary2Int(messageInt[pos + 1]).toRadixString(16).padLeft(2, "0") +
-        this.lib.Binary2Int(messageInt[pos + 2]).toRadixString(16).padLeft(2, "0");
+    Target_Address =
+        this.lib.Binary2Int(messageInt[pos]).toRadixString(16).padLeft(2, "0") +
+            this
+                .lib
+                .Binary2Int(messageInt[pos + 1])
+                .toRadixString(16)
+                .padLeft(2, "0") +
+            this
+                .lib
+                .Binary2Int(messageInt[pos + 2])
+                .toRadixString(16)
+                .padLeft(2, "0");
     pos += 3;
     return pos;
   }
@@ -657,10 +672,10 @@ class CAT10Helper {
   /// Format: Repetitive Data Item starting with a one-octet Field Repetition Indicator(REP) followed by at least
   /// one BDS report comprising one seven octet BDS register and one octet BDS code.
   /// </summary>
-  List<String> MB_Data=[];
-  List<String> BDS1=[];
-  List<String> BDS2=[];
-  int modeS_rep=0;
+  List<String> MB_Data = [];
+  List<String> BDS1 = [];
+  List<String> BDS2 = [];
+  int modeS_rep = 0;
   int Compute_Mode_S_MB_Data(List<String> message, int pos) {
     modeS_rep = this.lib.Binary2Int(message[pos]);
     if (modeS_rep < 0) {
@@ -927,14 +942,16 @@ class CAT10Helper {
   /// indicating the number of presences associated to the plot, followed by series of two octets(co-ordinates differences) as necessary.
   /// </summary>
   int REP_Presence = 0;
-  List<String> DRHO=[];
-  List<String> DTHETA=[];
+  List<String> DRHO = [];
+  List<String> DTHETA = [];
   int Compute_Presence(List<String> message, int pos) {
     REP_Presence = this.lib.Binary2Int(message[pos]);
     pos++;
     for (int i = 0; i < REP_Presence; i++) {
       this.DRHO.add(this.lib.Binary2Int(message[pos]).toString() + "m");
-      this.DTHETA.add((this.lib.Binary2Double(message[pos]) * 0.15).toString() + "º");
+      this
+          .DTHETA
+          .add((this.lib.Binary2Double(message[pos]) * 0.15).toString() + "º");
       pos += 2;
     }
     return pos;
@@ -982,36 +999,40 @@ class CAT10Helper {
     return pos;
   }
 
-  List<double> ComputeWGS_84_from_Cartesian(double x_component, double y_component) {
+  List<double> ComputeWGS_84_from_Cartesian(
+      double xComponent, double yComponent) {
     //Constants
     num A = 6378137.0;
     num E2 = 0.00669437999013;
-    num radlatBcn = 41.29561833* (0.01745329251);
-    num radlongBcn = 2.095114167* (0.01745329251);
+    num radlatBcn = 41.29561833 * (0.01745329251);
+    num radlongBcn = 2.095114167 * (0.01745329251);
 
     // Get Center Projection
     // c2 = c.Lat, c.Lon, 0 => Radar Location
     num nu = A / sqrt(1 - E2 * pow(sin(radlatBcn), 2.0));
 
-    num  R_S = (A * (1.0 - E2)) /
-        pow(1 - E2 * pow(sin(radlatBcn), 2.0), 1.5);
-     // GeneralMatrix R1; GeneralMatrix T1;
-    List<List<num>> T1 = CalculateTranslationMatrix(radlatBcn,radlongBcn, A, E2);
+    num RS = (A * (1.0 - E2)) / pow(1 - E2 * pow(sin(radlatBcn), 2.0), 1.5);
+    // GeneralMatrix R1; GeneralMatrix T1;
+    List<List<num>> T1 =
+        CalculateTranslationMatrix(radlatBcn, radlongBcn, A, E2);
     List<List<num>> R1 = CalculateRotationMatrix(radlatBcn, radlongBcn);
     // Convert Object Pos
-    List<num> posGeocentric = change_system_cartesian2geocentric(x_component, y_component, 0, R1, T1);
-    List<num> objectGeodesic = change_geocentric2geodesic(posGeocentric[0],posGeocentric[1],posGeocentric[2], A, E2);
+    List<num> posGeocentric =
+        change_system_cartesian2geocentric(xComponent, yComponent, 0, R1, T1);
+    List<num> objectGeodesic = change_geocentric2geodesic(
+        posGeocentric[0], posGeocentric[1], posGeocentric[2], A, E2);
     // Make the position of object with Airport
 
     // Save the position and return
     List<num> coordinatesObjWGS = [0, 0];
-    num LatitudeWGS_84_map = objectGeodesic[0] * (180 / pi);
-    num LongitudeWGS_84_map = objectGeodesic[1] * (180 / pi);
+    num LatitudeWGS84Map = objectGeodesic[0] * (180 / pi);
+    num LongitudeWGS84Map = objectGeodesic[1] * (180 / pi);
 
-    return [LatitudeWGS_84_map, LongitudeWGS_84_map];
+    return [LatitudeWGS84Map, LongitudeWGS84Map];
   }
-  List<List<num>> CalculateTranslationMatrix(num radlatBcn ,num radlongBcn, num A, num E2)
-  {
+
+  List<List<num>> CalculateTranslationMatrix(
+      num radlatBcn, num radlongBcn, num A, num E2) {
     double Height = 0;
     double nu = A / sqrt(1 - E2 * pow(sin(radlatBcn), 2.0));
     var coefT1 = List.generate(3, (i) => [0, 0, 0.0], growable: false);
@@ -1022,58 +1043,56 @@ class CAT10Helper {
     /*GeneralMatrix m = new GeneralMatrix(coefT1, 3, 1);*/
     return coefT1;
   }
-  List<num> change_geocentric2geodesic(num x, num y, num z, num A, num E2)
-  {
+
+  List<num> change_geocentric2geodesic(num x, num y, num z, num A, num E2) {
     // semi-minor earth axis
     //double b = this.A * sqrt(1 - this.E2);
     num b = 6356752.3142;
-    num Lat = 0; num Lon = 0; num Height = 0;
-    if ((x.abs() < 1e-10) && (y.abs() < 1e-10))
-    {
-      if (z < 1e-10)
-      {
+    num Lat = 0;
+    num Lon = 0;
+    num Height = 0;
+    if ((x.abs() < 1e-10) && (y.abs() < 1e-10)) {
+      if (z < 1e-10) {
         // the point is at the center of earth :)
         Lat = pi / 2.0;
-      }
-      else
-      {
-
-        Lat = (pi / 2.0) * ((z/ z.abs()) + 0.5);
+      } else {
+        Lat = (pi / 2.0) * ((z / z.abs()) + 0.5);
       }
       Lon = 0;
       Height = z.abs() - b;
       return [Lon, Lat, Height];
     }
 
-    double d_xy = sqrt(x*x+y*y);
+    double dXy = sqrt(x * x + y * y);
     // from formula 20
-    Lat = atan((z/ d_xy) / (1 - (A * E2) / sqrt(d_xy * d_xy + z * z)));
+    Lat = atan((z / dXy) / (1 - (A * E2) / sqrt(dXy * dXy + z * z)));
     // from formula 24
     num nu = A / sqrt(1 - E2 * pow(sin(Lat), 2.0));
     // from formula 20
-    Height = (d_xy / cos(Lat)) - nu;
+    Height = (dXy / cos(Lat)) - nu;
 
     // iteration from formula 20b
-    double Lat_over;
-    if (Lat >= 0) { Lat_over = -0.1; } else { Lat_over = 0.1; }
+    double LatOver;
+    if (Lat >= 0) {
+      LatOver = -0.1;
+    } else {
+      LatOver = 0.1;
+    }
 
-    int loop_count = 0;
-    while (((Lat - Lat_over).abs() >  1e-8)
-        && (loop_count < 50))
-    {
-      loop_count++;
-      Lat_over = Lat;
-      Lat = atan((z * (1 + Height / nu)) /
-          (d_xy * ((1 - E2) + (Height / nu))));
+    int loopCount = 0;
+    while (((Lat - LatOver).abs() > 1e-8) && (loopCount < 50)) {
+      loopCount++;
+      LatOver = Lat;
+      Lat = atan((z * (1 + Height / nu)) / (dXy * ((1 - E2) + (Height / nu))));
       nu = A / sqrt(1 - E2 * pow(sin(Lat), 2.0));
-      Height = d_xy / cos(Lat) - nu;
+      Height = dXy / cos(Lat) - nu;
     }
     Lon = atan2(y, x);
     // if (loop_count == 50) { // exception }
     return [Lat, Lon, Height];
   }
-  List<List<num>> CalculateRotationMatrix(num lat, num lon)
-  {
+
+  List<List<num>> CalculateRotationMatrix(num lat, num lon) {
     var coefR1 = List.generate(3, (i) => [0, 0, 0.0], growable: false);
     /*double[][] coefR1 = { new double[3], new double[3], new double[3] };*/
 
@@ -1089,18 +1108,20 @@ class CAT10Helper {
     /*GeneralMatrix m = new GeneralMatrix(coefR1, 3, 3);*/
     return coefR1;
   }
-  List<num> change_system_cartesian2geocentric(num x, num y, num z, List<List<num>> R1, List<List<num>> T1)
-  {
 
+  List<num> change_system_cartesian2geocentric(
+      num x, num y, num z, List<List<num>> R1, List<List<num>> T1) {
     var coefInput = List.generate(3, (i) => [0, 0, 0.0], growable: false);
     /*double[][] coefInput = { new double[1], new double[1], new double[1] };*/
-    coefInput[0][0] = x; coefInput[1][0] = y; coefInput[2][0] = z;
+    coefInput[0][0] = x;
+    coefInput[1][0] = y;
+    coefInput[2][0] = z;
     Matrix inputMatrix = new Matrix(coefInput.toList());
 
     Matrix R2 = Matrix(R1).transpose();
     Matrix R3 = R2.matrixProduct(inputMatrix);
     R3 = R3 + Matrix(T1);
-    List<num> ret = [R3.itemAt(1,1), R3.itemAt(2,1), R3.itemAt(3,1)];
+    List<num> ret = [R3.itemAt(1, 1), R3.itemAt(2, 1), R3.itemAt(3, 1)];
     return ret;
   }
 }

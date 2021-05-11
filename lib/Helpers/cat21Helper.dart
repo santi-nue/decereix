@@ -33,7 +33,7 @@ class CAT21Helper{
     if (OctetoChar[3] == '0') { TS = "No capability to support Target State Reports"; }
     else { TS = "Capable of supporting target State Reports"; }
     if (OctetoChar[4] == '0') { ARV = "No capability to generate ARV-Reports"; }
-    else { ARV = "Capable of generate ARV-Reports"; };
+    else { ARV = "Capable of generate ARV-Reports"; }
     if (OctetoChar[5] == '0') { CDTIA = "CDTI not operational"; }
     else { CDTIA = "CDTI operational"; }
     if (OctetoChar[6] == '0') { Not_TCAS = "TCAS operational"; }
@@ -1024,10 +1024,10 @@ class CAT21Helper{
   int modeS_rep=0;
   int Compute_Mode_S_MB_DATA(List<String> message, int pos)
   {
-    int modeS_rep = this.lib.Binary2Int(message[pos]);
-    if(modeS_rep>0){ MB_Data = List .filled(modeS_rep, "", growable: false);}
+    int modeSRep = this.lib.Binary2Int(message[pos]);
+    if(modeSRep>0){ MB_Data = List .filled(modeSRep, "", growable: false);}
     pos++;
-    for (int i = 0; i < modeS_rep; i++)
+    for (int i = 0; i < modeSRep; i++)
     {
       MB_Data[i] = (message[pos]+ message[pos + 1]+ message[pos + 2]+ message[pos + 3]+ message[pos + 4]+ message[pos + 5]+ message[pos + 6]);
       BDS1[i] = message[pos + 7].substring(0, 4);

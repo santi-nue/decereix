@@ -21,7 +21,7 @@ class CATALL {
   int direction=0;
   int refreshratio = -1;
 
-  CATALL() {}
+  CATALL();
 
   /// <summary>
   /// Create an instance of class CAT all from an instance of class CAT10
@@ -30,7 +30,7 @@ class CATALL {
   /// <param name="First_time_of_day">Parameter that indicates the time 00:00:00 of the day of the message (if the message is from the second day the time will be 86400)</param>
   /// <param name="first_time">Indicates the time of the first message in that file. In this way, if a file lasts 2
   /// days we can identify the messages that are on the second day and host them correctly</param>
-  CATALL.fromCat10(CAT10 message, int First_time_of_day) {
+  CATALL.fromCat10(CAT10 message, int FirstTimeOfDay) {
     this.num = message.Id;
     this.CAT = "10";
     this.SAC = message.SAC;
@@ -44,7 +44,7 @@ class CATALL {
     this.Latitude_in_WGS_84_map = message.LatitudeWGS_84_map;
     this.Flight_level = message.FlightLevel;
     this.Time_Of_day = message.TimeOfDayInSeconds;
-    this.List_Time_Of_Day = message.TimeOfDayInSeconds + First_time_of_day;
+    this.List_Time_Of_Day = message.TimeOfDayInSeconds + FirstTimeOfDay;
     /* } */
     if (message.TOT == "Ground vehicle") {
       type = "car";
@@ -66,7 +66,7 @@ class CATALL {
   /// <param name="First_time_of_day">Parameter that indicates the time 00:00:00 of the day of the message (if the message is from the second day the time will be 86400)</param>
   /// <param name="first_time">Indicates the time of the first message in that file. In this way, if a file lasts 2
   /// days we can identify the messages that are on the second day and host them correctly</param>
-  CATALL.fromCat21(CAT21 message, int First_time_of_day) {
+  CATALL.fromCat21(CAT21 message, int FirstTimeOfDay) {
     this.num = message.Id;
     this.CAT = "21";
     this.SAC = message.SAC;
@@ -78,7 +78,7 @@ class CATALL {
     this.Longitude_in_WGS_84_map = message.LongitudeWGS_84_map;
     this.Flight_level = message.Flight_Level;
     this.Time_Of_day = message.TimeOfDayInSeconds;
-    this.List_Time_Of_Day = message.TimeOfDayInSeconds + First_time_of_day;
+    this.List_Time_Of_Day = message.TimeOfDayInSeconds + FirstTimeOfDay;
     /* } */
     if (message.ECAT == "Surface emergency vehicle" ||
         message.ECAT == "Surface service vehicle") {

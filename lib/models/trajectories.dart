@@ -52,7 +52,7 @@ class Trajectories {
       String CAT,
       String SAC,
       String SIC,
-      String Track_number) {
+      String TrackNumber) {
     var p = [lat, lon];
     // Angle Plane
     if(ListPoints.isNotEmpty){
@@ -81,7 +81,7 @@ class Trajectories {
       this.type = 0;
     }
     this.DetectionMode = DetectionMode;
-    this.Track_number = Track_number;
+    this.Track_number = TrackNumber;
   }
   void AddPoint(double lat,double lon,int time)
   {
