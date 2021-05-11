@@ -30,10 +30,8 @@ class LoadfileScreen extends StatefulWidget {
 }
 
 class _LoadfileScreenState extends State<LoadfileScreen> {
-  static double sizeImage = 10;
-  static double pi = 3.141592;
 
-  // Use Multithreading to read and decode the file,
+  /// Reads Asterisk file *ast in binary format, optimized for Multithreading operation
   static Future<Map<String, dynamic>> loadAsterix(Map<String, dynamic> mapVal) async {
     List<CAT10> cat10All = [];
     List<CAT21> cat21All = [];
@@ -42,17 +40,15 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
       Uint8List fileBytes = mapVal["fileBytes"];
       int firstTime = mapVal["firstTime"];
       mapVal = {};
-      //-------------------RAW File to parse it in RAM-------------------//
+      /// Raw Integer to Dart Binary String ex. 02 = "00000010"//
       var fileBinary =
           fileBytes.map((i) => i.toRadixString(2).padLeft(8, "0")).toList();
       // Go over all of the packets and store them in a separate list of lists
-      // First Octet Category
-
-      // 2nd*256 + 3rd Octet = Length in Bytes
-      int messageLength; // 2nd*256 + 3rd Octet
+      /// First Octet equals Category [Cat10, Cat21v2.1]
+      /// 2nd*256 + 3rd Octet = Length in Bytes
+      int messageLength; /// 2nd*256 + 3rd Octet
       List<List<String>> messagesBinary = [];
-      // Also store as binary messages[currentMsg][Field].toRadixString(2).padLeft(8, "0")
-      // Store messages from the fileBytes into packet size Blocks using messageLength
+      /// Store messages from the fileBytes into packet size Blocks using messageLength
       int endPointer = messageLength;
       int initialTime = 86400;
       int endTime = -1;
@@ -67,7 +63,8 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
       fileBinary = null;
       fileBytes = null;
 
-      ///---------------------Binary to Human -------------------///
+      /// [Decoding] Binary to Human Readable UTF-8
+      /// No separate function due to [Dart] inefficiency
       HelpDecode helpDecode = new HelpDecode();
       CAT10Helper cat10helper = new CAT10Helper();
       CAT21Helper cat21helper = new CAT21Helper();
@@ -104,13 +101,12 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
           }
         }
       }
-
+      /// Everything in same function, faster computation
       Map<String, dynamic> transferMap = {};
-      // -------------TRAJECTORIES -----------------------------------//
-      List<Trajectories> SMRTrajectories = [];
-      List<Trajectories> MLATTrajectories = [];
-      List<Trajectories> ADSBTrajectories = [];
-      /*TransferCat transferCat = new TransferCat();*/
+      /// [Trajectories] calculated here and not separated due to inefficiency in dart///
+      List<Trajectories> smrTrajectories = [];
+      List<Trajectories> mlatTrajectories = [];
+      List<Trajectories> adsbTrajectories = [];
       int i = 0;
       bool check = false;
       catAll.forEach((message) {
@@ -120,16 +116,16 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
           if (message.DetectionMode == "SMR") {
             if (message.Target_Identification != null) {
               bool isNotFound = true;
-              for (int k = 0; k < SMRTrajectories.length; k++) {
-                if (SMRTrajectories[k].Target_Identification ==
+              for (int k = 0; k < smrTrajectories.length; k++) {
+                if (smrTrajectories[k].Target_Identification ==
                     message.Target_Identification) {
-                  SMRTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
+                  smrTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
                       message.Longitude_in_WGS_84_map, message.Time_Of_day);
                   isNotFound = false;
                 }
               }
               if (isNotFound) {
-                Trajectories traj = new Trajectories(
+                Trajectories trajectory = new Trajectories(
                     message.Target_Identification,
                     message.Time_Of_day,
                     message.Latitude_in_WGS_84_map,
@@ -141,21 +137,21 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                     message.SAC,
                     message.SIC,
                     message.Track_number);
-                SMRTrajectories.add(traj);
+                smrTrajectories.add(trajectory);
               }
             }
             else if (message.Target_Address != null) {
               bool isNotFound = true;
-              for (int k = 0; k < SMRTrajectories.length; k++) {
-                if (SMRTrajectories[k].Target_Address ==
+              for (int k = 0; k < smrTrajectories.length; k++) {
+                if (smrTrajectories[k].Target_Address ==
                     message.Target_Address) {
-                  SMRTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
+                  smrTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
                       message.Longitude_in_WGS_84_map, message.Time_Of_day);
                   isNotFound = false;
                 }
               }
               if (isNotFound) {
-                Trajectories traj = new Trajectories(
+                Trajectories trajectory = new Trajectories(
                     message.Target_Identification,
                     message.Time_Of_day,
                     message.Latitude_in_WGS_84_map,
@@ -167,20 +163,20 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                     message.SAC,
                     message.SIC,
                     message.Track_number);
-                SMRTrajectories.add(traj);
+                smrTrajectories.add(trajectory);
               }
             }
             else if (message.Track_number != null) {
               bool isNotFound = true;
-              for (int k = 0; k < SMRTrajectories.length; k++) {
-                if (SMRTrajectories[k].Track_number == message.Track_number) {
-                  SMRTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
+              for (int k = 0; k < smrTrajectories.length; k++) {
+                if (smrTrajectories[k].Track_number == message.Track_number) {
+                  smrTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
                       message.Longitude_in_WGS_84_map, message.Time_Of_day);
                   isNotFound = false;
                 }
               }
               if (isNotFound) {
-                Trajectories traj = new Trajectories(
+                Trajectories trajectory = new Trajectories(
                     message.Target_Identification,
                     message.Time_Of_day,
                     message.Latitude_in_WGS_84_map,
@@ -192,23 +188,23 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                     message.SAC,
                     message.SIC,
                     message.Track_number);
-                SMRTrajectories.add(traj);
+                smrTrajectories.add(trajectory);
               }
             }
           }
           else if (message.DetectionMode == "MLAT") {
             if (message.Target_Identification != null) {
               bool isNotFound = true;
-              for (int k = 0; k < MLATTrajectories.length; k++) {
-                if (MLATTrajectories[k].Target_Identification ==
+              for (int k = 0; k < mlatTrajectories.length; k++) {
+                if (mlatTrajectories[k].Target_Identification ==
                     message.Target_Identification) {
-                  MLATTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
+                  mlatTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
                       message.Longitude_in_WGS_84_map, message.Time_Of_day);
                   isNotFound = false;
                 }
               }
               if (isNotFound) {
-                Trajectories traj = new Trajectories(
+                Trajectories trajectory = new Trajectories(
                     message.Target_Identification,
                     message.Time_Of_day,
                     message.Latitude_in_WGS_84_map,
@@ -220,21 +216,21 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                     message.SAC,
                     message.SIC,
                     message.Track_number);
-                MLATTrajectories.add(traj);
+                mlatTrajectories.add(trajectory);
               }
             }
             else if (message.Target_Address != null) {
               bool isNotFound = true;
-              for (int k = 0; k < MLATTrajectories.length; k++) {
-                if (MLATTrajectories[k].Target_Address ==
+              for (int k = 0; k < mlatTrajectories.length; k++) {
+                if (mlatTrajectories[k].Target_Address ==
                     message.Target_Address) {
-                  MLATTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
+                  mlatTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
                       message.Longitude_in_WGS_84_map, message.Time_Of_day);
                   isNotFound = false;
                 }
               }
               if (isNotFound) {
-                Trajectories traj = new Trajectories(
+                Trajectories trajectory = new Trajectories(
                     message.Target_Identification,
                     message.Time_Of_day,
                     message.Latitude_in_WGS_84_map,
@@ -246,20 +242,20 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                     message.SAC,
                     message.SIC,
                     message.Track_number);
-                MLATTrajectories.add(traj);
+                mlatTrajectories.add(trajectory);
               }
             }
             else if (message.Track_number != null) {
               bool isNotFound = true;
-              for (int k = 0; k < MLATTrajectories.length; k++) {
-                if (MLATTrajectories[k].Track_number == message.Track_number) {
-                  MLATTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
+              for (int k = 0; k < mlatTrajectories.length; k++) {
+                if (mlatTrajectories[k].Track_number == message.Track_number) {
+                  mlatTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
                       message.Longitude_in_WGS_84_map, message.Time_Of_day);
                   isNotFound = false;
                 }
               }
               if (isNotFound) {
-                Trajectories traj = new Trajectories(
+                Trajectories trajectory = new Trajectories(
                     message.Target_Identification,
                     message.Time_Of_day,
                     message.Latitude_in_WGS_84_map,
@@ -271,23 +267,23 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                     message.SAC,
                     message.SIC,
                     message.Track_number);
-                MLATTrajectories.add(traj);
+                mlatTrajectories.add(trajectory);
               }
             }
           }
           else if (message.DetectionMode == "ADSB") {
             if (message.Target_Identification != null) {
               bool isNotFound = true;
-              for (int k = 0; k < ADSBTrajectories.length; k++) {
-                if (ADSBTrajectories[k].Target_Identification ==
+              for (int k = 0; k < adsbTrajectories.length; k++) {
+                if (adsbTrajectories[k].Target_Identification ==
                     message.Target_Identification) {
-                  ADSBTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
+                  adsbTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
                       message.Longitude_in_WGS_84_map, message.Time_Of_day);
                   isNotFound = false;
                 }
               }
               if (isNotFound) {
-                Trajectories traj = new Trajectories(
+                Trajectories trajectory = new Trajectories(
                     message.Target_Identification,
                     message.Time_Of_day,
                     message.Latitude_in_WGS_84_map,
@@ -299,21 +295,21 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                     message.SAC,
                     message.SIC,
                     message.Track_number);
-                ADSBTrajectories.add(traj);
+                adsbTrajectories.add(trajectory);
               }
             }
             else if (message.Target_Address != null) {
               bool isNotFound = true;
-              for (int k = 0; k < ADSBTrajectories.length; k++) {
-                if (ADSBTrajectories[k].Target_Address ==
+              for (int k = 0; k < adsbTrajectories.length; k++) {
+                if (adsbTrajectories[k].Target_Address ==
                     message.Target_Address) {
-                  ADSBTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
+                  adsbTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
                       message.Longitude_in_WGS_84_map, message.Time_Of_day);
                   isNotFound = false;
                 }
               }
               if (isNotFound) {
-                Trajectories traj = new Trajectories(
+                Trajectories trajectory = new Trajectories(
                     message.Target_Identification,
                     message.Time_Of_day,
                     message.Latitude_in_WGS_84_map,
@@ -325,20 +321,20 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                     message.SAC,
                     message.SIC,
                     message.Track_number);
-                ADSBTrajectories.add(traj);
+                adsbTrajectories.add(trajectory);
               }
             }
             else if (message.Track_number != null) {
               bool isNotFound = true;
-              for (int k = 0; k < ADSBTrajectories.length; k++) {
-                if (ADSBTrajectories[k].Track_number == message.Track_number) {
-                  ADSBTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
+              for (int k = 0; k < adsbTrajectories.length; k++) {
+                if (adsbTrajectories[k].Track_number == message.Track_number) {
+                  adsbTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
                       message.Longitude_in_WGS_84_map, message.Time_Of_day);
                   isNotFound = false;
                 }
               }
               if (isNotFound) {
-                Trajectories traj = new Trajectories(
+                Trajectories trajectory = new Trajectories(
                     message.Target_Identification,
                     message.Time_Of_day,
                     message.Latitude_in_WGS_84_map,
@@ -350,7 +346,7 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                     message.SAC,
                     message.SIC,
                     message.Track_number);
-                ADSBTrajectories.add(traj);
+                adsbTrajectories.add(trajectory);
               }
             }
           }
@@ -361,34 +357,17 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
       transferMap['cat10All'] = cat10All;
       transferMap['cat21All'] = cat21All;
       transferMap['catAll'] = catAll;
-      transferMap['SMRTrajectories'] = SMRTrajectories;
-      transferMap['MLATTrajectories'] = MLATTrajectories;
-      transferMap['ADSBTrajectories'] = ADSBTrajectories;
+      transferMap['smrTrajectories'] = smrTrajectories;
+      transferMap['mlatTrajectories'] = mlatTrajectories;
+      transferMap['adsbTrajectories'] = adsbTrajectories;
       transferMap['status'] = true;
+      // Cleaning up, for faster data retrieval before exiting the thread
       cat21All = null; cat10All = null;
-      /*List<List<Marker>> markerStack =  computePoints(SMRTrajectories,MLATTrajectories, ADSBTrajectories, initialTime, endTime);*/
-
-      //-------++++++++++++++++++"""""""""3###################################################################################################//
-      SMRTrajectories = null; MLATTrajectories = null; ADSBTrajectories = null; catAll = null;
-      //---------------------------MARKER TRAJECTORIES--------------------//
-      /*List<List<Marker>> markerStacks = computeTrajectories(catAll, initialTime, endTime);*/
-
-      // Old don't Delete
-        /*TransferCat transferCat = new TransferCat();
-        transferCat.catAll = catAll;
-        catAll = null; helpDecode = null; cat10helper = null; cat21helper = null;
-        transferCat.cat10All = cat10All;
-        cat10All = null;
-        transferCat.cat21All = cat21All;
-        cat21All = null;
-        transferCat.firstTime = initialTime;
-        transferCat.markerStacks = markerStacks;
-        markerStacks =null;
-        messagesBinary = null;
-        transferCat.status = true;*/
-
+      smrTrajectories = null; mlatTrajectories = null; adsbTrajectories = null; catAll = null;
+      // Return all of the computation both Trajectories and Cat packets
       return transferMap;
     } catch (e) {
+      // Debug Print if any error occurs during the execution of computation
       debugPrint("LoadFileError:" + e.toString());
       Map<String, dynamic> transferMap = {};
       transferMap['status'] = false;
@@ -420,9 +399,9 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
               _catProvider.cat10All = resultTransfer['cat10All'];
               _catProvider.cat21All = resultTransfer['cat21All'];
               _catProvider.catAll = resultTransfer['catAll'];
-              _catProvider.SMRTrajectories = resultTransfer['SMRTrajectories'];
-              _catProvider.MLATTrajectories = resultTransfer['MLATTrajectories'];
-              _catProvider.ADSBTrajectories = resultTransfer['ADSBTrajectories'];
+              _catProvider.smrTrajectories = resultTransfer['smrTrajectories'];
+              _catProvider.mlatTrajectories = resultTransfer['mlatTrajectories'];
+              _catProvider.adsbTrajectories = resultTransfer['adsbTrajectories'];
               resultTransfer = null;
             }
             EasyLoading.dismiss().then((value) => toast('File Loaded Successfully!'),);
@@ -431,7 +410,7 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
       } catch (e) {
         EasyLoading.dismiss();
         debugPrint("loadFile Error");
-        toast('File Could not be Loaded!');
+        toast('File could not be Loaded!');
         }
     }
 

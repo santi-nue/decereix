@@ -207,7 +207,7 @@ class _MapScreenState extends State<MapScreen> {
       try{
         // Time
         initialTime = _catProvider.firstTime; //Units seconds[s]
-        this.markerStack =  computePoints(_catProvider.SMRTrajectories,_catProvider.MLATTrajectories,_catProvider.ADSBTrajectories, initialTime, _catProvider.endTime);
+        this.markerStack =  computePoints(_catProvider.smrTrajectories,_catProvider.mlatTrajectories,_catProvider.adsbTrajectories, initialTime, _catProvider.endTime);
         debugPrint("Fetch Cat All");
         return true;
       }
