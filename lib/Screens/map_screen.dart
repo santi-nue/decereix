@@ -26,7 +26,7 @@ class _MapScreenState extends State<MapScreen> {
       SMRTrajectories.forEach((element) {
         // List Time pick the latest
         int k = element.ListTime.lastIndexWhere(
-                (element) => element < (currTime + 1));
+                (element) => ((element < (currTime + 1))&& (element > (currTime -1))));
         if (k != -1) {
           if (element.type == 2) {
             hoverText = element.Target_Identification ?? element.Target_Address;
@@ -82,7 +82,7 @@ class _MapScreenState extends State<MapScreen> {
       MLATTrajectories.forEach((element) {
         // List Time pick the latest
         int k = element.ListTime.lastIndexWhere(
-                (element) => element < (currTime + 1));
+                (element) => ((element < (currTime + 1))&& (element > (currTime -1))));
         if (k != -1) {
           if (element.type == 2) {
             hoverText = element.Target_Identification ?? element.Target_Address;
@@ -138,7 +138,7 @@ class _MapScreenState extends State<MapScreen> {
       ADSBTrajectories.forEach((element) {
         // List Time pick the latest
         int k = element.ListTime.lastIndexWhere(
-                (element) => element < (currTime + 1));
+                (element) => ((element < (currTime + 1))&& (element > (currTime -1))));
         if (k != -1) {
           if (element.type == 2) {
             hoverText = element.Target_Identification ?? element.Target_Address;
