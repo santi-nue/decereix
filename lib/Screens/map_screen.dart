@@ -1,4 +1,5 @@
 import 'package:decereix/Provider/cat_provider.dart';
+import 'package:decereix/Screens/loading.dart';
 import 'package:decereix/Screens/show_map_leaflet.dart';
 import 'package:decereix/models/trajectories.dart';
 import 'package:flutter/material.dart';
@@ -34,11 +35,11 @@ class _MapScreenState extends State<MapScreen> {
               height: 10.0,
               point: element.ListPoints[k],
               builder: (ctx) => Transform.rotate(
-                angle: 0 * pi / 180,
+                angle: element.ListAngles[k],
                 child: Icon(
                   Icons.airplanemode_active,
                   color: Colors.pinkAccent,
-                  size: sizeImage,
+                  size: sizeImage*2,
                   semanticLabel: hoverText, //For Accessibility
                 ),
               ),
@@ -50,7 +51,7 @@ class _MapScreenState extends State<MapScreen> {
               height: 10.0,
               point: element.ListPoints[k],
               builder: (ctx) => Transform.rotate(
-                angle: 0 * pi / 180,
+                angle: element.ListAngles[k],
                 child: Icon(
                   Icons.local_car_wash_rounded,
                   color: Colors.redAccent,
@@ -66,7 +67,7 @@ class _MapScreenState extends State<MapScreen> {
               height: 10.0,
               point: element.ListPoints[k],
               builder: (ctx) => Transform.rotate(
-                angle: 0 * pi / 180,
+                angle: element.ListAngles[k],
                 child: Icon(
                   Icons.grade,
                   color: Colors.blueAccent,
@@ -90,11 +91,11 @@ class _MapScreenState extends State<MapScreen> {
               height: 10.0,
               point: element.ListPoints[k],
               builder: (ctx) => Transform.rotate(
-                angle: 0 * pi / 180,
+                angle: element.ListAngles[k],
                 child: Icon(
                   Icons.airplanemode_active,
                   color: Colors.pinkAccent,
-                  size: sizeImage,
+                  size: sizeImage*2,
                   semanticLabel: hoverText, //For Accessibility
                 ),
               ),
@@ -106,7 +107,7 @@ class _MapScreenState extends State<MapScreen> {
               height: 10.0,
               point: element.ListPoints[k],
               builder: (ctx) => Transform.rotate(
-                angle: 0 * pi / 180,
+                angle: element.ListAngles[k],
                 child: Icon(
                   Icons.local_car_wash_rounded,
                   color: Colors.redAccent,
@@ -122,7 +123,7 @@ class _MapScreenState extends State<MapScreen> {
               height: 10.0,
               point: element.ListPoints[k],
               builder: (ctx) => Transform.rotate(
-                angle: 0 * pi / 180,
+                angle: element.ListAngles[k],
                 child: Icon(
                   Icons.grade,
                   color: Colors.blueAccent,
@@ -146,11 +147,11 @@ class _MapScreenState extends State<MapScreen> {
               height: 10.0,
               point: element.ListPoints[k],
               builder: (ctx) => Transform.rotate(
-                angle: 0 * pi / 180,
+                angle: element.ListAngles[k],
                 child: Icon(
                   Icons.airplanemode_active,
                   color: Colors.pinkAccent,
-                  size: sizeImage,
+                  size: sizeImage*2,
                   semanticLabel: hoverText, //For Accessibility
                 ),
               ),
@@ -162,7 +163,7 @@ class _MapScreenState extends State<MapScreen> {
               height: 10.0,
               point: element.ListPoints[k],
               builder: (ctx) => Transform.rotate(
-                angle: 0 * pi / 180,
+                angle: element.ListAngles[k],
                 child: Icon(
                   Icons.local_car_wash_rounded,
                   color: Colors.redAccent,
@@ -178,7 +179,7 @@ class _MapScreenState extends State<MapScreen> {
               height: 10.0,
               point: element.ListPoints[k],
               builder: (ctx) => Transform.rotate(
-                angle: 0 * pi / 180,
+                angle: element.ListAngles[k],
                 child: Icon(
                   Icons.grade,
                   color: Colors.blueAccent,
@@ -226,7 +227,7 @@ class _MapScreenState extends State<MapScreen> {
           case ConnectionState.waiting:
 
             /// Show [LoadingScreen], as we are waiting for the response...
-            return Text("Loading...");
+            return LoadingPage();
           default:
             if (snapshot1.hasError) {
               /// Show [ErrorScreen], as we got a error

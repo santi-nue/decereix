@@ -112,11 +112,11 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
       List<Trajectories> ADSBTrajectories = [];
       /*TransferCat transferCat = new TransferCat();*/
       int i = 0;
+      bool check = false;
       catAll.forEach((message) {
-        if (message.Latitude_in_WGS_84_map != -200 &&
-            message.Longitude_in_WGS_84_map != -200
-            && message.Time_Of_day!=null||message.List_Time_Of_Day!=null
-            && (message.Target_Identification!=null||message.Target_Address!=null||message.Track_number!=null)) {
+        check = false;
+        check = ((message.Latitude_in_WGS_84_map != -200) && (message.Longitude_in_WGS_84_map != -200)) && (message.Time_Of_day!=null||message.List_Time_Of_Day!=null) && (message.Target_Identification!=null||message.Target_Address!=null||message.Track_number!=null);
+        if (check) {
           if (message.DetectionMode == "SMR") {
             if (message.Target_Identification != null) {
               bool isNotFound = true;
