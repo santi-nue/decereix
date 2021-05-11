@@ -98,8 +98,8 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                 cat21.TimeOfDayInSeconds > -1) {
               initialTime = cat21.TimeOfDayInSeconds;
             }
-            if (endTime < cat10.TimeOfDayInSeconds) {
-              endTime = cat10.TimeOfDayInSeconds;
+            if (endTime < cat21.TimeOfDayInSeconds) {
+              endTime = cat21.TimeOfDayInSeconds;
             }
           }
         }
