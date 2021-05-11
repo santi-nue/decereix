@@ -11,7 +11,7 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:worker_manager/worker_manager.dart';
 
-void main() async {
+Future<void> main() async {
   await Executor().warmUp();
   /// [runApp] which is a Dart function to initialize the [Widget Tree]
   runApp(
