@@ -15,6 +15,7 @@ class CATALL {
   String Longitude_in_WGS_84;
   double Latitude_in_WGS_84_map=0;
   double Longitude_in_WGS_84_map=0;
+  double heading = 0;
   String Flight_level;
   String type;
   String DetectionMode;
@@ -45,6 +46,7 @@ class CATALL {
     this.Flight_level = message.FlightLevel;
     this.Time_Of_day = message.TimeOfDayInSeconds;
     this.List_Time_Of_Day = message.TimeOfDayInSeconds + FirstTimeOfDay;
+    this.heading = message.heading;
     /* } */
     if (message.TOT == "Ground vehicle") {
       type = "car";
@@ -76,6 +78,7 @@ class CATALL {
     this.Track_number = message.Track_Number;
     this.Latitude_in_WGS_84_map = message.LatitudeWGS_84_map;
     this.Longitude_in_WGS_84_map = message.LongitudeWGS_84_map;
+    this.heading = message.heading;
     this.Flight_level = message.Flight_Level;
     this.Time_Of_day = message.TimeOfDayInSeconds;
     this.List_Time_Of_Day = message.TimeOfDayInSeconds + FirstTimeOfDay;

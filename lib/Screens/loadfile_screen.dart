@@ -120,7 +120,7 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                 if (smrTrajectories[k].Target_Identification ==
                     message.Target_Identification) {
                   smrTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
-                      message.Longitude_in_WGS_84_map, message.Time_Of_day);
+                      message.Longitude_in_WGS_84_map,message.heading, message.Time_Of_day);
                   isNotFound = false;
                 }
               }
@@ -130,6 +130,7 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                     message.Time_Of_day,
                     message.Latitude_in_WGS_84_map,
                     message.Longitude_in_WGS_84_map,
+                    message.heading,
                     message.type,
                     message.Target_Address,
                     message.DetectionMode,
@@ -146,7 +147,7 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                 if (smrTrajectories[k].Target_Address ==
                     message.Target_Address) {
                   smrTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
-                      message.Longitude_in_WGS_84_map, message.Time_Of_day);
+                      message.Longitude_in_WGS_84_map,message.heading, message.Time_Of_day);
                   isNotFound = false;
                 }
               }
@@ -155,7 +156,8 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                     message.Target_Identification,
                     message.Time_Of_day,
                     message.Latitude_in_WGS_84_map,
-                    message.Longitude_in_WGS_84_map,
+                    message.Longitude_in_WGS_84_map,message.heading,
+
                     message.type,
                     message.Target_Address,
                     message.DetectionMode,
@@ -171,7 +173,7 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
               for (int k = 0; k < smrTrajectories.length; k++) {
                 if (smrTrajectories[k].Track_number == message.Track_number) {
                   smrTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
-                      message.Longitude_in_WGS_84_map, message.Time_Of_day);
+                      message.Longitude_in_WGS_84_map,message.heading, message.Time_Of_day);
                   isNotFound = false;
                 }
               }
@@ -181,6 +183,7 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                     message.Time_Of_day,
                     message.Latitude_in_WGS_84_map,
                     message.Longitude_in_WGS_84_map,
+                    message.heading,
                     message.type,
                     message.Target_Address,
                     message.DetectionMode,
@@ -199,7 +202,7 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                 if (mlatTrajectories[k].Target_Identification ==
                     message.Target_Identification) {
                   mlatTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
-                      message.Longitude_in_WGS_84_map, message.Time_Of_day);
+                      message.Longitude_in_WGS_84_map,message.heading, message.Time_Of_day);
                   isNotFound = false;
                 }
               }
@@ -209,6 +212,7 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                     message.Time_Of_day,
                     message.Latitude_in_WGS_84_map,
                     message.Longitude_in_WGS_84_map,
+                    message.heading,
                     message.type,
                     message.Target_Address,
                     message.DetectionMode,
@@ -225,7 +229,7 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                 if (mlatTrajectories[k].Target_Address ==
                     message.Target_Address) {
                   mlatTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
-                      message.Longitude_in_WGS_84_map, message.Time_Of_day);
+                      message.Longitude_in_WGS_84_map,message.heading, message.Time_Of_day);
                   isNotFound = false;
                 }
               }
@@ -235,6 +239,7 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                     message.Time_Of_day,
                     message.Latitude_in_WGS_84_map,
                     message.Longitude_in_WGS_84_map,
+                    message.heading,
                     message.type,
                     message.Target_Address,
                     message.DetectionMode,
@@ -250,7 +255,7 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
               for (int k = 0; k < mlatTrajectories.length; k++) {
                 if (mlatTrajectories[k].Track_number == message.Track_number) {
                   mlatTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
-                      message.Longitude_in_WGS_84_map, message.Time_Of_day);
+                      message.Longitude_in_WGS_84_map,message.heading, message.Time_Of_day);
                   isNotFound = false;
                 }
               }
@@ -260,6 +265,7 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                     message.Time_Of_day,
                     message.Latitude_in_WGS_84_map,
                     message.Longitude_in_WGS_84_map,
+                    message.heading,
                     message.type,
                     message.Target_Address,
                     message.DetectionMode,
@@ -278,7 +284,7 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                 if (adsbTrajectories[k].Target_Identification ==
                     message.Target_Identification) {
                   adsbTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
-                      message.Longitude_in_WGS_84_map, message.Time_Of_day);
+                      message.Longitude_in_WGS_84_map,message.heading, message.Time_Of_day);
                   isNotFound = false;
                 }
               }
@@ -288,6 +294,7 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                     message.Time_Of_day,
                     message.Latitude_in_WGS_84_map,
                     message.Longitude_in_WGS_84_map,
+                    message.heading,
                     message.type,
                     message.Target_Address,
                     message.DetectionMode,
@@ -304,7 +311,7 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                 if (adsbTrajectories[k].Target_Address ==
                     message.Target_Address) {
                   adsbTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
-                      message.Longitude_in_WGS_84_map, message.Time_Of_day);
+                      message.Longitude_in_WGS_84_map,message.heading, message.Time_Of_day);
                   isNotFound = false;
                 }
               }
@@ -314,6 +321,7 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                     message.Time_Of_day,
                     message.Latitude_in_WGS_84_map,
                     message.Longitude_in_WGS_84_map,
+                    message.heading,
                     message.type,
                     message.Target_Address,
                     message.DetectionMode,
@@ -329,7 +337,7 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
               for (int k = 0; k < adsbTrajectories.length; k++) {
                 if (adsbTrajectories[k].Track_number == message.Track_number) {
                   adsbTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
-                      message.Longitude_in_WGS_84_map, message.Time_Of_day);
+                      message.Longitude_in_WGS_84_map,message.heading, message.Time_Of_day);
                   isNotFound = false;
                 }
               }
@@ -338,7 +346,8 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                     message.Target_Identification,
                     message.Time_Of_day,
                     message.Latitude_in_WGS_84_map,
-                    message.Longitude_in_WGS_84_map,
+                    message.Longitude_in_WGS_84_map
+                    ,message.heading,
                     message.type,
                     message.Target_Address,
                     message.DetectionMode,

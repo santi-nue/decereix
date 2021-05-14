@@ -54,7 +54,18 @@ class _CatAllTableState extends State<CatAllTable> {
         field: 'text_field4',
         type: PlutoColumnType.text(),
       ),
-
+      /// Text Column definition
+      PlutoColumn(
+        title: 'Type',
+        field: 'text_field12',
+        type: PlutoColumnType.text(),
+      ),
+      /// Text Column definition
+      PlutoColumn(
+        title: 'Heading',
+        field: 'text_field12b',
+        type: PlutoColumnType.text(),
+      ),
       /// Text Column definition
       PlutoColumn(
         title: 'Target Address',
@@ -118,13 +129,6 @@ class _CatAllTableState extends State<CatAllTable> {
 
       /// Text Column definition
       PlutoColumn(
-        title: 'Type',
-        field: 'text_field12',
-        type: PlutoColumnType.text(),
-      ),
-
-      /// Text Column definition
-      PlutoColumn(
         title: 'Detection Mode',
         field: 'text_field13',
         type: PlutoColumnType.text(),
@@ -141,6 +145,8 @@ class _CatAllTableState extends State<CatAllTable> {
               'text_field3': PlutoCell(value: catAll.SIC ?? "None"),
               'text_field4':
                   PlutoCell(value: catAll.Target_Identification ?? "None"),
+              'text_field12': PlutoCell(value: catAll.type ?? "None"),
+              'text_field12b': PlutoCell(value: catAll.heading ?? "None"),
               'text_field5': PlutoCell(value: catAll.Target_Address ?? "None"),
               'text_field6': PlutoCell(value: catAll.Time_Of_day ?? "None"),
               'text_field7':
@@ -155,7 +161,7 @@ class _CatAllTableState extends State<CatAllTable> {
               'text_field10b':
               PlutoCell(value: catAll.Longitude_in_WGS_84_map ?? "None"),
               'text_field11': PlutoCell(value: catAll.Flight_level ?? "None"),
-              'text_field12': PlutoCell(value: catAll.type ?? "None"),
+
               'text_field13': PlutoCell(value: catAll.DetectionMode ?? "None"),
             },
           ),

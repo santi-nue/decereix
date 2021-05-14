@@ -104,6 +104,7 @@ class CAT21 {
   //  Ground Speed and Track Angle elements of Airborne Ground Vector.
   String Ground_Speed;
   String Track_Angle;
+  double heading = 0;
   String Ground_vector;
   // Track Angle Rate, Rate of Turn, in two’s complement form.
   String Track_Angle_Rate;
@@ -389,6 +390,7 @@ class CAT21 {
           index = cat21Helper.Compute_Airborne_Ground_Vector(message, index);
           Ground_Speed = cat21Helper.Ground_Speed;
           Track_Angle = cat21Helper.Track_Angle;
+          heading = cat21Helper.heading;
           Ground_vector = cat21Helper.Ground_vector;
         }
         if (FSPEC[26] == '1') {

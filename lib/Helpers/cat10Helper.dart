@@ -392,6 +392,7 @@ class CAT10Helper {
   /// </summary>
   String Ground_Speed;
   String Track_Angle;
+  double heading = 0;
   String Track_Velocity_Polar_Coordinates;
   int Compute_Track_Velocity_in_Polar_Coordinates(
       List<String> message, int pos) {
@@ -405,12 +406,8 @@ class CAT10Helper {
     } else {
       Ground_Speed = "GS: " + meters.toString() + " m/s, ";
     }
-    Track_Angle = "T.A: " +
-        (this.lib.Binary2Double(
-                    message[pos + 2].toString() + message[pos + 3].toString()) *
-                (360 / (65536)))
-            .toString() +
-        "°";
+    heading = this.lib.Binary2Double(message[pos + 2].toString() + message[pos + 3].toString())*(0.00549316406);
+    Track_Angle = "T.A: " +heading.toString() +"°";
     Track_Velocity_Polar_Coordinates = Ground_Speed + Track_Angle;
     pos += 4;
     return pos;

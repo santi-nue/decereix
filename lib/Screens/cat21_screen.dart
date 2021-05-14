@@ -54,7 +54,12 @@ class _Cat21TableState extends State<Cat21Table> {
         field: 'text_field4',
         type: PlutoColumnType.text(),
       ),
-
+      /// Text Column definition
+      PlutoColumn(
+        title: 'Heading',
+        field: 'text_field4b',
+        type: PlutoColumnType.text(),
+      ),
       /// Text Column definition
       PlutoColumn(
         title: 'MessageType',
@@ -441,6 +446,7 @@ class _Cat21TableState extends State<Cat21Table> {
               'text_field2': PlutoCell(value: cat21.SAC ?? "None"),
               'text_field3': PlutoCell(value: cat21.SIC ?? "None"),
               'text_field4': PlutoCell(value: cat21.TAR ?? "None"),
+              'text_field4b': PlutoCell(value: cat21.heading ?? "None"),
               'text_field5': PlutoCell(value: cat21.messageType ?? "None"),
               'text_field6a': PlutoCell(
                   value: cat21.ATP != null

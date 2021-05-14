@@ -842,6 +842,7 @@ class CAT21Helper{
   /// </summary>
   String Ground_Speed;
   String Track_Angle;
+  double heading = 0;
   String Ground_vector;
   int Compute_Airborne_Ground_Vector(List<String> message, int pos)
   {
@@ -849,7 +850,8 @@ class CAT21Helper{
     {
       Ground_Speed = (this.lib.Binary2Int((message[pos]+ message[pos + 1]).substring(1, 16)) * 0.21972654).toString() + "Knts";
       // double meters =
-      Track_Angle = (this.lib.Binary2Int((message[pos + 2]+ message[pos + 3]).substring(0, 16)) * 0.00549316406).toString();
+      heading = (this.lib.Binary2Int((message[pos + 2]+ message[pos + 3]).substring(0, 16)) * 0.00549316406);
+      Track_Angle = heading.toString();
       Ground_vector = "GS: " + Ground_Speed + ", T.A: " + (Track_Angle) + "º";
     }
     else { Ground_vector = "Value exceeds defined rage"; }

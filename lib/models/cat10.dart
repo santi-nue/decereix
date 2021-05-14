@@ -51,7 +51,7 @@ class CAT10 {
 //CALCULATED TRACK VELOCITY IN POLAR CO-ORDINATES
   String GroundSpeed;
   String TrackAngle;
-
+  double heading = 0 ;
 //CALCULATED TRACK VELOCITY IN CARTESIAN CO-ORDINATES
   String Vx;
   String Vy;
@@ -205,6 +205,7 @@ class CAT10 {
         if (FSPEC[7] == '1') {
           index = cat10Helper.Compute_Track_Velocity_in_Polar_Coordinates(
               messageBinary, index);
+          this.heading = cat10Helper.heading;
           this.GroundSpeed = cat10Helper.Ground_Speed;
           this.TrackAngle = cat10Helper.Track_Angle;
         } //

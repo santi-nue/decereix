@@ -69,6 +69,16 @@ class _ShowMapLeafletState extends State<ShowMapLeaflet> {
   void initState() {
     super.initState();
   }
+  @override
+  void dispose(){
+    if (timer != null) {
+      if (timer.isActive) {
+        timer.cancel();
+      }
+    }
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {

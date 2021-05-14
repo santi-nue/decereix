@@ -54,7 +54,12 @@ class _Cat10TableState extends State<Cat10Table> {
         field: 'text_field4',
         type: PlutoColumnType.text(),
       ),
-
+      /// Text Column definition
+      PlutoColumn(
+        title: 'Heading',
+        field: 'text_field4b',
+        type: PlutoColumnType.text(),
+      ),
       /// Text Column definition
       PlutoColumn(
         title: 'MessageType',
@@ -275,6 +280,7 @@ class _Cat10TableState extends State<Cat10Table> {
               'text_field2': PlutoCell(value: cat10.SAC ?? "None"),
               'text_field3': PlutoCell(value: cat10.SIC ?? "None"),
               'text_field4': PlutoCell(value: cat10.TAR ?? "None"),
+              'text_field4b': PlutoCell(value: cat10.heading ?? "None"),
               'text_field5': PlutoCell(value: cat10.messageType ?? "None"),
               'text_field6': PlutoCell(
                   value: cat10.TYP != null
