@@ -205,10 +205,17 @@ class _MapScreenState extends State<MapScreen> {
     /// [_fetchPreferences] We fetch the preference from the storage and notify in future
     Future< bool> _fetchMarkers() async {
       try{
+        if(!_catProvider.hasMarkers){
         // Time
         initialTime = _catProvider.firstTime; //Units seconds[s]
         this.markerStack =  computePoints(_catProvider.smrTrajectories,_catProvider.mlatTrajectories,_catProvider.adsbTrajectories, initialTime, _catProvider.endTime);
+        _catProvider.markers = this.markerStack;
+        _catProvider.hasMarkers = true;
         debugPrint("Fetch Cat All");
+        }
+        else{
+          this.markerStack = _catProvider.markers;
+        }
         return true;
       }
       catch(e){

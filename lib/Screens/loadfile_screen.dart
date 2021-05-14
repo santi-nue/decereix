@@ -394,6 +394,7 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
             myFile = null;
             bool status = resultTransfer['status'];
             if (status) {
+              _catProvider.hasMarkers = false;
               _catProvider.firstTime = resultTransfer['initialTime'];
               _catProvider.endTime = resultTransfer['endTime'];
               _catProvider.cat10All = resultTransfer['cat10All'];
