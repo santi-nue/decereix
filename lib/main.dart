@@ -71,118 +71,100 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      body: SafeArea(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Flexible(
-              flex: 2,
-              child: Container(
-                color: Colors.blue,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Expanded(
-                      flex: 2,
-                      child: SizedBox(
-                        child: CupertinoButton.filled(
-                          child: Text('Load File'),
-                          onPressed: () {
-                            setState(() {
-                              this._currPage = 0;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: SizedBox(
-                        child: CupertinoButton.filled(
-                          child: Text('Cat 10'),
-                          onPressed: () {
-                            setState(() {
-                              this._currPage = 1;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: SizedBox(
-                        child: CupertinoButton.filled(
-                          child: Text('Cat 21'),
-                          onPressed: () {
-                            setState(() {
-                              this._currPage = 2;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: SizedBox(
-                        child: CupertinoButton.filled(
-                          child: Text('Cat All'),
-                          onPressed: () {
-                            setState(() {
-                              this._currPage = 3;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: SizedBox(
-                        child: CupertinoButton.filled(
-                          child: Text('Map'),
-                          onPressed: () {
-                            setState(() {
-                              this._currPage = 4;
-                            });
-                          },
-                        ),
-                      ),
-                    )
-                  ],
+      body: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          SafeArea(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                  flex: 2,
+                  child: CupertinoButton.filled(
+                    child: Text('Load File'),
+                    onPressed: () {
+                      setState(() {
+                        this._currPage = 0;
+                      });
+                    },
+                  ),
                 ),
-              ),
+                Expanded(
+                  flex: 2,
+                  child: CupertinoButton.filled(
+                    child: Text('Cat 10'),
+                    onPressed: () {
+                      setState(() {
+                        this._currPage = 1;
+                      });
+                    },
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: CupertinoButton.filled(
+                    child: Text('Cat 21'),
+                    onPressed: () {
+                      setState(() {
+                        this._currPage = 2;
+                      });
+                    },
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: CupertinoButton.filled(
+                    child: Text('Cat All'),
+                    onPressed: () {
+                      setState(() {
+                        this._currPage = 3;
+                      });
+                    },
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: CupertinoButton.filled(
+                    child: Text('Map'),
+                    onPressed: () {
+                      setState(() {
+                        this._currPage = 4;
+                      });
+                    },
+                  ),
+                )
+              ],
             ),
-            if (_currPage == 0) ...[
-              Expanded(
-                flex: 8,
-                child: Center(
-                  child: LoadfileScreen(),
-                ),
-              ),
-            ] else if (_currPage == 1) ...[
-              Expanded(
-                flex: 8,
-                child: Center(child: Cat10Table()),
-              ),
-            ] else if (_currPage == 2) ...[
-              Expanded(
-                flex: 8,
-                child: Center(child: Cat21Table()),
-              ),
-            ] else if (_currPage == 3) ...[
-              Expanded(
-                flex: 8,
-                child: Center(child: CatAllTable()),
-              ),
-            ] else if (_currPage == 4) ...[
-              Expanded(
-                flex: 8,
-                child: MapScreen(),
-              ),
-            ],
+          ),
+          if (_currPage == 0) ...[
+            Expanded(
+              flex: 8,
+              child: LoadfileScreen(),
+            ),
+          ] else if (_currPage == 1) ...[
+            Expanded(
+              flex: 8,
+              child: Cat10Table(),
+            ),
+          ] else if (_currPage == 2) ...[
+            Expanded(
+              flex: 8,
+              child: Cat21Table(),
+            ),
+          ] else if (_currPage == 3) ...[
+            Expanded(
+              flex: 8,
+              child: CatAllTable(),
+            ),
+          ] else if (_currPage == 4) ...[
+            Expanded(
+              flex: 8,
+              child: MapScreen(),
+            ),
           ],
-        ),
+        ],
       ),
     );
   }
