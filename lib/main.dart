@@ -75,14 +75,15 @@ class _MyHomePageState extends State<MyHomePage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          SafeArea(
+            Expanded(
+            flex: 1,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Expanded(
                   flex: 2,
-                  child: CupertinoButton.filled(
+                  child: CupertinoButton(
                     child: Text('Load File'),
                     onPressed: () {
                       setState(() {
@@ -93,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 Expanded(
                   flex: 2,
-                  child: CupertinoButton.filled(
+                  child: CupertinoButton(
                     child: Text('Cat 10'),
                     onPressed: () {
                       setState(() {
@@ -104,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 Expanded(
                   flex: 2,
-                  child: CupertinoButton.filled(
+                  child: CupertinoButton(
                     child: Text('Cat 21'),
                     onPressed: () {
                       setState(() {
@@ -115,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 Expanded(
                   flex: 2,
-                  child: CupertinoButton.filled(
+                  child: CupertinoButton(
                     child: Text('Cat All'),
                     onPressed: () {
                       setState(() {
@@ -126,7 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 Expanded(
                   flex: 2,
-                  child: CupertinoButton.filled(
+                  child: CupertinoButton(
                     child: Text('Map'),
                     onPressed: () {
                       setState(() {
@@ -140,27 +141,27 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           if (_currPage == 0) ...[
             Expanded(
-              flex: 8,
+              flex: 9,
               child: LoadfileScreen(),
             ),
           ] else if (_currPage == 1) ...[
             Expanded(
-              flex: 8,
+              flex: 9,
               child: Cat10Table(),
             ),
           ] else if (_currPage == 2) ...[
             Expanded(
-              flex: 8,
+              flex: 9,
               child: Cat21Table(),
             ),
           ] else if (_currPage == 3) ...[
             Expanded(
-              flex: 8,
+              flex: 9,
               child: CatAllTable(),
             ),
           ] else if (_currPage == 4) ...[
             Expanded(
-              flex: 8,
+              flex: 9,
               child: MapScreen(),
             ),
           ],
