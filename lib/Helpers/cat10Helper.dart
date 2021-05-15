@@ -348,7 +348,7 @@ class CAT10Helper {
     /*Point p = new Point(X_Component_map, Y_Component_map);*/
     //Compute WGS84 position from cartesian position
     //[latitude,longitude]
-    List<num> latLong =
+    List<double> latLong =
         ComputeWGS_84_from_Cartesian(X_Component_map, Y_Component_map);
     setWGS_84(latLong[0].toDouble(), latLong[1].toDouble());
     /*Set_WGS84_Coordinates(position);*/ //Apply computed WGS84 position to this message
@@ -1000,54 +1000,51 @@ class CAT10Helper {
   List<double> ComputeWGS_84_from_Cartesian(
       double xComponent, double yComponent) {
     //Constants
-    num A = 6378137.0;
-    num E2 = 0.00669437999013;
-    num radlatBcn = 0.72076995986363457;
-    num radlongBcn = 0.036276018891154553;
+    double A = 6378137.0;
+    double E2 = 0.00669437999013;
+    double radlatBcn = 0.72076995986363457;
+    double radlongBcn = 0.036276018891154553;
 
     // Get Center Projection
     // c2 = c.Lat, c.Lon, 0 => Radar Location
-    num nu = A / sqrt(1 - E2 * pow(sin(radlatBcn), 2.0));
+    double nu = A / sqrt(1 - E2 * pow(sin(radlatBcn), 2.0));
 
-    num RS = (A * (1.0 - E2)) / pow(1 - E2 * pow(sin(radlatBcn), 2.0), 1.5);
+    double RS = (A * (1.0 - E2)) / pow(1 - E2 * pow(sin(radlatBcn), 2.0), 1.5);
     // GeneralMatrix R1; GeneralMatrix T1;
-    List<List<num>> T1 =
+    List<List<double>> T1 =
         CalculateTranslationMatrix(radlatBcn, radlongBcn, A, E2);
-    List<List<num>> R1 = CalculateRotationMatrix(radlatBcn, radlongBcn);
+    List<List<double>> R1 = CalculateRotationMatrix(radlatBcn, radlongBcn);
     // Convert Object Pos
-    List<num> posGeocentric =
-        change_system_cartesian2geocentric(xComponent, yComponent, 0, R1, T1);
-    List<num> objectGeodesic = change_geocentric2geodesic(
+    List<double> posGeocentric = change_system_cartesian2geocentric(xComponent, yComponent, 0, R1, T1);
+    List<double> objectGeodesic = change_geocentric2geodesic(
         posGeocentric[0], posGeocentric[1], posGeocentric[2], A, E2);
     // Make the position of object with Airport
 
     // Save the position and return
-    List<num> coordinatesObjWGS = [0, 0];
-    num LatitudeWGS84Map = objectGeodesic[0] * (180 / pi);
-    num LongitudeWGS84Map = objectGeodesic[1] * (180 / pi);
+    List<double> coordinatesObjWGS = [0, 0];
+    double LatitudeWGS84Map = objectGeodesic[0] * (180 / pi);
+    double LongitudeWGS84Map = objectGeodesic[1] * (180 / pi);
 
     return [LatitudeWGS84Map, LongitudeWGS84Map];
   }
 
-  List<List<num>> CalculateTranslationMatrix(
-      num radlatBcn, num radlongBcn, num A, num E2) {
+  List<List<double>> CalculateTranslationMatrix(double radlatBcn, double radlongBcn, double A, double E2) {
     double Height = 0;
     double nu = A / sqrt(1 - E2 * pow(sin(radlatBcn), 2.0));
-    var coefT1 = List.generate(3, (i) => [0.0], growable: false);
+    List<List<double>> coefT1 =[[0.0],[0.0],[0.0]];
     coefT1[0][0] = (nu + Height) * cos(radlatBcn) * cos(radlongBcn);
     coefT1[1][0] = (nu + Height) * cos(radlatBcn) * sin(radlongBcn);
     coefT1[2][0] = (nu * (1 - E2) + Height) * sin(radlatBcn);
-    /*GeneralMatrix m = new GeneralMatrix(coefT1, 3, 1);*/
     return coefT1;
   }
 
-  List<num> change_geocentric2geodesic(num x, num y, num z, num A, num E2) {
+  List<double> change_geocentric2geodesic(double x, double y, double z, double A, double E2) {
     // semi-minor earth axis
     //double b = this.A * sqrt(1 - this.E2);
-    num b = 6356752.3142;
-    num Lat = 0;
-    num Lon = 0;
-    num Height = 0;
+    double b = 6356752.3142;
+    double Lat = 0;
+    double Lon = 0;
+    double Height = 0;
     if ((x.abs() < 1e-10) && (y.abs() < 1e-10)) {
       if (z < 1e-10) {
         // the point is at the center of earth :)
@@ -1064,7 +1061,7 @@ class CAT10Helper {
     // from formula 20
     Lat = atan((z / dXy) / (1 - (A * E2) / sqrt(dXy * dXy + z * z)));
     // from formula 24
-    num nu = A / sqrt(1 - E2 * pow(sin(Lat), 2.0));
+    double nu = A / sqrt(1 - E2 * pow(sin(Lat), 2.0));
     // from formula 20
     Height = (dXy / cos(Lat)) - nu;
 
@@ -1089,8 +1086,8 @@ class CAT10Helper {
     return [Lat, Lon, Height];
   }
 
-  List<List<num>> CalculateRotationMatrix(num lat, num lon) {
-    var coefR1 = List.generate(3, (i) => [0, 0, 0.0], growable: false);
+  List<List<double>> CalculateRotationMatrix(double lat, double lon) {
+    List<List<double>> coefR1 = [[0.0, 0.0, 0.0],[0.0, 0.0, 0.0],[0.0, 0.0, 0.0]];
     /*double[][] coefR1 = { new double[3], new double[3], new double[3] };*/
 
     coefR1[0][0] = -(sin(lon));
@@ -1106,9 +1103,9 @@ class CAT10Helper {
     return coefR1;
   }
 
-  List<num> change_system_cartesian2geocentric(
-      num x, num y, num z, List<List<num>> R1, List<List<num>> T1) {
-    var coefInput = List.generate(3, (i) => [0, 0, 0.0], growable: false);
+  List<double> change_system_cartesian2geocentric(
+      double x, double y, double z, List<List<double>> R1, List<List<double>> T1) {
+    List<List<double>> coefInput = [[0.0],[0.0],[0.0]];
     /*double[][] coefInput = { new double[1], new double[1], new double[1] };*/
     coefInput[0][0] = x;
     coefInput[1][0] = y;
@@ -1118,7 +1115,7 @@ class CAT10Helper {
     Matrix R2 = Matrix(R1).transpose();
     Matrix R3 = R2.matrixProduct(inputMatrix);
     R3 = R3 + Matrix(T1);
-    List<num> ret = [R3.itemAt(1, 1), R3.itemAt(2, 1), R3.itemAt(3, 1)];
-    return ret;
+    /*List<num> ret = [R3.itemAt(1, 1), R3.itemAt(2, 1), R3.itemAt(3, 1)];*/
+    return [R3.itemAt(1, 1), R3.itemAt(2, 1), R3.itemAt(3, 1)];
   }
 }
