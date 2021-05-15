@@ -347,6 +347,7 @@ class CAT10Helper {
         "X: " + X_Component + ", Y: " + Y_Component;
     /*Point p = new Point(X_Component_map, Y_Component_map);*/
     //Compute WGS84 position from cartesian position
+    //[latitude,longitude]
     List<num> latLong =
         ComputeWGS_84_from_Cartesian(X_Component_map, Y_Component_map);
     setWGS_84(latLong[0].toDouble(), latLong[1].toDouble());
@@ -361,8 +362,8 @@ class CAT10Helper {
   }
 
   setWGS_84(double Latitude, double Longitude) {
-    this.LatitudeWGS_84_map = dp(Latitude, 5);
-    this.LongitudeWGS_84_map = dp(Longitude, 5);
+    this.LatitudeWGS_84_map = Latitude;
+    this.LongitudeWGS_84_map = Longitude;
     int Latdegres = Latitude.truncate();
     int Latmin = ((Latitude - Latdegres) * 60).truncate();
     double Latsec = (Latitude - (Latdegres + (Latmin / 60))) * 3600;
@@ -1001,8 +1002,8 @@ class CAT10Helper {
     //Constants
     num A = 6378137.0;
     num E2 = 0.00669437999013;
-    num radlatBcn = 41.29561833 * (0.01745329251);
-    num radlongBcn = 2.095114167 * (0.01745329251);
+    num radlatBcn = 0.72076995986363457;
+    num radlongBcn = 0.036276018891154553;
 
     // Get Center Projection
     // c2 = c.Lat, c.Lon, 0 => Radar Location
@@ -1032,9 +1033,8 @@ class CAT10Helper {
       num radlatBcn, num radlongBcn, num A, num E2) {
     double Height = 0;
     double nu = A / sqrt(1 - E2 * pow(sin(radlatBcn), 2.0));
-    var coefT1 = List.generate(3, (i) => [0, 0, 0.0], growable: false);
+    var coefT1 = List.generate(3, (i) => [0.0], growable: false);
     coefT1[0][0] = (nu + Height) * cos(radlatBcn) * cos(radlongBcn);
-
     coefT1[1][0] = (nu + Height) * cos(radlatBcn) * sin(radlongBcn);
     coefT1[2][0] = (nu * (1 - E2) + Height) * sin(radlatBcn);
     /*GeneralMatrix m = new GeneralMatrix(coefT1, 3, 1);*/
