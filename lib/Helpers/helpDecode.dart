@@ -58,7 +58,7 @@ class HelpDecode{
           newbits += "1";
         i++;
       }
-      return int.parse(newbits, radix:2) .toDouble()+ 1;
+      return -(int.parse(newbits, radix:2) .toDouble()+ 1);
     }
   }
   int Binary2Int(String bits)

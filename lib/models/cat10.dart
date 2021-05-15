@@ -188,6 +188,7 @@ class CAT10 {
         index = cat10Helper.Compute_Measured_Position_in_Polar_Coordinates(
             messageBinary, index);
         this.RHO = cat10Helper.RHO;
+        this.Position_In_Polar = cat10Helper.Position_In_Polar;
         this.THETA = cat10Helper.THETA;
       }
       if (FSPEC[6] == '1') {
@@ -195,7 +196,7 @@ class CAT10 {
             messageBinary, index);
         this.X_Component = cat10Helper.X_Component;
         this.Y_Component = cat10Helper.Y_Component;
-        this.Position_In_Polar = cat10Helper.Position_In_Polar;
+
         this.LatitudeWGS_84 = cat10Helper.Latitude_in_WGS_84;
         this.LongitudeWGS_84 = cat10Helper.Longitude_in_WGS_84;
         this.LatitudeWGS_84_map = cat10Helper.LatitudeWGS_84_map;

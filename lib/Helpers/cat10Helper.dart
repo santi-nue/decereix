@@ -338,9 +338,9 @@ class CAT10Helper {
   String Position_Cartesian_Coordinates;
   int Compute_Position_in_Cartesian_Coordinates(List<String> message, int pos) {
     X_Component_map = this.lib.TwoComplement2Decimal(
-        message[pos].toString() + message[pos + 1].toString());
+        message[pos]+ message[pos + 1]);
     Y_Component_map = this.lib.TwoComplement2Decimal(
-        message[pos + 2].toString() + message[pos + 3].toString());
+        message[pos + 2] + message[pos + 3]);
     X_Component = X_Component_map.toString();
     Y_Component = Y_Component_map.toString();
     Position_Cartesian_Coordinates =
