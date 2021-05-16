@@ -21,7 +21,6 @@ class _MapScreenState extends State<MapScreen> {
       List<Trajectories> ADSBTrajectories, int initialTime, int endTime) {
     List<List<Marker>> markersStack = [];
     List<Marker> markers = [];
-    String hoverText = "";
     for (int currTime = initialTime; currTime < (endTime + 1); currTime++) {
       SMRTrajectories.forEach((element) {
         // List Time pick the latest
@@ -29,26 +28,24 @@ class _MapScreenState extends State<MapScreen> {
                 (element) => ((element < (currTime + 1))&& (element > (currTime -1))));
         if (k != -1) {
           if (element.type == 2) {
-            hoverText = element.Target_Identification;
             markers.add(new Marker(
               width: 10.0,
               height: 10.0,
               point: element.ListPoints[k],
-              builder: (ctx) => Transform.rotate(
-                angle: element.ListAngles[k],
-                child:  Tooltip(
-                  message: hoverText,
-                  child: Icon(
+              builder: (ctx) => Tooltip(
+                message:  element.Target_Identification,
+                child: Transform.rotate(
+                  angle: element.ListAngles[k],
+                  child:  Icon(
                     Icons.airplanemode_active,
                     color: Colors.pinkAccent,
                     size: sizeImage*2,
-                    semanticLabel: hoverText, //For Accessibility
+                    semanticLabel:  element.Target_Identification, //For Accessibility
                   ),
                 ),
               ),
             ));
           } else if (element.type == 1) {
-            hoverText = element.Target_Identification ?? element.Target_Address;
             markers.add(new Marker(
               width: 10.0,
               height: 10.0,
@@ -57,11 +54,10 @@ class _MapScreenState extends State<MapScreen> {
                 Icons.local_car_wash_rounded,
                 color: Colors.redAccent,
                 size: sizeImage,
-                semanticLabel: hoverText, //For Accessibility
+                semanticLabel: element.Target_Identification ?? element.Target_Address, //For Accessibility
               ),
             ));
           } else {
-            hoverText = element.Target_Identification ?? element.Target_Address;
             markers.add(new Marker(
               width: 10.0,
               height: 10.0,
@@ -70,7 +66,7 @@ class _MapScreenState extends State<MapScreen> {
                 Icons.grade,
                 color: Colors.blueAccent,
                 size: sizeImage,
-                semanticLabel: hoverText, //For Accessibility
+                semanticLabel: element.Target_Identification ?? element.Target_Address, //For Accessibility
               ),
             ));
           }
@@ -82,26 +78,24 @@ class _MapScreenState extends State<MapScreen> {
                 (element) => ((element < (currTime + 1))&& (element > (currTime -1))));
         if (k != -1) {
           if (element.type == 2) {
-            hoverText = element.Target_Identification;
             markers.add(new Marker(
               width: 10.0,
               height: 10.0,
               point: element.ListPoints[k],
-              builder: (ctx) => Transform.rotate(
-                angle: element.ListAngles[k],
-                child:  Tooltip(
-                  message: hoverText,
-                  child: Icon(
+              builder: (ctx) => Tooltip(
+                message: element.Target_Identification,
+                child: Transform.rotate(
+                  angle: element.ListAngles[k],
+                  child:  Icon(
                     Icons.airplanemode_active,
                     color: Colors.pinkAccent,
                     size: sizeImage*2,
-                    semanticLabel: hoverText, //For Accessibility
+                    semanticLabel: element.Target_Identification, //For Accessibility
                   ),
                 ),
               ),
             ));
           } else if (element.type == 1) {
-            hoverText = element.Target_Identification ?? element.Target_Address;
             markers.add(new Marker(
               width: 10.0,
               height: 10.0,
@@ -110,11 +104,10 @@ class _MapScreenState extends State<MapScreen> {
                 Icons.local_car_wash_rounded,
                 color: Colors.redAccent,
                 size: sizeImage,
-                semanticLabel: hoverText, //For Accessibility
+                semanticLabel: element.Target_Identification ?? element.Target_Address, //For Accessibility
               ),
             ));
           } else {
-            hoverText = element.Target_Identification ?? element.Target_Address;
             markers.add(new Marker(
               width: 10.0,
               height: 10.0,
@@ -123,7 +116,7 @@ class _MapScreenState extends State<MapScreen> {
                 Icons.grade,
                 color: Colors.blueAccent,
                 size: sizeImage,
-                semanticLabel: hoverText, //For Accessibility
+                semanticLabel: element.Target_Identification ?? element.Target_Address, //For Accessibility
               ),
             ));
           }
@@ -135,26 +128,24 @@ class _MapScreenState extends State<MapScreen> {
                 (element) => ((element < (currTime + 1))&& (element > (currTime -1))));
         if (k != -1) {
           if (element.type == 2) {
-            hoverText = element.Target_Identification;
             markers.add(new Marker(
               width: 10.0,
               height: 10.0,
               point: element.ListPoints[k],
-              builder: (ctx) => Transform.rotate(
-                angle: element.ListAngles[k],
-                child:  Tooltip(
-                  message: hoverText,
-                  child: Icon(
+              builder: (ctx) => Tooltip(
+                message: element.Target_Identification,
+                child: Transform.rotate(
+                  angle: element.ListAngles[k],
+                  child:  Icon(
                     Icons.airplanemode_active,
                     color: Colors.pinkAccent,
                     size: sizeImage*2,
-                    semanticLabel: hoverText, //For Accessibility
+                    semanticLabel: element.Target_Identification, //For Accessibility
                   ),
                 ),
               ),
             ));
           } else if (element.type == 1) {
-            hoverText = element.Target_Identification ?? element.Target_Address;
             markers.add(new Marker(
               width: 10.0,
               height: 10.0,
@@ -163,11 +154,10 @@ class _MapScreenState extends State<MapScreen> {
                 Icons.local_car_wash_rounded,
                 color: Colors.redAccent,
                 size: sizeImage,
-                semanticLabel: hoverText, //For Accessibility
+                semanticLabel: element.Target_Identification ?? element.Target_Address, //For Accessibility
               ),
             ));
           } else {
-            hoverText = element.Target_Identification ?? element.Target_Address;
             markers.add(new Marker(
               width: 10.0,
               height: 10.0,
@@ -176,7 +166,7 @@ class _MapScreenState extends State<MapScreen> {
                 Icons.grade,
                 color: Colors.blueAccent,
                 size: sizeImage,
-                semanticLabel: hoverText, //For Accessibility
+                semanticLabel: element.Target_Identification ?? element.Target_Address, //For Accessibility
               ),
             ));
           }

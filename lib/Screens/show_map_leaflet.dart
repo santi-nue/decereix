@@ -121,7 +121,7 @@ class _ShowMapLeafletState extends State<ShowMapLeaflet> {
                 timer.cancel();
               }
             }
-            timer = Timer.periodic(Duration(milliseconds: repetitionDelay),
+            timer = Timer.periodic(Duration(milliseconds: repetitionDelay~/ this.currentSpeed),
                 (Timer t) => autoPlay());
           } else {
             if (timer != null) {
