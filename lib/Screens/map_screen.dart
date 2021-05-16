@@ -29,18 +29,21 @@ class _MapScreenState extends State<MapScreen> {
                 (element) => ((element < (currTime + 1))&& (element > (currTime -1))));
         if (k != -1) {
           if (element.type == 2) {
-            hoverText = element.Target_Identification ?? element.Target_Address;
+            hoverText = element.Target_Identification;
             markers.add(new Marker(
               width: 10.0,
               height: 10.0,
               point: element.ListPoints[k],
               builder: (ctx) => Transform.rotate(
                 angle: element.ListAngles[k],
-                child: Icon(
-                  Icons.airplanemode_active,
-                  color: Colors.pinkAccent,
-                  size: sizeImage*2,
-                  semanticLabel: hoverText, //For Accessibility
+                child:  Tooltip(
+                  message: hoverText,
+                  child: Icon(
+                    Icons.airplanemode_active,
+                    color: Colors.pinkAccent,
+                    size: sizeImage*2,
+                    semanticLabel: hoverText, //For Accessibility
+                  ),
                 ),
               ),
             ));
@@ -79,18 +82,21 @@ class _MapScreenState extends State<MapScreen> {
                 (element) => ((element < (currTime + 1))&& (element > (currTime -1))));
         if (k != -1) {
           if (element.type == 2) {
-            hoverText = element.Target_Identification ?? element.Target_Address;
+            hoverText = element.Target_Identification;
             markers.add(new Marker(
               width: 10.0,
               height: 10.0,
               point: element.ListPoints[k],
               builder: (ctx) => Transform.rotate(
                 angle: element.ListAngles[k],
-                child: Icon(
-                  Icons.airplanemode_active,
-                  color: Colors.pinkAccent,
-                  size: sizeImage*2,
-                  semanticLabel: hoverText, //For Accessibility
+                child:  Tooltip(
+                  message: hoverText,
+                  child: Icon(
+                    Icons.airplanemode_active,
+                    color: Colors.pinkAccent,
+                    size: sizeImage*2,
+                    semanticLabel: hoverText, //For Accessibility
+                  ),
                 ),
               ),
             ));
@@ -129,18 +135,21 @@ class _MapScreenState extends State<MapScreen> {
                 (element) => ((element < (currTime + 1))&& (element > (currTime -1))));
         if (k != -1) {
           if (element.type == 2) {
-            hoverText = element.Target_Identification ?? element.Target_Address;
+            hoverText = element.Target_Identification;
             markers.add(new Marker(
               width: 10.0,
               height: 10.0,
               point: element.ListPoints[k],
               builder: (ctx) => Transform.rotate(
                 angle: element.ListAngles[k],
-                child: Icon(
-                  Icons.airplanemode_active,
-                  color: Colors.pinkAccent,
-                  size: sizeImage*2,
-                  semanticLabel: hoverText, //For Accessibility
+                child:  Tooltip(
+                  message: hoverText,
+                  child: Icon(
+                    Icons.airplanemode_active,
+                    color: Colors.pinkAccent,
+                    size: sizeImage*2,
+                    semanticLabel: hoverText, //For Accessibility
+                  ),
                 ),
               ),
             ));
