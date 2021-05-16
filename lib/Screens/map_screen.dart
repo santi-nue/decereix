@@ -35,7 +35,7 @@ class _MapScreenState extends State<MapScreen> {
               height: 10.0,
               point: element.ListPoints[k],
               builder: (ctx) => Transform.rotate(
-                angle: element.ListAngles[k]*0.01745329251,
+                angle: element.ListAngles[k],
                 child: Icon(
                   Icons.airplanemode_active,
                   color: Colors.pinkAccent,
@@ -50,14 +50,11 @@ class _MapScreenState extends State<MapScreen> {
               width: 10.0,
               height: 10.0,
               point: element.ListPoints[k],
-              builder: (ctx) => Transform.rotate(
-                angle: element.ListAngles[k]*0.01745329251,
-                child: Icon(
-                  Icons.local_car_wash_rounded,
-                  color: Colors.redAccent,
-                  size: sizeImage,
-                  semanticLabel: hoverText, //For Accessibility
-                ),
+              builder: (ctx) => Icon(
+                Icons.local_car_wash_rounded,
+                color: Colors.redAccent,
+                size: sizeImage,
+                semanticLabel: hoverText, //For Accessibility
               ),
             ));
           } else {
@@ -66,14 +63,11 @@ class _MapScreenState extends State<MapScreen> {
               width: 10.0,
               height: 10.0,
               point: element.ListPoints[k],
-              builder: (ctx) => Transform.rotate(
-                angle: element.ListAngles[k]*0.01745329251,
-                child: Icon(
-                  Icons.grade,
-                  color: Colors.blueAccent,
-                  size: sizeImage,
-                  semanticLabel: hoverText, //For Accessibility
-                ),
+              builder: (ctx) => Icon(
+                Icons.grade,
+                color: Colors.blueAccent,
+                size: sizeImage,
+                semanticLabel: hoverText, //For Accessibility
               ),
             ));
           }
@@ -91,7 +85,7 @@ class _MapScreenState extends State<MapScreen> {
               height: 10.0,
               point: element.ListPoints[k],
               builder: (ctx) => Transform.rotate(
-                angle: element.ListAngles[k]*0.01745329251,
+                angle: element.ListAngles[k],
                 child: Icon(
                   Icons.airplanemode_active,
                   color: Colors.pinkAccent,
@@ -106,14 +100,11 @@ class _MapScreenState extends State<MapScreen> {
               width: 10.0,
               height: 10.0,
               point: element.ListPoints[k],
-              builder: (ctx) => Transform.rotate(
-                angle: element.ListAngles[k]*0.01745329251,
-                child: Icon(
-                  Icons.local_car_wash_rounded,
-                  color: Colors.redAccent,
-                  size: sizeImage,
-                  semanticLabel: hoverText, //For Accessibility
-                ),
+              builder: (ctx) => Icon(
+                Icons.local_car_wash_rounded,
+                color: Colors.redAccent,
+                size: sizeImage,
+                semanticLabel: hoverText, //For Accessibility
               ),
             ));
           } else {
@@ -122,14 +113,11 @@ class _MapScreenState extends State<MapScreen> {
               width: 10.0,
               height: 10.0,
               point: element.ListPoints[k],
-              builder: (ctx) => Transform.rotate(
-                angle: element.ListAngles[k]*0.01745329251,
-                child: Icon(
-                  Icons.grade,
-                  color: Colors.blueAccent,
-                  size: sizeImage,
-                  semanticLabel: hoverText, //For Accessibility
-                ),
+              builder: (ctx) => Icon(
+                Icons.grade,
+                color: Colors.blueAccent,
+                size: sizeImage,
+                semanticLabel: hoverText, //For Accessibility
               ),
             ));
           }
@@ -147,7 +135,7 @@ class _MapScreenState extends State<MapScreen> {
               height: 10.0,
               point: element.ListPoints[k],
               builder: (ctx) => Transform.rotate(
-                angle: element.ListAngles[k]*0.01745329251,
+                angle: element.ListAngles[k],
                 child: Icon(
                   Icons.airplanemode_active,
                   color: Colors.pinkAccent,
@@ -162,14 +150,11 @@ class _MapScreenState extends State<MapScreen> {
               width: 10.0,
               height: 10.0,
               point: element.ListPoints[k],
-              builder: (ctx) => Transform.rotate(
-                angle: element.ListAngles[k]*0.01745329251,
-                child: Icon(
-                  Icons.local_car_wash_rounded,
-                  color: Colors.redAccent,
-                  size: sizeImage,
-                  semanticLabel: hoverText, //For Accessibility
-                ),
+              builder: (ctx) => Icon(
+                Icons.local_car_wash_rounded,
+                color: Colors.redAccent,
+                size: sizeImage,
+                semanticLabel: hoverText, //For Accessibility
               ),
             ));
           } else {
@@ -178,14 +163,11 @@ class _MapScreenState extends State<MapScreen> {
               width: 10.0,
               height: 10.0,
               point: element.ListPoints[k],
-              builder: (ctx) => Transform.rotate(
-                angle: element.ListAngles[k]*0.01745329251,
-                child: Icon(
-                  Icons.grade,
-                  color: Colors.blueAccent,
-                  size: sizeImage,
-                  semanticLabel: hoverText, //For Accessibility
-                ),
+              builder: (ctx) => Icon(
+                Icons.grade,
+                color: Colors.blueAccent,
+                size: sizeImage,
+                semanticLabel: hoverText, //For Accessibility
               ),
             ));
           }

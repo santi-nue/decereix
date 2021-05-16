@@ -47,7 +47,7 @@ class HelpDecode{
     }
     else
     {
-      String bitsNegative = bits.substring(1, bits.length - 1);
+      String bitsNegative = bits.substring(1, bits.length);
       String newbits = "";
       int i = 0;
       while (i < bitsNegative.length)
