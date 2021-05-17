@@ -13,6 +13,7 @@ import 'package:worker_manager/worker_manager.dart';
 
 Future<void> main() async {
   await Executor().warmUp();
+
   /// [runApp] which is a Dart function to initialize the [Widget Tree]
   runApp(
     /// Providers are above [MyApp] instead of inside it, so that [Other Widgets] including [MyApp]
@@ -34,12 +35,12 @@ class MyApp extends StatelessWidget {
     return OverlaySupport(
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Decereix',
+        title: 'DECERIX',
         builder: EasyLoading.init(),
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: MyHomePage(title: 'DECEREIX'),
+        home: MyHomePage(title: 'DECERIX'),
       ),
     );
   }
@@ -75,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-            Expanded(
+          Expanded(
             flex: 1,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -83,59 +84,72 @@ class _MyHomePageState extends State<MyHomePage> {
               children: <Widget>[
                 Expanded(
                   flex: 2,
-                  child: CupertinoButton(
-                    child: Text('Load File'),
+                  child: ElevatedButton.icon(
                     onPressed: () {
                       setState(() {
                         this._currPage = 0;
                       });
                     },
+                    icon: Icon(Icons.home, size: 30, color: Colors.white),
+                    label: Text("HOME", overflow: TextOverflow.ellipsis),
                   ),
                 ),
+                Container(height: 15),
                 Expanded(
                   flex: 2,
-                  child: CupertinoButton(
-                    child: Text('Cat 10'),
+                  child: ElevatedButton.icon(
                     onPressed: () {
                       setState(() {
                         this._currPage = 1;
                       });
                     },
+                    icon: Icon(Icons.article_outlined,
+                        size: 30, color: Colors.white),
+                    label: Text("CAT 10", overflow: TextOverflow.ellipsis),
                   ),
                 ),
+                Container(height: 15),
                 Expanded(
                   flex: 2,
-                  child: CupertinoButton(
-                    child: Text('Cat 21'),
+                  child: ElevatedButton.icon(
                     onPressed: () {
                       setState(() {
                         this._currPage = 2;
                       });
                     },
+                    icon: Icon(Icons.article_outlined,
+                        size: 30, color: Colors.white),
+                    label: Text("CAT 21", overflow: TextOverflow.ellipsis),
                   ),
                 ),
+                Container(height: 15),
                 Expanded(
                   flex: 2,
-                  child: CupertinoButton(
-                    child: Text('Cat All'),
+                  child: ElevatedButton.icon(
                     onPressed: () {
                       setState(() {
                         this._currPage = 3;
                       });
                     },
+                    icon: Icon(Icons.addchart, size: 30, color: Colors.white),
+                    label: Text("CAT ALL", overflow: TextOverflow.ellipsis),
                   ),
                 ),
+                Container(height: 15),
                 Expanded(
                   flex: 2,
-                  child: CupertinoButton(
-                    child: Text('Map'),
+                  child: ElevatedButton.icon(
                     onPressed: () {
                       setState(() {
                         this._currPage = 4;
                       });
                     },
+                    icon:
+                        Icon(Icons.map_outlined, size: 40, color: Colors.white),
+                    label: Text("MAP ", overflow: TextOverflow.ellipsis),
                   ),
-                )
+                ),
+                Container(height: 15),
               ],
             ),
           ),

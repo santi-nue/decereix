@@ -22,6 +22,9 @@ import 'package:worker_manager/worker_manager.dart';
 import 'dart:io'; // for exit();
 import 'dart:async';
 import 'dart:isolate';
+import 'background.dart';
+import 'package:flutter/painting.dart';
+
 class LoadfileScreen extends StatefulWidget {
   const LoadfileScreen({Key key}) : super(key: key);
 
@@ -30,9 +33,9 @@ class LoadfileScreen extends StatefulWidget {
 }
 
 class _LoadfileScreenState extends State<LoadfileScreen> {
-
   /// Reads Asterisk file *ast in binary format, optimized for Multithreading operation
-  static Future<Map<String, dynamic>> loadAsterix(Map<String, dynamic> mapVal) async {
+  static Future<Map<String, dynamic>> loadAsterix(
+      Map<String, dynamic> mapVal) async {
     List<CAT10> cat10All = [];
     List<CAT21> cat21All = [];
     List<CATALL> catAll = [];
@@ -40,14 +43,18 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
       Uint8List fileBytes = mapVal["fileBytes"];
       int firstTime = mapVal["firstTime"];
       mapVal = {};
+
       /// Raw Integer to Dart Binary String ex. 02 = "00000010"//
       var fileBinary =
           fileBytes.map((i) => i.toRadixString(2).padLeft(8, "0")).toList();
       // Go over all of the packets and store them in a separate list of lists
       /// First Octet equals Category [Cat10, Cat21v2.1]
       /// 2nd*256 + 3rd Octet = Length in Bytes
-      int messageLength; /// 2nd*256 + 3rd Octet
+      int messageLength;
+
+      /// 2nd*256 + 3rd Octet
       List<List<String>> messagesBinary = [];
+
       /// Store messages from the fileBytes into packet size Blocks using messageLength
       int endPointer = messageLength;
       int initialTime = 86400;
@@ -77,7 +84,7 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
           cat10 = new CAT10(helpDecode, cat10helper, k, messagesBinary[k]);
           cat10All.add(cat10);
           catAll.add(new CATALL.fromCat10(cat10, firstTime));
-          if(cat10.TimeOfDayInSeconds!=null) {
+          if (cat10.TimeOfDayInSeconds != null) {
             if (cat10.TimeOfDayInSeconds < initialTime &&
                 cat10.TimeOfDayInSeconds > -1) {
               initialTime = cat10.TimeOfDayInSeconds;
@@ -90,7 +97,7 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
           cat21 = new CAT21(helpDecode, cat21helper, k, messagesBinary[k]);
           cat21All.add(cat21);
           catAll.add(new CATALL.fromCat21(cat21, firstTime));
-          if(cat21.TimeOfDayInSeconds!=null) {
+          if (cat21.TimeOfDayInSeconds != null) {
             if (cat21.TimeOfDayInSeconds < initialTime &&
                 cat21.TimeOfDayInSeconds > -1) {
               initialTime = cat21.TimeOfDayInSeconds;
@@ -101,8 +108,10 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
           }
         }
       }
+
       /// Everything in same function, faster computation
       Map<String, dynamic> transferMap = {};
+
       /// [Trajectories] calculated here and not separated due to inefficiency in dart///
       List<Trajectories> smrTrajectories = [];
       List<Trajectories> mlatTrajectories = [];
@@ -111,7 +120,12 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
       bool check = false;
       catAll.forEach((message) {
         check = false;
-        check = ((message.Latitude_in_WGS_84_map != -200) && (message.Longitude_in_WGS_84_map != -200)) && (message.Time_Of_day!=null||message.List_Time_Of_Day!=null) && (message.Target_Identification!=null||message.Target_Address!=null||message.Track_number!=null);
+        check = ((message.Latitude_in_WGS_84_map != -200) &&
+                (message.Longitude_in_WGS_84_map != -200)) &&
+            (message.Time_Of_day != null || message.List_Time_Of_Day != null) &&
+            (message.Target_Identification != null ||
+                message.Target_Address != null ||
+                message.Track_number != null);
         if (check) {
           if (message.DetectionMode == "SMR") {
             if (message.Target_Identification != null) {
@@ -119,8 +133,11 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
               for (int k = 0; k < smrTrajectories.length; k++) {
                 if (smrTrajectories[k].Target_Identification ==
                     message.Target_Identification) {
-                  smrTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
-                      message.Longitude_in_WGS_84_map,message.heading, message.Time_Of_day);
+                  smrTrajectories[k].AddPoint(
+                      message.Latitude_in_WGS_84_map,
+                      message.Longitude_in_WGS_84_map,
+                      message.heading,
+                      message.Time_Of_day);
                   isNotFound = false;
                 }
               }
@@ -140,14 +157,16 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                     message.Track_number);
                 smrTrajectories.add(trajectory);
               }
-            }
-            else if (message.Target_Address != null) {
+            } else if (message.Target_Address != null) {
               bool isNotFound = true;
               for (int k = 0; k < smrTrajectories.length; k++) {
                 if (smrTrajectories[k].Target_Address ==
                     message.Target_Address) {
-                  smrTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
-                      message.Longitude_in_WGS_84_map,message.heading, message.Time_Of_day);
+                  smrTrajectories[k].AddPoint(
+                      message.Latitude_in_WGS_84_map,
+                      message.Longitude_in_WGS_84_map,
+                      message.heading,
+                      message.Time_Of_day);
                   isNotFound = false;
                 }
               }
@@ -156,8 +175,8 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                     message.Target_Identification,
                     message.Time_Of_day,
                     message.Latitude_in_WGS_84_map,
-                    message.Longitude_in_WGS_84_map,message.heading,
-
+                    message.Longitude_in_WGS_84_map,
+                    message.heading,
                     message.type,
                     message.Target_Address,
                     message.DetectionMode,
@@ -167,13 +186,15 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                     message.Track_number);
                 smrTrajectories.add(trajectory);
               }
-            }
-            else if (message.Track_number != null) {
+            } else if (message.Track_number != null) {
               bool isNotFound = true;
               for (int k = 0; k < smrTrajectories.length; k++) {
                 if (smrTrajectories[k].Track_number == message.Track_number) {
-                  smrTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
-                      message.Longitude_in_WGS_84_map,message.heading, message.Time_Of_day);
+                  smrTrajectories[k].AddPoint(
+                      message.Latitude_in_WGS_84_map,
+                      message.Longitude_in_WGS_84_map,
+                      message.heading,
+                      message.Time_Of_day);
                   isNotFound = false;
                 }
               }
@@ -194,15 +215,17 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                 smrTrajectories.add(trajectory);
               }
             }
-          }
-          else if (message.DetectionMode == "MLAT") {
+          } else if (message.DetectionMode == "MLAT") {
             if (message.Target_Identification != null) {
               bool isNotFound = true;
               for (int k = 0; k < mlatTrajectories.length; k++) {
                 if (mlatTrajectories[k].Target_Identification ==
                     message.Target_Identification) {
-                  mlatTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
-                      message.Longitude_in_WGS_84_map,message.heading, message.Time_Of_day);
+                  mlatTrajectories[k].AddPoint(
+                      message.Latitude_in_WGS_84_map,
+                      message.Longitude_in_WGS_84_map,
+                      message.heading,
+                      message.Time_Of_day);
                   isNotFound = false;
                 }
               }
@@ -222,14 +245,16 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                     message.Track_number);
                 mlatTrajectories.add(trajectory);
               }
-            }
-            else if (message.Target_Address != null) {
+            } else if (message.Target_Address != null) {
               bool isNotFound = true;
               for (int k = 0; k < mlatTrajectories.length; k++) {
                 if (mlatTrajectories[k].Target_Address ==
                     message.Target_Address) {
-                  mlatTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
-                      message.Longitude_in_WGS_84_map,message.heading, message.Time_Of_day);
+                  mlatTrajectories[k].AddPoint(
+                      message.Latitude_in_WGS_84_map,
+                      message.Longitude_in_WGS_84_map,
+                      message.heading,
+                      message.Time_Of_day);
                   isNotFound = false;
                 }
               }
@@ -249,13 +274,15 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                     message.Track_number);
                 mlatTrajectories.add(trajectory);
               }
-            }
-            else if (message.Track_number != null) {
+            } else if (message.Track_number != null) {
               bool isNotFound = true;
               for (int k = 0; k < mlatTrajectories.length; k++) {
                 if (mlatTrajectories[k].Track_number == message.Track_number) {
-                  mlatTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
-                      message.Longitude_in_WGS_84_map,message.heading, message.Time_Of_day);
+                  mlatTrajectories[k].AddPoint(
+                      message.Latitude_in_WGS_84_map,
+                      message.Longitude_in_WGS_84_map,
+                      message.heading,
+                      message.Time_Of_day);
                   isNotFound = false;
                 }
               }
@@ -276,15 +303,17 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                 mlatTrajectories.add(trajectory);
               }
             }
-          }
-          else if (message.DetectionMode == "ADSB") {
+          } else if (message.DetectionMode == "ADSB") {
             if (message.Target_Identification != null) {
               bool isNotFound = true;
               for (int k = 0; k < adsbTrajectories.length; k++) {
                 if (adsbTrajectories[k].Target_Identification ==
                     message.Target_Identification) {
-                  adsbTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
-                      message.Longitude_in_WGS_84_map,message.heading, message.Time_Of_day);
+                  adsbTrajectories[k].AddPoint(
+                      message.Latitude_in_WGS_84_map,
+                      message.Longitude_in_WGS_84_map,
+                      message.heading,
+                      message.Time_Of_day);
                   isNotFound = false;
                 }
               }
@@ -304,14 +333,16 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                     message.Track_number);
                 adsbTrajectories.add(trajectory);
               }
-            }
-            else if (message.Target_Address != null) {
+            } else if (message.Target_Address != null) {
               bool isNotFound = true;
               for (int k = 0; k < adsbTrajectories.length; k++) {
                 if (adsbTrajectories[k].Target_Address ==
                     message.Target_Address) {
-                  adsbTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
-                      message.Longitude_in_WGS_84_map,message.heading, message.Time_Of_day);
+                  adsbTrajectories[k].AddPoint(
+                      message.Latitude_in_WGS_84_map,
+                      message.Longitude_in_WGS_84_map,
+                      message.heading,
+                      message.Time_Of_day);
                   isNotFound = false;
                 }
               }
@@ -331,13 +362,15 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                     message.Track_number);
                 adsbTrajectories.add(trajectory);
               }
-            }
-            else if (message.Track_number != null) {
+            } else if (message.Track_number != null) {
               bool isNotFound = true;
               for (int k = 0; k < adsbTrajectories.length; k++) {
                 if (adsbTrajectories[k].Track_number == message.Track_number) {
-                  adsbTrajectories[k].AddPoint(message.Latitude_in_WGS_84_map,
-                      message.Longitude_in_WGS_84_map,message.heading, message.Time_Of_day);
+                  adsbTrajectories[k].AddPoint(
+                      message.Latitude_in_WGS_84_map,
+                      message.Longitude_in_WGS_84_map,
+                      message.heading,
+                      message.Time_Of_day);
                   isNotFound = false;
                 }
               }
@@ -346,8 +379,8 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
                     message.Target_Identification,
                     message.Time_Of_day,
                     message.Latitude_in_WGS_84_map,
-                    message.Longitude_in_WGS_84_map
-                    ,message.heading,
+                    message.Longitude_in_WGS_84_map,
+                    message.heading,
                     message.type,
                     message.Target_Address,
                     message.DetectionMode,
@@ -370,9 +403,15 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
       transferMap['mlatTrajectories'] = mlatTrajectories;
       transferMap['adsbTrajectories'] = adsbTrajectories;
       transferMap['status'] = true;
+
       // Cleaning up, for faster data retrieval before exiting the thread
-      cat21All = null; cat10All = null;
-      smrTrajectories = null; mlatTrajectories = null; adsbTrajectories = null; catAll = null;
+      cat21All = null;
+      cat10All = null;
+      smrTrajectories = null;
+      mlatTrajectories = null;
+      adsbTrajectories = null;
+      catAll = null;
+
       // Return all of the computation both Trajectories and Cat packets
       return transferMap;
     } catch (e) {
@@ -389,7 +428,8 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
     CatProvider _catProvider = Provider.of<CatProvider>(context, listen: false);
     loadFileAsync() async {
       try {
-        FilePickerCross myFile = await FilePickerCross.importFromStorage(fileExtension: 'ast');
+        FilePickerCross myFile =
+            await FilePickerCross.importFromStorage(fileExtension: 'ast');
         // After picking file --> Read the file in Hex
         //---------------------------------------------------//
 
@@ -398,8 +438,10 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
           map['fileBytes'] = myFile.toUint8List();
           map['firstTime'] = _catProvider.firstTime;
           //-------------------------------- compute(loadAsterix, map). ---------//
-          /*final result = */ Executor().execute(arg1: map, fun1: loadAsterix).then((resultTransfer) {
-           map = null;
+          /*final result = */ Executor()
+              .execute(arg1: map, fun1: loadAsterix)
+              .then((resultTransfer) {
+            map = null;
             myFile = null;
             bool status = resultTransfer['status'];
             if (status) {
@@ -410,44 +452,87 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
               _catProvider.cat21All = resultTransfer['cat21All'];
               _catProvider.catAll = resultTransfer['catAll'];
               _catProvider.smrTrajectories = resultTransfer['smrTrajectories'];
-              _catProvider.mlatTrajectories = resultTransfer['mlatTrajectories'];
-              _catProvider.adsbTrajectories = resultTransfer['adsbTrajectories'];
+              _catProvider.mlatTrajectories =
+                  resultTransfer['mlatTrajectories'];
+              _catProvider.adsbTrajectories =
+                  resultTransfer['adsbTrajectories'];
               resultTransfer = null;
             }
-            EasyLoading.dismiss().then((value) => toast('File Loaded Successfully!'),);
+            EasyLoading.dismiss().then(
+              (value) => toast('File Loaded Successfully!'),
+            );
           }).whenComplete(() {});
         }
       } catch (e) {
         EasyLoading.dismiss();
         debugPrint("loadFile Error");
         toast('File could not be Loaded!');
-        }
+      }
     }
 
-    return Center(
-        child: Container(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                IconButton(
-                    iconSize: 96,
-                    icon: const Icon(Icons.find_in_page),
-                    tooltip: 'Load Asterix File',
-                    onPressed: () {
-                      EasyLoading.show(
-                        status: 'loading...',
-                        maskType: EasyLoadingMaskType.black,
-                      ).then((value) {
-                        loadFileAsync();
-                      });
-                    }),
-                Text("Load File"),
-              ],
-            ),
+    return SafeArea(
+        child: Scaffold(
+            body: Background(
+      child: Container(
+        child: Expanded(
+          flex: 2,
+          child: Wrap(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(35.0),
+                child: Text(
+                  'Welcome to DECERIX',
+                  textAlign: TextAlign.left,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white70,
+                      fontSize: 50),
+                ),
+              ),
+              Container(height: 130),
+              Container(
+                margin: const EdgeInsets.only(left: 80.0),
+                child: Text(
+                  'Decerix UPC is an ASTERIX decoding software \naimed at reading CAT10 and CAT21 messages.\n\n-You can visualize the decoded data in tables \nfor CAT10, CAT21 and both.\n-In the maps section you can see simulations \nfor your files.\n\n\nChoose a file to start:',
+                  textAlign: TextAlign.left,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white54,
+                      fontSize: 15),
+                ),
+              ),
+              Container(height: 40),
+              Container(
+                  margin: EdgeInsets.only(left: 70.0),
+                  child: (IconButton(
+                      iconSize: 96,
+                      icon: const Icon(Icons.find_in_page),
+                      color: Colors.blue,
+                      tooltip: 'Load Asterix File',
+                      onPressed: () {
+                        EasyLoading.show(
+                          status: 'loading...',
+                          maskType: EasyLoadingMaskType.clear,
+                        ).then((value) {
+                          loadFileAsync();
+                        });
+                      }))),
+              Container(height: 1),
+              Container(
+                  margin: EdgeInsets.only(left: 95.0),
+                  child: (Text(
+                    "Load File",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue,
+                        fontSize: 15),
+                  )))
+            ],
           ),
-        ));
+        ),
+      ),
+    )));
   }
 }
