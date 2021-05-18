@@ -4,11 +4,24 @@ Decerix UPC is an ASTERIX decoding software aimed at reading ASTERIX (All-purpos
 This project is made by PGTA students from UPC
 
 ## Getting Started
+_Step 1. 
+```
+Install the decereix setup_
+```
+_Step 2._
+```
+ Run the Program
+```
+_Step 3. _
 
-Step 1. Install the decereix setup
-Step 2. Run the Program
-Step 3. First screen is "load file screen" -> load file
-Step 4. View the table or View it on Map.
+```
+First screen is "load file screen" -> load file
+```
+_Step 4. _
+
+```
+View the table or View it on Map 
+```
 ## Authors ✒️
 
 _This project wouldn't have been able to reach where it is today, without the help of:_
