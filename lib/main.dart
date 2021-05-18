@@ -65,6 +65,30 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    Widget getScreen(){
+      if (this._currPage == 0)
+      {
+        return LoadfileScreen();
+      }
+      else if (this._currPage == 1)
+      {
+        return Cat10Table();
+      }
+      else if (this._currPage == 2)
+      {
+        return Cat21Table();
+      }
+      else if (this._currPage == 3)
+      {
+        return CatAllTable();
+      }
+      else
+      {
+        return MapScreen();
+      }
+    }
+
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -80,105 +104,93 @@ class _MyHomePageState extends State<MyHomePage> {
             flex: 1,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Expanded(
                   flex: 2,
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      setState(() {
-                        this._currPage = 0;
-                      });
-                    },
-                    icon: Icon(Icons.home, size: 30, color: Colors.white),
-                    label: Text("HOME", overflow: TextOverflow.ellipsis),
+                  child: Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        setState(() {
+                          this._currPage = 0;
+                        });
+                      },
+                      icon: Icon(Icons.home, size: 30, color: Colors.white),
+                      label: Text("HOME", overflow: TextOverflow.ellipsis),
+                    ),
                   ),
                 ),
-                Container(height: 15),
                 Expanded(
                   flex: 2,
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      setState(() {
-                        this._currPage = 1;
-                      });
-                    },
-                    icon: Icon(Icons.article_outlined,
-                        size: 30, color: Colors.white),
-                    label: Text("CAT 10", overflow: TextOverflow.ellipsis),
+                  child: Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        setState(() {
+                          this._currPage = 1;
+                        });
+                      },
+                      icon: Icon(Icons.article_outlined,
+                          size: 30, color: Colors.white),
+                      label: Text("CAT 10", overflow: TextOverflow.ellipsis),
+                    ),
                   ),
                 ),
-                Container(height: 15),
                 Expanded(
                   flex: 2,
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      setState(() {
-                        this._currPage = 2;
-                      });
-                    },
-                    icon: Icon(Icons.article_outlined,
-                        size: 30, color: Colors.white),
-                    label: Text("CAT 21", overflow: TextOverflow.ellipsis),
+                  child: Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        setState(() {
+                          this._currPage = 2;
+                        });
+                      },
+                      icon: Icon(Icons.article_outlined,
+                          size: 30, color: Colors.white),
+                      label: Text("CAT 21", overflow: TextOverflow.ellipsis),
+                    ),
                   ),
                 ),
-                Container(height: 15),
                 Expanded(
                   flex: 2,
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      setState(() {
-                        this._currPage = 3;
-                      });
-                    },
-                    icon: Icon(Icons.addchart, size: 30, color: Colors.white),
-                    label: Text("CAT ALL", overflow: TextOverflow.ellipsis),
+                  child: Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        setState(() {
+                          this._currPage = 3;
+                        });
+                      },
+                      icon: Icon(Icons.addchart, size: 30, color: Colors.white),
+                      label: Text("CAT ALL", overflow: TextOverflow.ellipsis),
+                    ),
                   ),
                 ),
-                Container(height: 15),
                 Expanded(
                   flex: 2,
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      setState(() {
-                        this._currPage = 4;
-                      });
-                    },
-                    icon:
-                        Icon(Icons.map_outlined, size: 40, color: Colors.white),
-                    label: Text("MAP ", overflow: TextOverflow.ellipsis),
+                  child: Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        setState(() {
+                          this._currPage = 4;
+                        });
+                      },
+                      icon:
+                          Icon(Icons.map_outlined, size: 40, color: Colors.white),
+                      label: Text("MAP ", overflow: TextOverflow.ellipsis),
+                    ),
                   ),
                 ),
-                Container(height: 15),
               ],
             ),
           ),
-          if (_currPage == 0) ...[
-            Expanded(
-              flex: 9,
-              child: LoadfileScreen(),
-            ),
-          ] else if (_currPage == 1) ...[
-            Expanded(
-              flex: 9,
-              child: Cat10Table(),
-            ),
-          ] else if (_currPage == 2) ...[
-            Expanded(
-              flex: 9,
-              child: Cat21Table(),
-            ),
-          ] else if (_currPage == 3) ...[
-            Expanded(
-              flex: 9,
-              child: CatAllTable(),
-            ),
-          ] else if (_currPage == 4) ...[
-            Expanded(
-              flex: 9,
-              child: MapScreen(),
-            ),
-          ],
+        Expanded(
+            flex: 9,
+            child: getScreen(),
+            )
         ],
       ),
     );

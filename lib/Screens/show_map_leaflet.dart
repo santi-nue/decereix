@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong/latlong.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:weight_slider/weight_slider.dart';
 
 import 'error_show.dart';
@@ -221,37 +222,59 @@ class _ShowMapLeafletState extends State<ShowMapLeaflet> {
       child: ErrorShow(errorText: "Unexpected error occured, Please Restart the App"),
     );
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
-      floatingActionButton: FloatingActionRow(
-        children: floatingPanelSpeed,
-        color: Colors.blueAccent,
-        elevation: 4,
+      floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
+      floatingActionButton: Tooltip(
+        message: 'Hovering your mouse over planes on the map, shows '
+            'the Identifier',
+        child: IconButton(
+          onPressed: () {
+            // Toast
+            toast('Hovering your mouse over planes on the map, shows '
+                'the Identifier');
+          },
+          icon: Icon(Icons.help_outline_sharp,
+              size:56, color: Colors.blueAccent),
+        ),
       ),
       body: Scaffold(
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: FloatingActionRow(
-          children: mapControls,
-          color: Colors.blueAccent,
-          elevation: 4,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
+        floatingActionButton: Tooltip(
+          message: 'Playback Speed',
+          child: FloatingActionRow(
+            children: floatingPanelSpeed,
+            color: Colors.blueAccent,
+            elevation: 4,
+          ),
         ),
-        body: SafeArea(
-          child: SizedBox.expand(
-            child: Listener(
-                onPointerSignal: (pointerSignal) {
-                  if (pointerSignal is PointerScrollEvent) {
-                    LatLng latlng = _mapController.center ?? new LatLng(0, 0);
+        body: Scaffold(
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          floatingActionButton: Tooltip(
+            message: 'Playback Controls Backward<-Play/Pause->Forward',
+            child: FloatingActionRow(
+              children: mapControls,
+              color: Colors.blueAccent,
+              elevation: 4,
+            ),
+          ),
+          body: SafeArea(
+            child: SizedBox.expand(
+              child: Listener(
+                  onPointerSignal: (pointerSignal) {
+                    if (pointerSignal is PointerScrollEvent) {
+                      LatLng latlng = _mapController.center ?? new LatLng(0, 0);
 
-                    /// Scroll Direction Normalized * [Zoom factor] :: [Windows Zoom] precision factor
-                    double deltaZoom = (pointerSignal.scrollDelta.direction /
-                            (pointerSignal.scrollDelta.direction).abs()) *
-                        zoomFactor;
-                    double zoomNew = _mapController.zoom - deltaZoom;
-                    zoomNew = zoomNew < minZoom ? minZoom : zoomNew;
-                    zoomNew = zoomNew > maxZoom ? maxZoom : zoomNew;
-                    _mapController.move(latlng, zoomNew);
-                  }
-                },
-                child: flutterMapWidget),
+                      /// Scroll Direction Normalized * [Zoom factor] :: [Windows Zoom] precision factor
+                      double deltaZoom = (pointerSignal.scrollDelta.direction /
+                              (pointerSignal.scrollDelta.direction).abs()) *
+                          zoomFactor;
+                      double zoomNew = _mapController.zoom - deltaZoom;
+                      zoomNew = zoomNew < minZoom ? minZoom : zoomNew;
+                      zoomNew = zoomNew > maxZoom ? maxZoom : zoomNew;
+                      _mapController.move(latlng, zoomNew);
+                    }
+                  },
+                  child: flutterMapWidget),
+            ),
           ),
         ),
       ),

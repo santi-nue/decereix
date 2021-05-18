@@ -215,7 +215,39 @@ class _MapScreenState extends State<MapScreen> {
           case ConnectionState.waiting:
 
             /// Show [LoadingScreen], as we are waiting for the response...
-            return LoadingPage();
+            return Center(child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text.rich(
+                  TextSpan(
+                    children: <TextSpan>[
+                      TextSpan(text: 'Loading, please have patience ...',
+                          style: TextStyle(fontStyle: FontStyle.italic,
+                              fontSize: 36)),
+                    ],
+                  ),
+                ),
+                Text.rich(
+                  TextSpan(
+                    children: <TextSpan>[
+                      TextSpan(text: '¿Tu sabías que las cajas negras de'
+                          ' los aviones en realidad son naranjas?',
+                          style: TextStyle(fontWeight:FontWeight.bold)),
+                    ],
+                  ),
+                ),
+                Text.rich(
+                  TextSpan(
+                    children: <TextSpan>[
+                      TextSpan(text: '- Que me dices! ¿no son cajas?',
+                          style: TextStyle(fontWeight:FontWeight.bold)),
+                    ],
+                  ),
+                ),
+
+              ],
+            ),);
           default:
             if (snapshot1.hasError) {
               /// Show [ErrorScreen], as we got a error
@@ -225,7 +257,8 @@ class _MapScreenState extends State<MapScreen> {
             } else {
               /// Show [Map] with trajectories for current time
               if(snapshot1.data){
-                return ShowMapLeaflet( markerStack: this.markerStack, lengthMarkerStack: this.markerStack.length,);
+                return ShowMapLeaflet( markerStack: this.markerStack,
+                  lengthMarkerStack: this.markerStack.length,);
               }else{
                 return Container(
                   child: Text("Error: Could not load trajectory!"),

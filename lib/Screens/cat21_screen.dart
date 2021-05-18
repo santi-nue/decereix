@@ -612,7 +612,7 @@ class _Cat21TableState extends State<Cat21Table> {
           case ConnectionState.waiting:
 
             /// Show [LoadingScreen], as we are waiting for the response...
-            return Text("Loading...");
+            return Center(child: Text("Loading..."));
           default:
             if (snapshot1.hasError) {
               /// Show [ErrorScreen], as we got a error
@@ -624,13 +624,7 @@ class _Cat21TableState extends State<Cat21Table> {
               /// Redirect to [Login]
               return PlutoGrid(
                   columns: columns,
-                  rows: rows,
-                  onChanged: (PlutoGridOnChangedEvent event) {
-                    print(event);
-                  },
-                  onLoaded: (PlutoGridOnLoadedEvent event) {
-                    print(event);
-                  });
+                  rows: rows);
             }
         }
       },

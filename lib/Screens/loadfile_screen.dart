@@ -474,63 +474,60 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
         child: Scaffold(
             body: Background(
       child: Container(
-        child: Expanded(
-          flex: 2,
-          child: Wrap(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(35.0),
-                child: Text(
-                  'Welcome to DECERIX',
-                  textAlign: TextAlign.left,
-                  overflow: TextOverflow.ellipsis,
+        child: Wrap(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(35.0),
+              child: Text(
+                'Welcome to DECERIX',
+                textAlign: TextAlign.left,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white70,
+                    fontSize: 50),
+              ),
+            ),
+            Container(height: 130),
+            Container(
+              margin: const EdgeInsets.only(left: 80.0),
+              child: Text(
+                'Decerix UPC is an ASTERIX decoding software \naimed at reading CAT10 and CAT21 messages.\n\n-You can visualize the decoded data in tables \nfor CAT10, CAT21 and both.\n-In the maps section you can see simulations \nfor your files.\n\n\nChoose a file to start:',
+                textAlign: TextAlign.left,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white54,
+                    fontSize: 15),
+              ),
+            ),
+            Container(height: 40),
+            Container(
+                margin: EdgeInsets.only(left: 70.0),
+                child: (IconButton(
+                    iconSize: 96,
+                    icon: const Icon(Icons.find_in_page),
+                    color: Colors.blue,
+                    tooltip: 'Load Asterix File',
+                    onPressed: () {
+                      EasyLoading.show(
+                        status: 'loading...',
+                        maskType: EasyLoadingMaskType.clear,
+                      ).then((value) {
+                        loadFileAsync();
+                      });
+                    }))),
+            Container(height: 1),
+            Container(
+                margin: EdgeInsets.only(left: 95.0),
+                child: (Text(
+                  "Load File",
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Colors.white70,
-                      fontSize: 50),
-                ),
-              ),
-              Container(height: 130),
-              Container(
-                margin: const EdgeInsets.only(left: 80.0),
-                child: Text(
-                  'Decerix UPC is an ASTERIX decoding software \naimed at reading CAT10 and CAT21 messages.\n\n-You can visualize the decoded data in tables \nfor CAT10, CAT21 and both.\n-In the maps section you can see simulations \nfor your files.\n\n\nChoose a file to start:',
-                  textAlign: TextAlign.left,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white54,
-                      fontSize: 15),
-                ),
-              ),
-              Container(height: 40),
-              Container(
-                  margin: EdgeInsets.only(left: 70.0),
-                  child: (IconButton(
-                      iconSize: 96,
-                      icon: const Icon(Icons.find_in_page),
                       color: Colors.blue,
-                      tooltip: 'Load Asterix File',
-                      onPressed: () {
-                        EasyLoading.show(
-                          status: 'loading...',
-                          maskType: EasyLoadingMaskType.clear,
-                        ).then((value) {
-                          loadFileAsync();
-                        });
-                      }))),
-              Container(height: 1),
-              Container(
-                  margin: EdgeInsets.only(left: 95.0),
-                  child: (Text(
-                    "Load File",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
-                        fontSize: 15),
-                  )))
-            ],
-          ),
+                      fontSize: 15),
+                )))
+          ],
         ),
       ),
     )));
