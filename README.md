@@ -25,6 +25,6 @@ View the table or View it on Map
 ## Authors ✒️
 
 _This project wouldn't have been able to reach where it is today, without the help of:_
-* **Albert Prades Gimeno** - *PDI - Professor* -
+* **Albert Prades Gimeno** - *PDI - Professor* - [UPC]()
 * **Krunal Ratan Badsiwal** - *Student* - [UPC](linkedin.com/in/krunal-badsiwal)
 * **Mª Teresa Fernandez Mateos** - *Student* - [UPC](linkedin.com/in/maite-fernández-a414b710a/)
