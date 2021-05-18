@@ -6,7 +6,7 @@ This project is made by PGTA students from UPC
 ## Getting Started
 _Step 1._
 ```
-Install the decereix setup_
+Install the decereix setup
 ```
 _Step 2._
 ```
