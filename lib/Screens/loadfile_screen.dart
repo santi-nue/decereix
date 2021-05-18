@@ -478,14 +478,28 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
           children: <Widget>[
             Padding(
               padding: EdgeInsets.all(35.0),
-              child: Text(
-                'Welcome to DECERIX',
-                textAlign: TextAlign.left,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white70,
-                    fontSize: 50),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Welcome to DECERIX',
+                    textAlign: TextAlign.left,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white70,
+                        fontSize: 50),
+                  ),
+                  Text(
+                    'Author Krunal Ratan Badsiwal & Mª Teresa Mateos Ferández',
+                    textAlign: TextAlign.left,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white70,
+                        fontSize: 50),
+                  ),
+                ],
               ),
             ),
             Container(height: 130),

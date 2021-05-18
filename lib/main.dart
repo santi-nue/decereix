@@ -65,26 +65,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
-    Widget getScreen(){
-      if (this._currPage == 0)
-      {
+    Widget getScreen() {
+      if (this._currPage == 0) {
         return LoadfileScreen();
-      }
-      else if (this._currPage == 1)
-      {
+      } else if (this._currPage == 1) {
         return Cat10Table();
-      }
-      else if (this._currPage == 2)
-      {
+      } else if (this._currPage == 2) {
         return Cat21Table();
-      }
-      else if (this._currPage == 3)
-      {
+      } else if (this._currPage == 3) {
         return CatAllTable();
-      }
-      else
-      {
+      } else {
         return MapScreen();
       }
     }
@@ -95,10 +85,10 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return Scaffold(
-      body: Row(
+
+    return Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Expanded(
             flex: 1,
@@ -178,8 +168,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           this._currPage = 4;
                         });
                       },
-                      icon:
-                          Icon(Icons.map_outlined, size: 40, color: Colors.white),
+                      icon: Icon(Icons.map_outlined,
+                          size: 40, color: Colors.white),
                       label: Text("MAP ", overflow: TextOverflow.ellipsis),
                     ),
                   ),
@@ -187,12 +177,11 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
           ),
-        Expanded(
+          Expanded(
             flex: 9,
             child: getScreen(),
-            )
+          )
         ],
-      ),
     );
   }
 }
