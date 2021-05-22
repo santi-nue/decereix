@@ -76,10 +76,16 @@ class Trajectories {
     this.ListTime.add(Time);
     /*this.ListTimePoints.add(pt);*/
     this.CAT = CAT;
-    this.Target_Identification = Callsign;
+    if(Callsign!=""){
+      this.Target_Identification = Callsign;
+    }else{
+      this.Target_Identification = " ";
+    }
+
     this.SAC = SAC;
     this.SIC = SIC;
     this.Target_Address = TargetAddress;
+
     if (emitter == "car") {
       this.type = 1;
     } else if (emitter == "plane") {

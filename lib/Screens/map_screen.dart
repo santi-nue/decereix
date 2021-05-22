@@ -33,14 +33,14 @@ class _MapScreenState extends State<MapScreen> {
               height: 10.0,
               point: element.ListPoints[k],
               builder: (ctx) => Tooltip(
-                message:  element.Target_Identification,
+                message:  "SMR & ${element.Target_Identification??" "}",
                 child: Transform.rotate(
                   angle: element.ListAngles[k],
                   child:  Icon(
                     Icons.airplanemode_active,
-                    color: Colors.pinkAccent,
+                    color: Colors.greenAccent,
                     size: sizeImage*2,
-                    semanticLabel:  element.Target_Identification, //For Accessibility
+                    semanticLabel: "SMR & ${element.Target_Identification??" "}", //For Accessibility
                   ),
                 ),
               ),
@@ -83,14 +83,14 @@ class _MapScreenState extends State<MapScreen> {
               height: 10.0,
               point: element.ListPoints[k],
               builder: (ctx) => Tooltip(
-                message: element.Target_Identification,
+                message: "MLAT & ${element.Target_Identification??" "}",
                 child: Transform.rotate(
                   angle: element.ListAngles[k],
                   child:  Icon(
                     Icons.airplanemode_active,
-                    color: Colors.pinkAccent,
+                    color: Colors.amberAccent,
                     size: sizeImage*2,
-                    semanticLabel: element.Target_Identification, //For Accessibility
+                    semanticLabel: "MLAT & ${element.Target_Identification??" "}", //For Accessibility
                   ),
                 ),
               ),
@@ -133,14 +133,14 @@ class _MapScreenState extends State<MapScreen> {
               height: 10.0,
               point: element.ListPoints[k],
               builder: (ctx) => Tooltip(
-                message: element.Target_Identification,
+                message: "ADS-B & ${element.Target_Identification??" "}",
                 child: Transform.rotate(
                   angle: element.ListAngles[k],
                   child:  Icon(
                     Icons.airplanemode_active,
                     color: Colors.pinkAccent,
                     size: sizeImage*2,
-                    semanticLabel: element.Target_Identification, //For Accessibility
+                    semanticLabel: "ADS-B & ${element.Target_Identification??" "}", //For Accessibility
                   ),
                 ),
               ),

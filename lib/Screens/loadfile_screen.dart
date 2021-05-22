@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:core';
 import 'dart:typed_data';
 
@@ -9,21 +10,16 @@ import 'package:decereix/models/cat10.dart';
 import 'package:decereix/models/cat21.dart';
 import 'package:decereix/models/catall.dart';
 import 'package:decereix/models/trajectories.dart';
-import 'package:decereix/models/transferCat.dart';
 import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
-import 'package:worker_manager/worker_manager.dart';
-import 'dart:io'; // for exit();
-import 'dart:async';
-import 'dart:isolate';
+
 import 'background.dart';
-import 'package:flutter/painting.dart';
 
 class LoadfileScreen extends StatefulWidget {
   const LoadfileScreen({Key key}) : super(key: key);
@@ -438,9 +434,8 @@ class _LoadfileScreenState extends State<LoadfileScreen> {
           map['fileBytes'] = myFile.toUint8List();
           map['firstTime'] = _catProvider.firstTime;
           //-------------------------------- compute(loadAsterix, map). ---------//
-          /*final result = */ Executor()
-              .execute(arg1: map, fun1: loadAsterix)
-              .then((resultTransfer) {
+          /*final result = */
+          compute(loadAsterix,map).then((resultTransfer) {
             map = null;
             myFile = null;
             bool status = resultTransfer['status'];
