@@ -15,12 +15,18 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   static double sizeImage = 10; int initialTime = 86400;
-  List<List<Marker>> markerStack = [];
-
-  static List<List<Marker>> computePoints(List<Trajectories> SMRTrajectories, List<Trajectories> MLATTrajectories,
+  List<List<Marker>> markerStackSMR = [];
+  List<List<Marker>> markerStackMLAT = [];
+  List<List<Marker>> markerStackADSB = [];
+  int lengthMarker = 0;
+  Future<bool> computePoints(List<Trajectories> SMRTrajectories, List<Trajectories> MLATTrajectories,
       List<Trajectories> ADSBTrajectories, int initialTime, int endTime) {
-    List<List<Marker>> markersStack = [];
-    List<Marker> markers = [];
+    /*List<List<Marker>> markersStack = [];*/
+
+    List<Marker> markersSMR = [];
+    List<Marker> markersMLAT = [];
+    List<Marker> markersADSB = [];
+
     for (int currTime = initialTime; currTime < (endTime + 1); currTime++) {
       SMRTrajectories.forEach((element) {
         // List Time pick the latest
@@ -28,7 +34,7 @@ class _MapScreenState extends State<MapScreen> {
                 (element) => ((element < (currTime + 1))&& (element > (currTime -1))));
         if (k != -1) {
           if (element.type == 2) {
-            markers.add(new Marker(
+            markersSMR.add(new Marker(
               width: 10.0,
               height: 10.0,
               point: element.ListPoints[k],
@@ -38,7 +44,7 @@ class _MapScreenState extends State<MapScreen> {
                   angle: element.ListAngles[k],
                   child:  Icon(
                     Icons.airplanemode_active,
-                    color: Colors.greenAccent,
+                    color: Colors.black87,
                     size: sizeImage*2,
                     semanticLabel: "SMR & ${element.Target_Identification??" "}", //For Accessibility
                   ),
@@ -46,25 +52,25 @@ class _MapScreenState extends State<MapScreen> {
               ),
             ));
           } else if (element.type == 1) {
-            markers.add(new Marker(
+            markersSMR.add(new Marker(
               width: 10.0,
               height: 10.0,
               point: element.ListPoints[k],
               builder: (ctx) => Icon(
                 Icons.local_car_wash_rounded,
-                color: Colors.redAccent,
+                color: Colors.black87,
                 size: sizeImage,
                 semanticLabel: element.Target_Identification ?? element.Target_Address, //For Accessibility
               ),
             ));
           } else {
-            markers.add(new Marker(
+            markersSMR.add(new Marker(
               width: 10.0,
               height: 10.0,
               point: element.ListPoints[k],
               builder: (ctx) => Icon(
                 Icons.grade,
-                color: Colors.blueAccent,
+                color: Colors.black87,
                 size: sizeImage,
                 semanticLabel: element.Target_Identification ?? element.Target_Address, //For Accessibility
               ),
@@ -78,7 +84,7 @@ class _MapScreenState extends State<MapScreen> {
                 (element) => ((element < (currTime + 1))&& (element > (currTime -1))));
         if (k != -1) {
           if (element.type == 2) {
-            markers.add(new Marker(
+            markersMLAT.add(new Marker(
               width: 10.0,
               height: 10.0,
               point: element.ListPoints[k],
@@ -88,7 +94,7 @@ class _MapScreenState extends State<MapScreen> {
                   angle: element.ListAngles[k],
                   child:  Icon(
                     Icons.airplanemode_active,
-                    color: Colors.amberAccent,
+                    color: Colors.redAccent,
                     size: sizeImage*2,
                     semanticLabel: "MLAT & ${element.Target_Identification??" "}", //For Accessibility
                   ),
@@ -96,7 +102,7 @@ class _MapScreenState extends State<MapScreen> {
               ),
             ));
           } else if (element.type == 1) {
-            markers.add(new Marker(
+            markersMLAT.add(new Marker(
               width: 10.0,
               height: 10.0,
               point: element.ListPoints[k],
@@ -108,13 +114,13 @@ class _MapScreenState extends State<MapScreen> {
               ),
             ));
           } else {
-            markers.add(new Marker(
+            markersMLAT.add(new Marker(
               width: 10.0,
               height: 10.0,
               point: element.ListPoints[k],
               builder: (ctx) => Icon(
                 Icons.grade,
-                color: Colors.blueAccent,
+                color: Colors.redAccent,
                 size: sizeImage,
                 semanticLabel: element.Target_Identification ?? element.Target_Address, //For Accessibility
               ),
@@ -128,7 +134,7 @@ class _MapScreenState extends State<MapScreen> {
                 (element) => ((element < (currTime + 1))&& (element > (currTime -1))));
         if (k != -1) {
           if (element.type == 2) {
-            markers.add(new Marker(
+            markersADSB.add(new Marker(
               width: 10.0,
               height: 10.0,
               point: element.ListPoints[k],
@@ -138,7 +144,7 @@ class _MapScreenState extends State<MapScreen> {
                   angle: element.ListAngles[k],
                   child:  Icon(
                     Icons.airplanemode_active,
-                    color: Colors.pinkAccent,
+                    color: Colors.blueAccent,
                     size: sizeImage*2,
                     semanticLabel: "ADS-B & ${element.Target_Identification??" "}", //For Accessibility
                   ),
@@ -146,19 +152,19 @@ class _MapScreenState extends State<MapScreen> {
               ),
             ));
           } else if (element.type == 1) {
-            markers.add(new Marker(
+            markersADSB.add(new Marker(
               width: 10.0,
               height: 10.0,
               point: element.ListPoints[k],
               builder: (ctx) => Icon(
                 Icons.local_car_wash_rounded,
-                color: Colors.redAccent,
+                color: Colors.blueAccent,
                 size: sizeImage,
                 semanticLabel: element.Target_Identification ?? element.Target_Address, //For Accessibility
               ),
             ));
           } else {
-            markers.add(new Marker(
+            markersADSB.add(new Marker(
               width: 10.0,
               height: 10.0,
               point: element.ListPoints[k],
@@ -172,10 +178,14 @@ class _MapScreenState extends State<MapScreen> {
           }
         }
       });
-      markersStack.add(markers);
-      markers=[];
+      markerStackSMR.add(markersSMR);
+      markerStackMLAT.add(markersMLAT);
+      markerStackADSB.add(markersADSB);
+      markersSMR=[];
+      markersMLAT=[];
+      markersADSB=[];
     }
-    return markersStack;
+    return Future.value(true);
   }
 
 
@@ -189,13 +199,17 @@ class _MapScreenState extends State<MapScreen> {
         if(!_catProvider.hasMarkers){
         // Time
         initialTime = _catProvider.firstTime; //Units seconds[s]
-        this.markerStack =  computePoints(_catProvider.smrTrajectories,_catProvider.mlatTrajectories,_catProvider.adsbTrajectories, initialTime, _catProvider.endTime);
-        _catProvider.markers = this.markerStack;
+        bool stat = await computePoints(_catProvider.smrTrajectories,_catProvider.mlatTrajectories,_catProvider.adsbTrajectories, initialTime, _catProvider.endTime);
+        _catProvider.markerStackSMR = this.markerStackSMR;
+        _catProvider.markerStackMLAT = this.markerStackMLAT;
+        _catProvider.markerStackADSB = this.markerStackADSB;
         _catProvider.hasMarkers = true;
         debugPrint("Fetch Cat All");
         }
         else{
-          this.markerStack = _catProvider.markers;
+          /*this.markerStackSMR = _catProvider.markerStackSMR ;
+          this.markerStackMLAT = _catProvider.markerStackMLAT;
+          this.markerStackADSB = _catProvider.markerStackADSB;*/
         }
         return true;
       }
@@ -257,8 +271,8 @@ class _MapScreenState extends State<MapScreen> {
             } else {
               /// Show [Map] with trajectories for current time
               if(snapshot1.data){
-                return ShowMapLeaflet( markerStack: this.markerStack,
-                  lengthMarkerStack: this.markerStack.length,);
+                return ShowMapLeaflet(
+                  lengthMarkerStack: _catProvider.endTime, markerStackSMR:  _catProvider.markerStackSMR, markerStackMLAT:  _catProvider.markerStackMLAT, markerStackADSB:  _catProvider.markerStackADSB,);
               }else{
                 return Container(
                   child: Text("Error: Could not load trajectory!"),

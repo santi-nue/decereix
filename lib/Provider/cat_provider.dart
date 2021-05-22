@@ -12,7 +12,9 @@ class CatProvider with ChangeNotifier {
   List<Trajectories> mlatTrajectories = [];
   List<Trajectories> adsbTrajectories = [];
   List<CATALL> catAll = [];
-  List<List<Marker>> markers = [];
+  List<List<Marker>> markerStackSMR = [];
+  List<List<Marker>> markerStackMLAT = [];
+  List<List<Marker>> markerStackADSB = [];
   bool hasMarkers = false;
   int firstTime = 0;
   int endTime = 0;
