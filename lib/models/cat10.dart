@@ -193,7 +193,7 @@ class CAT10 {
       }
       if (FSPEC[6] == '1') {
         index = cat10Helper.Compute_Position_in_Cartesian_Coordinates(
-            messageBinary, index);
+            messageBinary, index,this.SIC);
         this.X_Component = cat10Helper.X_Component;
         this.Y_Component = cat10Helper.Y_Component;
 

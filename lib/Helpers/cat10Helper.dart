@@ -336,7 +336,7 @@ class CAT10Helper {
   String X_Component;
   String Y_Component;
   String Position_Cartesian_Coordinates;
-  int Compute_Position_in_Cartesian_Coordinates(List<String> message, int pos) {
+  int Compute_Position_in_Cartesian_Coordinates(List<String> message, int pos, String sic) {
     X_Component_map = this.lib.TwoComplement2Decimal(
         message[pos]+ message[pos + 1]);
     Y_Component_map = this.lib.TwoComplement2Decimal(
@@ -349,7 +349,7 @@ class CAT10Helper {
     //Compute WGS84 position from cartesian position
     //[latitude,longitude]
     List<double> latLong =
-        ComputeWGS_84_from_Cartesian(X_Component_map, Y_Component_map);
+        ComputeWGS_84_from_Cartesian(X_Component_map, Y_Component_map,sic);
     setWGS_84(latLong[0].toDouble(), latLong[1].toDouble());
     /*Set_WGS84_Coordinates(position);*/ //Apply computed WGS84 position to this message
     pos += 4;
@@ -998,13 +998,22 @@ class CAT10Helper {
   }
 
   List<double> ComputeWGS_84_from_Cartesian(
-      double xComponent, double yComponent) {
+      double xComponent, double yComponent, String sic) {
     //Constants
     double A = 6378137.0;
     double E2 = 0.00669437999013;
     double radlatBcn = 0.72076995986363457;
     double radlongBcn = 0.036276018891154553;
+    if(sic=="7"){
+      //SMR
+      radlatBcn = 0.7207445065;
+      radlongBcn = 0.03656664041;
 
+    }else{
+      //MLAT
+      radlatBcn = 0.72076995986363457;
+      radlongBcn = 0.036276018891154553;
+    }
     // Get Center Projection
     // c2 = c.Lat, c.Lon, 0 => Radar Location
     double nu = A / sqrt(1 - E2 * pow(sin(radlatBcn), 2.0));
